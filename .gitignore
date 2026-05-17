@@ -1,0 +1,17 @@
+# Virtual environment
+backend/venv/
+
+# Environment variables
+backend/.env
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Generated files
+backend/app/static/receipts/
+backend/app/static/statements/
+
+# Database
+*.db
