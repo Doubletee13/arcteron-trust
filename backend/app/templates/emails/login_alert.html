@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login Alert</title>
+  <style>
+    body { margin: 0; padding: 0; background-color: #F5F7FA; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+    .wrapper { max-width: 600px; margin: 40px auto; background: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 24px rgba(0,0,0,0.06); }
+    .header { background-color: #0F1115; padding: 32px 40px; text-align: center; }
+    .header h1 { color: #ffffff; font-size: 22px; font-weight: 600; margin: 0; letter-spacing: 0.5px; }
+    .header p { color: #9CA3AF; font-size: 13px; margin: 6px 0 0; }
+    .body { padding: 40px; }
+    .greeting { font-size: 16px; color: #111827; margin-bottom: 16px; }
+    .alert-box { background: #F5F7FA; border-left: 4px solid #10B981; border-radius: 8px; padding: 20px 24px; margin: 24px 0; }
+    .alert-box p { margin: 6px 0; font-size: 14px; color: #374151; }
+    .alert-box span { font-weight: 600; color: #111827; }
+    .warning { font-size: 13px; color: #6B7280; margin-top: 24px; line-height: 1.6; }
+    .warning a { color: #10B981; text-decoration: none; font-weight: 500; }
+    .footer { background: #F9FAFB; padding: 24px 40px; text-align: center; border-top: 1px solid #E5E7EB; }
+    .footer p { font-size: 12px; color: #9CA3AF; margin: 0; }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <div class="header">
+      <h1>Arcteron Trust</h1>
+      <p>Private Banking &amp; Wealth Management</p>
+    </div>
+    <div class="body">
+      <p class="greeting">Dear <strong>{{ first_name }}</strong>,</p>
+      <p style="color:#374151; font-size:15px;">We detected a new login to your Arcteron Trust account. Here are the details:</p>
+
+      <div class="alert-box">
+        <p>Date &amp; Time: <span>{{ login_time }}</span></p>
+        <p>Email: <span>{{ email }}</span></p>
+        <p>Account: <span>****{{ account_last_four }}</span></p>
+      </div>
+
+      <p class="warning">
+        If this was you, no action is needed. If you did not authorize this login, please
+        <a href="{{ frontend_url }}/pages/user/profile.html">secure your account immediately</a>
+        and contact our support team.
+      </p>
+    </div>
+    <div class="footer">
+      <p>&copy; {{ year }} Arcteron Trust. All rights reserved. This is an automated security alert.</p>
+    </div>
+  </div>
+</body>
+</html>
