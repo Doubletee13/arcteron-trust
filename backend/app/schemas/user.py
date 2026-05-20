@@ -2,7 +2,15 @@ from pydantic import BaseModel, EmailStr, field_validator, model_validator
 from typing import Optional
 from datetime import date, datetime
 from uuid import UUID
-from app.models.user import UserRole, UserStatus, IDType, CitizenshipStatus, EmploymentStatus, AccountPurpose
+from app.models.user import (
+    User,
+    UserRole,
+    UserStatus,
+    IDType,
+    CitizenshipStatus,
+    EmploymentStatus,
+    AccountPurpose,
+)
 
 
 # --- Registration Schemas ---
@@ -163,8 +171,16 @@ class UserResponse(BaseModel):
     created_at: datetime
     last_login: Optional[datetime] = None
     account: Optional[AccountResponse] = None
+    has_pin: bool = False
 
     model_config = {"from_attributes": True}
+
+
+def user_to_response(user: User) -> UserResponse:
+    """Serialize user for API; has_pin reflects stored transaction PIN (hash never exposed)."""
+    return UserResponse.model_validate(user).model_copy(
+        update={"has_pin": bool(user.transaction_pin)}
+    )
 
 
 class TokenResponse(BaseModel):

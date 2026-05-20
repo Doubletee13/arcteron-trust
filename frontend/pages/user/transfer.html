@@ -1,0 +1,2026 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Transfer — Arcteron Trust</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=DM+Sans:wght@300;400;500;600&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="../../assets/css/theme.css">
+  <link rel="stylesheet" href="../../assets/css/style.css">
+  <script src="../../assets/js/theme.js"></script>
+  <style>
+    body {
+      font-family: 'DM Sans', sans-serif;
+      margin: 0;
+    }
+
+    .layout {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* Sidebar — same as dashboard */
+    .sidebar {
+      width: 260px;
+      background: #111827;
+      border-right: none;
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100vh;
+      z-index: 300;
+      transition: transform 0.3s ease;
+    }
+
+    [data-theme="dark"] .sidebar {
+      background: #0D0F12;
+    }
+
+    .sidebar-logo {
+      padding: 22px 20px 18px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .sidebar-logo-text h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 16px;
+      font-weight: 600;
+      color: #ffffff;
+    }
+
+    .sidebar-logo-text p {
+      font-size: 9px;
+      color: rgba(255, 255, 255, 0.3);
+      margin-top: 1px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    .sidebar-nav {
+      padding: 10px;
+      flex: 1;
+      overflow-y: auto;
+    }
+
+    .nav-section-label {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.25);
+      padding: 10px 10px 4px;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.5);
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-bottom: 1px;
+      text-decoration: none;
+    }
+
+    .nav-item:hover {
+      background: rgba(255, 255, 255, 0.07);
+      color: rgba(255, 255, 255, 0.85);
+    }
+
+    .nav-item.active {
+      background: rgba(255, 255, 255, 0.1);
+      color: #ffffff;
+      font-weight: 600;
+    }
+
+    .nav-item svg {
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+    }
+
+    .nav-item.danger {
+      color: rgba(239, 68, 68, 0.7);
+    }
+
+    .nav-item.danger:hover {
+      background: rgba(239, 68, 68, 0.1);
+      color: #EF4444;
+    }
+
+    .sidebar-footer {
+      padding: 12px 10px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .user-card {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      margin-bottom: 4px;
+    }
+
+    .sidebar-avatar {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.12);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+      flex-shrink: 0;
+      font-family: 'Cormorant Garamond', serif;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+
+    .user-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.85);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .user-role {
+      font-size: 11px;
+      color: rgba(255, 255, 255, 0.3);
+    }
+
+    /* Main */
+    .main-content {
+      margin-left: 260px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      background: var(--bg-primary);
+    }
+
+    .topbar {
+      background: var(--bg-secondary);
+      border-bottom: 1px solid var(--border-color);
+      padding: 0 28px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 200;
+    }
+
+    .topbar-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .menu-btn {
+      display: none;
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      background: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--text-secondary);
+      flex-shrink: 0;
+    }
+
+    .topbar-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .icon-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      background: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--text-secondary);
+      transition: all 0.2s;
+      text-decoration: none;
+    }
+
+    .icon-btn:hover {
+      color: var(--text-primary);
+    }
+
+    .topbar-avatar {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: #111827;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      flex-shrink: 0;
+      font-family: 'Cormorant Garamond', serif;
+    }
+
+    [data-theme="dark"] .topbar-avatar {
+      background: #E5E7EB;
+      color: #111827;
+    }
+
+    .page-content {
+      padding: 28px;
+      flex: 1;
+    }
+
+    /* Page header */
+    .page-header {
+      margin-bottom: 24px;
+    }
+
+    .page-header h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 26px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .page-header p {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-top: 4px;
+    }
+
+    /* Transfer type tabs */
+    .transfer-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 24px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 4px;
+      width: fit-content;
+    }
+
+    .tab-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 18px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.2s;
+      background: none;
+      border: none;
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    .tab-btn:hover {
+      color: var(--text-primary);
+    }
+
+    .tab-btn.active {
+      background: var(--text-primary);
+      color: var(--bg-secondary);
+      font-weight: 600;
+    }
+
+    .tab-btn svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    /* Balance pill */
+    .balance-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 8px 16px;
+      margin-bottom: 24px;
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    .balance-pill strong {
+      color: var(--text-primary);
+      font-weight: 700;
+    }
+
+    .balance-pill-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #10B981;
+    }
+
+    /* Form panels */
+    .transfer-panel {
+      display: none;
+    }
+
+    .transfer-panel.active {
+      display: block;
+    }
+
+    .transfer-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      align-items: start;
+    }
+
+    /* Form card */
+    .form-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: 28px;
+    }
+
+    .form-card-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .form-card-title svg {
+      width: 16px;
+      height: 16px;
+      color: var(--text-muted);
+    }
+
+    .field {
+      margin-bottom: 16px;
+    }
+
+    .field label {
+      display: block;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 7px;
+    }
+
+    .field input,
+    .field select,
+    .field textarea {
+      width: 100%;
+      background: var(--bg-primary);
+      border: 1.5px solid var(--border-color);
+      border-radius: 8px;
+      padding: 11px 14px;
+      font-size: 14px;
+      color: var(--text-primary);
+      font-family: 'DM Sans', sans-serif;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      outline: none;
+      box-sizing: border-box;
+      appearance: none;
+    }
+
+    .field textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    .field input::placeholder,
+    .field textarea::placeholder {
+      color: var(--text-muted);
+      font-size: 13px;
+    }
+
+    .field input:focus,
+    .field select:focus,
+    .field textarea:focus {
+      border-color: var(--text-primary);
+      box-shadow: 0 0 0 3px rgba(17, 24, 39, 0.06);
+    }
+
+    [data-theme="dark"] .field input:focus,
+    [data-theme="dark"] .field select:focus,
+    [data-theme="dark"] .field textarea:focus {
+      box-shadow: 0 0 0 3px rgba(229, 231, 235, 0.06);
+    }
+
+    [data-theme="dark"] .field input,
+    [data-theme="dark"] .field select,
+    [data-theme="dark"] .field textarea {
+      background: #0F1115;
+      border-color: #2B2F36;
+      color: #E5E7EB;
+    }
+
+    [data-theme="light"] .field input,
+    [data-theme="light"] .field select,
+    [data-theme="light"] .field textarea {
+      background: #F9FAFB;
+    }
+
+    .field input::placeholder {
+      color: var(--text-muted);
+    }
+
+    .field input.error-field,
+    .field textarea.error-field {
+      border-color: #EF4444;
+      background: rgba(239, 68, 68, 0.02);
+    }
+
+    .field-error {
+      display: none;
+      font-size: 11px;
+      color: #EF4444;
+      margin-top: 5px;
+      font-weight: 500;
+    }
+
+    .field-error.show {
+      display: block;
+    }
+
+    /* Slick searchable dropdown */
+    .search-select {
+      position: relative;
+      user-select: none;
+    }
+
+    .search-select-trigger {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      background: var(--bg-primary);
+      border: 1.5px solid var(--border-color);
+      border-radius: 8px;
+      padding: 11px 14px;
+      font-size: 14px;
+      color: var(--text-primary);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .search-select.open .search-select-trigger {
+      border-color: var(--text-primary);
+      border-radius: 8px 8px 0 0;
+    }
+
+    .search-select-options {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: var(--bg-secondary);
+      border: 1.5px solid var(--text-primary);
+      border-top: none;
+      border-radius: 0 0 8px 8px;
+      max-height: 250px;
+      overflow-y: auto;
+      z-index: 1000;
+      display: none;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
+
+    .search-select.open .search-select-options {
+      display: block;
+    }
+
+    .search-select-search {
+      position: sticky;
+      top: 0;
+      padding: 10px;
+      background: var(--bg-secondary);
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .search-select-search input {
+      width: 100%;
+      padding: 8px 12px;
+      font-size: 13px;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      outline: none;
+    }
+
+    .search-option {
+      padding: 10px 14px;
+      font-size: 13px;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .search-option:hover {
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-primary);
+    }
+
+    /* Verification dots */
+    .verifying-dots {
+      display: none;
+      align-items: center;
+      gap: 4px;
+      margin-top: 8px;
+      font-size: 12px;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .verifying-dots.show {
+      display: flex;
+    }
+
+    .verifying-dots span {
+      width: 4px;
+      height: 4px;
+      background: currentColor;
+      border-radius: 50%;
+      animation: bounce 1s infinite;
+    }
+
+    .verifying-dots span:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+
+    .verifying-dots span:nth-child(3) {
+      animation-delay: 0.4s;
+    }
+
+    @keyframes bounce {
+
+      0%,
+      100% {
+        transform: translateY(0);
+        opacity: 0.3;
+      }
+
+      50% {
+        transform: translateY(-3px);
+        opacity: 1;
+      }
+    }
+
+
+    .field-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    /* Amount input */
+    .amount-wrap {
+      position: relative;
+    }
+
+    .amount-wrap input {
+      padding-left: 36px;
+      font-size: 20px;
+      font-weight: 600;
+      height: 52px;
+    }
+
+    .amount-prefix {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--text-muted);
+      pointer-events: none;
+    }
+
+    /* Account verify */
+    .verify-row {
+      display: flex;
+      gap: 8px;
+      align-items: flex-end;
+    }
+
+    .verify-row .field {
+      flex: 1;
+      margin-bottom: 0;
+    }
+
+    .verify-btn {
+      height: 42px;
+      padding: 0 16px;
+      background: var(--bg-primary);
+      border: 1.5px solid var(--border-color);
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: 'DM Sans', sans-serif;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .verify-btn:hover {
+      color: var(--text-primary);
+      border-color: var(--text-primary);
+    }
+
+    .verified-badge {
+      display: none;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 14px;
+      background: rgba(16, 185, 129, 0.08);
+      border: 1px solid rgba(16, 185, 129, 0.2);
+      border-radius: 8px;
+      margin-top: 8px;
+      font-size: 13px;
+      font-weight: 500;
+      color: #10B981;
+    }
+
+    .verified-badge.show {
+      display: flex;
+    }
+
+    .verified-badge svg {
+      width: 14px;
+      height: 14px;
+      flex-shrink: 0;
+    }
+
+    /* PIN input */
+    .pin-row {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin: 4px 0;
+    }
+
+    .pin-digit {
+      width: 48px;
+      height: 52px;
+      border: 1.5px solid var(--border-color);
+      border-radius: 8px;
+      background: var(--bg-primary);
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text-primary);
+      text-align: center;
+      font-family: 'DM Sans', sans-serif;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      outline: none;
+    }
+
+    .pin-digit:focus {
+      border-color: var(--text-primary);
+      box-shadow: 0 0 0 3px rgba(17, 24, 39, 0.06);
+    }
+
+    [data-theme="dark"] .pin-digit {
+      background: #0F1115;
+      border-color: #2B2F36;
+      color: #E5E7EB;
+    }
+
+    [data-theme="dark"] .pin-digit:focus {
+      border-color: #E5E7EB;
+      box-shadow: 0 0 0 3px rgba(229, 231, 235, 0.06);
+    }
+
+    /* Submit button */
+    .submit-btn {
+      width: 100%;
+      background: #111827;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 14px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.15s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      min-height: 50px;
+      margin-top: 8px;
+    }
+
+    [data-theme="dark"] .submit-btn {
+      background: #E5E7EB;
+      color: #0F1115;
+    }
+
+    .submit-btn:hover:not(:disabled) {
+      opacity: 0.85;
+    }
+
+    .submit-btn:active:not(:disabled) {
+      transform: scale(0.99);
+    }
+
+    .submit-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .dot-loader {
+      display: none;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .dot-loader span {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: #fff;
+      animation: dotBounce 1.2s ease-in-out infinite;
+    }
+
+    [data-theme="dark"] .dot-loader span {
+      background: #0F1115;
+    }
+
+    .dot-loader span:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+
+    .dot-loader span:nth-child(3) {
+      animation-delay: 0.4s;
+    }
+
+    @keyframes dotBounce {
+
+      0%,
+      80%,
+      100% {
+        transform: scale(0.7);
+        opacity: 0.4;
+      }
+
+      40% {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    /* Alert */
+    .form-alert {
+      display: none;
+      padding: 11px 14px;
+      border-radius: 8px;
+      font-size: 13px;
+      margin-bottom: 14px;
+      border-left: 3px solid;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .form-alert.show {
+      display: flex;
+    }
+
+    .form-alert.error {
+      background: rgba(239, 68, 68, 0.06);
+      border-color: #EF4444;
+      color: #DC2626;
+    }
+
+    .form-alert.success {
+      background: rgba(16, 185, 129, 0.06);
+      border-color: #10B981;
+      color: #059669;
+    }
+
+    [data-theme="dark"] .form-alert.error {
+      background: rgba(239, 68, 68, 0.1);
+      color: #FCA5A5;
+    }
+
+    [data-theme="dark"] .form-alert.success {
+      background: rgba(16, 185, 129, 0.1);
+      color: #6EE7B7;
+    }
+
+    /* Summary card */
+    .summary-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: 24px;
+      position: sticky;
+      top: 80px;
+    }
+
+    .summary-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 18px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 12px;
+      font-size: 13px;
+    }
+
+    .summary-label {
+      color: var(--text-muted);
+      font-size: 12px;
+    }
+
+    .summary-value {
+      color: var(--text-primary);
+      font-weight: 500;
+      text-align: right;
+      max-width: 60%;
+      word-break: break-all;
+    }
+
+    .summary-divider {
+      height: 1px;
+      background: var(--border-color);
+      margin: 14px 0;
+    }
+
+    .summary-total {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .summary-total-label {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .summary-total-value {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 24px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .summary-note {
+      margin-top: 14px;
+      padding: 10px 12px;
+      background: var(--bg-primary);
+      border-radius: 8px;
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* Success modal */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(4px);
+    }
+
+    .modal-overlay.show {
+      display: flex;
+    }
+
+    .modal {
+      background: var(--bg-secondary);
+      border-radius: 16px;
+      padding: 40px;
+      max-width: 400px;
+      width: 90%;
+      text-align: center;
+      border: 1px solid var(--border-color);
+      animation: modalIn 0.3s ease;
+    }
+
+    @keyframes modalIn {
+      from {
+        transform: scale(0.9);
+        opacity: 0;
+      }
+
+      to {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    .modal-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: rgba(16, 185, 129, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+    }
+
+    .modal-icon svg {
+      color: #10B981;
+    }
+
+    .modal h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 24px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+    }
+
+    .modal p {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin-bottom: 6px;
+    }
+
+    .modal-ref {
+      display: inline-block;
+      background: var(--bg-primary);
+      border-radius: 6px;
+      padding: 6px 14px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      letter-spacing: 0.5px;
+      margin: 10px 0 20px;
+    }
+
+    .modal-pending-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(245, 158, 11, 0.1);
+      border: 1px solid rgba(245, 158, 11, 0.2);
+      border-radius: 6px;
+      padding: 6px 12px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #F59E0B;
+      margin-bottom: 16px;
+    }
+
+    .modal-btn {
+      width: 100%;
+      background: #111827;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 13px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.2s;
+      margin-bottom: 8px;
+    }
+
+    [data-theme="dark"] .modal-btn {
+      background: #E5E7EB;
+      color: #0F1115;
+    }
+
+    .modal-btn:hover {
+      opacity: 0.85;
+    }
+
+    .modal-btn-outline {
+      width: 100%;
+      background: transparent;
+      color: var(--text-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 12px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .modal-btn-outline:hover {
+      color: var(--text-primary);
+      border-color: var(--text-primary);
+    }
+
+    /* COT/BOP info box */
+    .code-info-box {
+      background: rgba(245, 158, 11, 0.06);
+      border: 1px solid rgba(245, 158, 11, 0.15);
+      border-radius: 8px;
+      padding: 12px 14px;
+      font-size: 12px;
+      color: #92400E;
+      line-height: 1.6;
+      margin-bottom: 14px;
+      display: none;
+    }
+
+    [data-theme="dark"] .code-info-box {
+      color: #FCD34D;
+      background: rgba(245, 158, 11, 0.08);
+    }
+
+    .code-info-box.show {
+      display: block;
+    }
+
+    /* Sidebar overlay */
+    .sidebar-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.6);
+      z-index: 299;
+      backdrop-filter: blur(2px);
+    }
+
+    .sidebar-overlay.show {
+      display: block;
+    }
+
+    @media (max-width: 1024px) {
+      .transfer-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .summary-card {
+        position: static;
+      }
+    }
+
+    @media (max-width: 900px) {
+      .sidebar {
+        transform: translateX(-260px);
+      }
+
+      .sidebar.open {
+        transform: translateX(0);
+        box-shadow: 4px 0 24px rgba(0, 0, 0, 0.4);
+      }
+
+      .main-content {
+        margin-left: 0;
+      }
+
+      .menu-btn {
+        display: flex;
+      }
+
+      .page-content {
+        padding: 16px;
+      }
+
+      .topbar {
+        padding: 0 16px;
+      }
+
+      .transfer-tabs {
+        width: 100%;
+      }
+
+      .tab-btn {
+        flex: 1;
+        justify-content: center;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .field-row {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="layout">
+
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-logo">
+        <svg width="28" height="28" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg"
+          style="flex-shrink:0;opacity:0.8">
+          <circle cx="20" cy="20" r="18" stroke="white" stroke-width="1.5" opacity="0.3" />
+          <path d="M20 8 L30 28 H24 L20 20 L16 28 H10 Z" fill="white" opacity="0.9" />
+          <path d="M14 23 H26" stroke="white" stroke-width="1.5" opacity="0.6" />
+          <circle cx="20" cy="6" r="2" fill="white" opacity="0.5" />
+        </svg>
+        <div class="sidebar-logo-text">
+          <h1>Arcteron Trust</h1>
+          <p>Private Banking</p>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-section-label">Main</div>
+        <a class="nav-item" href="dashboard.html" onclick="nav(event,'dashboard.html')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round">
+            <rect x="3" y="3" width="7" height="7" />
+            <rect x="14" y="3" width="7" height="7" />
+            <rect x="14" y="14" width="7" height="7" />
+            <rect x="3" y="14" width="7" height="7" />
+          </svg>
+          Dashboard
+        </a>
+        <a class="nav-item active" href="transfer.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round">
+            <line x1="22" y1="2" x2="11" y2="13" />
+            <polygon points="22 2 15 22 11 13 2 9 22 2" />
+          </svg>
+          Transfer
+        </a>
+        <a class="nav-item" href="transactions.html" onclick="nav(event,'transactions.html')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round">
+            <line x1="8" y1="6" x2="21" y2="6" />
+            <line x1="8" y1="12" x2="21" y2="12" />
+            <line x1="8" y1="18" x2="21" y2="18" />
+            <line x1="3" y1="6" x2="3.01" y2="6" />
+            <line x1="3" y1="12" x2="3.01" y2="12" />
+            <line x1="3" y1="18" x2="3.01" y2="18" />
+          </svg>
+          Transactions
+        </a>
+        <a class="nav-item" href="notifications.html" onclick="nav(event,'notifications.html')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+            <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+          </svg>
+          Notifications
+        </a>
+        <div class="nav-section-label">Account</div>
+        <a class="nav-item" href="profile.html" onclick="nav(event,'profile.html')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+            <circle cx="12" cy="7" r="4" />
+          </svg>
+          Profile
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="user-card">
+          <div class="sidebar-avatar" id="sidebarAvatar">AT</div>
+          <div style="flex:1;min-width:0;">
+            <div class="user-name" id="sidebarName">Loading...</div>
+            <div class="user-role">Personal Account</div>
+          </div>
+        </div>
+        <a class="nav-item danger" onclick="Auth.logout()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+            <polyline points="16 17 21 12 16 7" />
+            <line x1="21" y1="12" x2="9" y2="12" />
+          </svg>
+          Sign Out
+        </a>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <div class="main-content">
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="menu-btn" onclick="openSidebar()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="3" y1="12" x2="21" y2="12" />
+              <line x1="3" y1="6" x2="21" y2="6" />
+              <line x1="3" y1="18" x2="21" y2="18" />
+            </svg>
+          </button>
+          <span class="topbar-title">Transfer</span>
+        </div>
+        <div class="topbar-right">
+          <button class="icon-btn" onclick="Theme.toggle()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+            </svg>
+          </button>
+          <div class="topbar-avatar" id="topbarAvatar">AT</div>
+        </div>
+      </header>
+
+      <main class="page-content">
+
+        <div class="page-header">
+          <h1>Send Money</h1>
+          <p>Transfer funds locally or internationally with ease.</p>
+        </div>
+
+        <!-- Balance pill -->
+        <div class="balance-pill">
+          <div class="balance-pill-dot"></div>
+          Available Balance: <strong id="availableBalance">Loading...</strong>
+        </div>
+
+        <!-- Tabs -->
+        <div class="transfer-tabs">
+          <button class="tab-btn active" id="tabLocal" onclick="switchTab('local')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round">
+              <line x1="22" y1="2" x2="11" y2="13" />
+              <polygon points="22 2 15 22 11 13 2 9 22 2" />
+            </svg>
+            Local Transfer
+          </button>
+          <button class="tab-btn" id="tabIntl" onclick="switchTab('international')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10" />
+              <line x1="2" y1="12" x2="22" y2="12" />
+              <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+            </svg>
+            International
+          </button>
+        </div>
+
+        <!-- Alert -->
+        <div id="formAlert" class="form-alert error">
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
+            style="flex-shrink:0;margin-top:1px">
+            <circle cx="12" cy="12" r="10" />
+            <line x1="12" y1="8" x2="12" y2="12" />
+            <line x1="12" y1="16" x2="12.01" y2="16" />
+          </svg>
+          <span id="alertText"></span>
+        </div>
+
+        <!-- ── LOCAL TRANSFER ── -->
+        <div class="transfer-panel active" id="panelLocal">
+          <div class="transfer-grid">
+
+            <div class="form-card">
+              <div class="form-card-title">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round">
+                  <line x1="22" y1="2" x2="11" y2="13" />
+                  <polygon points="22 2 15 22 11 13 2 9 22 2" />
+                </svg>
+                Recipient Details
+              </div>
+
+              <div class="field">
+                <label>Recipient Account Number</label>
+                <div class="verify-row">
+                  <div class="field" style="margin-bottom:0">
+                    <input type="text" id="localAccNumber" placeholder="Enter 10-digit account number" maxlength="10"
+                      oninput="onAccNumberInput()">
+                  </div>
+                </div>
+                <div class="verifying-dots" id="verifyingDots">
+                  <span></span><span></span><span></span>
+                  <p style="margin:0 0 0 8px">Verifying...</p>
+                </div>
+                <div class="verified-badge" id="verifiedBadge">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                  <span id="verifiedName">Account verified</span>
+                </div>
+                <span class="field-error" id="error_localAccNumber"></span>
+              </div>
+
+              <div class="field">
+                <label>Amount (USD)</label>
+                <div class="amount-wrap">
+                  <span class="amount-prefix">$</span>
+                  <input type="number" id="localAmount" placeholder="0.00" min="1" step="0.01"
+                    oninput="updateSummary()">
+                </div>
+                <span class="field-error" id="error_localAmount"></span>
+              </div>
+
+              <div class="field">
+                <label>Description <span
+                    style="font-weight:400;text-transform:none;letter-spacing:0;font-size:11px;">(optional)</span></label>
+                <textarea id="localDesc" placeholder="What's this transfer for?"></textarea>
+              </div>
+
+              <div class="field">
+                <label>Transaction PIN</label>
+                <div class="pin-row">
+                  <input class="pin-digit" id="lpin1" type="password" maxlength="1" inputmode="numeric">
+                  <input class="pin-digit" id="lpin2" type="password" maxlength="1" inputmode="numeric">
+                  <input class="pin-digit" id="lpin3" type="password" maxlength="1" inputmode="numeric">
+                  <input class="pin-digit" id="lpin4" type="password" maxlength="1" inputmode="numeric">
+                </div>
+              </div>
+
+              <button class="submit-btn" id="localSubmitBtn" onclick="submitLocalTransfer()">
+                <span class="btn-text">Send Money</span>
+                <div class="dot-loader" id="localDots"><span></span><span></span><span></span></div>
+              </button>
+            </div>
+
+            <!-- Summary -->
+            <div class="summary-card" id="localSummary">
+              <div class="summary-title">Transfer Summary</div>
+
+              <div class="summary-row">
+                <span class="summary-label">From</span>
+                <span class="summary-value" id="summFromName">—</span>
+              </div>
+              <div class="summary-row">
+                <span class="summary-label">From Account</span>
+                <span class="summary-value" id="summFromAcc">—</span>
+              </div>
+              <div class="summary-row">
+                <span class="summary-label">To</span>
+                <span class="summary-value" id="summToName">—</span>
+              </div>
+              <div class="summary-row">
+                <span class="summary-label">To Account</span>
+                <span class="summary-value" id="summToAcc">—</span>
+              </div>
+              <div class="summary-row">
+                <span class="summary-label">Description</span>
+                <span class="summary-value" id="summDesc">—</span>
+              </div>
+
+              <div class="summary-divider"></div>
+
+              <div class="summary-total">
+                <span class="summary-total-label">Total Amount</span>
+                <span class="summary-total-value" id="summAmount">$0.00</span>
+              </div>
+
+              <div class="summary-note">
+                ✓ Local transfers are instant and free of charge. Funds will be available immediately.
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- ── INTERNATIONAL TRANSFER ── -->
+        <div class="transfer-panel" id="panelIntl">
+          <div class="transfer-grid">
+
+            <div class="form-card">
+              <div class="form-card-title">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10" />
+                  <line x1="2" y1="12" x2="22" y2="12" />
+                </svg>
+                Recipient Details
+              </div>
+
+              <div class="field">
+                <label>Recipient Full Name</label>
+                <input type="text" id="intlName" placeholder="As shown on bank account" oninput="updateIntlSummary()">
+                <span class="field-error" id="error_intlName"></span>
+              </div>
+
+              <div class="field-row">
+                <div class="field">
+                  <label>Recipient Bank</label>
+                  <input type="text" id="intlBank" placeholder="Bank name" oninput="updateIntlSummary()">
+                  <span class="field-error" id="error_intlBank"></span>
+                </div>
+                <div class="field">
+                  <label>Country</label>
+                  <div class="search-select" id="countrySelect">
+                    <div class="search-select-trigger" onclick="toggleCountrySelect()">
+                      <span id="selectedCountry">Select Country</span>
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2">
+                        <path d="M6 9l6 6 6-6" />
+                      </svg>
+                    </div>
+                    <div class="search-select-options" id="countryOptions">
+                      <div class="search-select-search">
+                        <input type="text" placeholder="Search country..." oninput="filterCountries(this.value)"
+                          onclick="event.stopPropagation()">
+                      </div>
+                      <div id="countryList">
+                        <!-- Populated by JS -->
+                      </div>
+                    </div>
+                  </div>
+                  <span class="field-error" id="error_intlCountry"></span>
+                </div>
+              </div>
+
+              <div class="field">
+                <label>Bank Address <span
+                    style="font-weight:400;text-transform:none;letter-spacing:0;font-size:11px;">(optional)</span></label>
+                <input type="text" id="intlBankAddress" placeholder="Bank street address">
+              </div>
+
+              <div class="field-row">
+                <div class="field">
+                  <label>Account / IBAN Number</label>
+                  <input type="text" id="intlAccount" placeholder="Account or IBAN">
+                  <span class="field-error" id="error_intlAccount"></span>
+                </div>
+                <div class="field">
+                  <label>SWIFT / BIC Code</label>
+                  <input type="text" id="intlSwift" placeholder="e.g. BARCGB22"
+                    oninput="this.value = this.value.toUpperCase()">
+                  <span class="field-error" id="error_intlSwift"></span>
+                </div>
+              </div>
+
+              <div class="field">
+                <label>Routing Number <span
+                    style="font-weight:400;text-transform:none;letter-spacing:0;font-size:11px;">(if
+                    applicable)</span></label>
+                <input type="text" id="intlRouting" placeholder="ABA routing number">
+              </div>
+
+              <div class="field">
+                <label>Amount (USD)</label>
+                <div class="amount-wrap">
+                  <span class="amount-prefix">$</span>
+                  <input type="number" id="intlAmount" placeholder="0.00" min="10" step="0.01"
+                    oninput="updateIntlSummary(); checkCodeRequirement()">
+                </div>
+                <span class="field-error" id="error_intlAmount"></span>
+              </div>
+
+              <!-- COT/BOP notice -->
+              <div class="code-info-box" id="codeInfoBox">
+                ⚠️ Transfers of $10,000 or more require a COT (Cost of Transfer) or BOP (Balance of Payment) code.
+                Please contact your account manager or visit a branch to obtain this code before proceeding.
+              </div>
+
+              <div class="field" id="cotField" style="display:none">
+                <label>COT Code</label>
+                <input type="text" id="cotCode" placeholder="Enter COT code"
+                  oninput="this.value = this.value.toUpperCase()">
+              </div>
+
+              <div class="field" id="bopField" style="display:none">
+                <label>BOP Code <span
+                    style="font-weight:400;text-transform:none;letter-spacing:0;font-size:11px;">(alternative to
+                    COT)</span></label>
+                <input type="text" id="bopCode" placeholder="Enter BOP code"
+                  oninput="this.value = this.value.toUpperCase()">
+              </div>
+
+              <div class="field">
+                <label>Transfer Purpose / Description</label>
+                <textarea id="intlDesc" placeholder="Reason for transfer (required for international wires)"
+                  oninput="updateIntlSummary()"></textarea>
+                <span class="field-error" id="error_intlDesc"></span>
+              </div>
+
+              <div class="field">
+                <label>Transaction PIN</label>
+                <div class="pin-row">
+                  <input class="pin-digit" id="ipin1" type="password" maxlength="1" inputmode="numeric">
+                  <input class="pin-digit" id="ipin2" type="password" maxlength="1" inputmode="numeric">
+                  <input class="pin-digit" id="ipin3" type="password" maxlength="1" inputmode="numeric">
+                  <input class="pin-digit" id="ipin4" type="password" maxlength="1" inputmode="numeric">
+                </div>
+              </div>
+
+              <button class="submit-btn" id="intlSubmitBtn" onclick="submitIntlTransfer()">
+                <span class="btn-text">Submit Wire Transfer</span>
+                <div class="dot-loader" id="intlDots"><span></span><span></span><span></span></div>
+              </button>
+            </div>
+
+            <!-- Summary -->
+            <div class="summary-card" id="intlSummaryCard">
+              <div class="summary-title">Wire Transfer Summary</div>
+
+              <div class="summary-row">
+                <span class="summary-label">Recipient</span>
+                <span class="summary-value" id="isummName">—</span>
+              </div>
+              <div class="summary-row">
+                <span class="summary-label">Bank</span>
+                <span class="summary-value" id="isummBank">—</span>
+              </div>
+              <div class="summary-row">
+                <span class="summary-label">Country</span>
+                <span class="summary-value" id="isummCountry">—</span>
+              </div>
+              <div class="summary-row">
+                <span class="summary-label">Purpose</span>
+                <span class="summary-value" id="isummDesc">—</span>
+              </div>
+
+              <div class="summary-divider"></div>
+
+              <div class="summary-total">
+                <span class="summary-total-label">Amount</span>
+                <span class="summary-total-value" id="isummAmount">$0.00</span>
+              </div>
+
+              <div class="summary-note">
+                ⏳ International wire transfers are subject to compliance review and typically process within 1–3
+                business days. Your balance will be reserved immediately.
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- Success Modal -->
+  <div class="modal-overlay" id="successModal">
+    <div class="modal">
+      <div class="modal-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="20 6 9 17 4 12" />
+        </svg>
+      </div>
+      <h2 id="modalTitle">Transfer Successful</h2>
+      <p id="modalMessage">Your transfer has been processed successfully.</p>
+      <div class="modal-ref" id="modalRef">REF: —</div>
+      <div class="modal-pending-badge" id="modalPending" style="display:none">
+        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10" />
+          <polyline points="12 6 12 12 16 14" />
+        </svg>
+        Pending Review
+      </div>
+      <button class="modal-btn" onclick="closeModal()">Done</button>
+      <button class="modal-btn-outline" onclick="Utils.navigateTo('transactions.html')">View Transactions</button>
+    </div>
+  </div>
+
+  <script src="../../assets/js/api.js"></script>
+  <script src="../../assets/js/auth.js"></script>
+  <script src="../../assets/js/utils.js"></script>
+  <script>
+    (async () => {
+      const authenticated = await Auth.requireAuthAsync();
+      if (!authenticated) return;
+      renderCountries();
+      await init();
+    })();
+
+    let currentBalance = 0;
+    let verifiedRecipient = null;
+    let currentTab = 'local';
+    let verifyTimeout = null;
+
+    const countries = [
+      "Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Antigua and Barbuda", "Argentina", "Armenia", "Australia", "Austria", "Azerbaijan",
+      "Bahamas", "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium", "Belize", "Benin", "Bhutan", "Bolivia", "Bosnia and Herzegovina", "Botswana", "Brazil", "Brunei", "Bulgaria", "Burkina Faso", "Burundi",
+      "Cabo Verde", "Cambodia", "Cameroon", "Canada", "Central African Republic", "Chad", "Chile", "China", "Colombia", "Comoros", "Congo", "Costa Rica", "Croatia", "Cuba", "Cyprus", "Czech Republic",
+      "Denmark", "Djibouti", "Dominica", "Dominican Republic",
+      "Ecuador", "Egypt", "El Salvador", "Equatorial Guinea", "Eritrea", "Estonia", "Eswatini", "Ethiopia",
+      "Fiji", "Finland", "France",
+      "Gabon", "Gambia", "Georgia", "Germany", "Ghana", "Greece", "Grenada", "Guatemala", "Guinea", "Guinea-Bissau", "Guyana",
+      "Haiti", "Honduras", "Hungary",
+      "Iceland", "India", "Indonesia", "Iran", "Iraq", "Ireland", "Israel", "Italy",
+      "Jamaica", "Japan", "Jordan",
+      "Kazakhstan", "Kenya", "Kiribati", "Kuwait", "Kyrgyzstan",
+      "Laos", "Latvia", "Lebanon", "Lesotho", "Liberia", "Libya", "Liechtenstein", "Lithuania", "Luxembourg",
+      "Madagascar", "Malawi", "Malaysia", "Maldives", "Mali", "Malta", "Marshall Islands", "Mauritania", "Mauritius", "Mexico", "Micronesia", "Moldova", "Monaco", "Mongolia", "Montenegro", "Morocco", "Mozambique", "Myanmar",
+      "Namibia", "Nauru", "Nepal", "Netherlands", "New Zealand", "Nicaragua", "Niger", "Nigeria", "North Korea", "North Macedonia", "Norway",
+      "Oman",
+      "Pakistan", "Palau", "Palestine", "Panama", "Papua New Guinea", "Paraguay", "Peru", "Philippines", "Poland", "Portugal",
+      "Qatar",
+      "Romania", "Russia", "Rwanda",
+      "Saint Kitts and Nevis", "Saint Lucia", "Saint Vincent and the Grenadines", "Samoa", "San Marino", "Sao Tome and Principe", "Saudi Arabia", "Senegal", "Serbia", "Seychelles", "Sierra Leone", "Singapore", "Slovakia", "Slovenia", "Solomon Islands", "Somalia", "South Africa", "South Korea", "South Sudan", "Spain", "Sri Lanka", "Sudan", "Suriname", "Sweden", "Switzerland", "Syria",
+      "Taiwan", "Tajikistan", "Tanzania", "Thailand", "Timor-Leste", "Togo", "Tonga", "Trinidad and Tobago", "Tunisia", "Turkey", "Turkmenistan", "Tuvalu",
+      "Uganda", "Ukraine", "United Arab Emirates", "United Kingdom", "United States", "Uruguay", "Uzbekistan",
+      "Vanuatu", "Vatican City", "Venezuela", "Vietnam",
+      "Yemen",
+      "Zambia", "Zimbabwe"
+    ];
+
+    function renderCountries(list = countries) {
+      const container = document.getElementById('countryList');
+      container.innerHTML = list.map(c => `<div class="search-option" onclick="selectCountry('${c.replace(/'/g, "\\'")}')">${c}</div>`).join('');
+    }
+
+    function toggleCountrySelect() {
+      document.getElementById('countrySelect').classList.toggle('open');
+    }
+
+    function filterCountries(val) {
+      const filtered = countries.filter(c => c.toLowerCase().includes(val.toLowerCase()));
+      renderCountries(filtered);
+    }
+
+    function selectCountry(val) {
+      document.getElementById('selectedCountry').textContent = val;
+      document.getElementById('countrySelect').classList.remove('open');
+      hideFieldError('error_intlCountry');
+      updateIntlSummary();
+    }
+
+    // Close dropdown on click outside
+    window.addEventListener('click', e => {
+      if (!e.target.closest('#countrySelect')) {
+        document.getElementById('countrySelect').classList.remove('open');
+      }
+    });
+
+    // ── Init ──
+    async function init() {
+      const user = Api.getUser();
+      if (!user) { Auth.logout(); return; }
+
+      const initials = Auth.getInitials(user.first_name, user.last_name);
+      document.getElementById('sidebarAvatar').textContent = initials;
+      document.getElementById('topbarAvatar').textContent = initials;
+      document.getElementById('sidebarName').textContent = `${user.first_name} ${user.last_name}`;
+      document.getElementById('summFromName').textContent = `${user.first_name} ${user.last_name}`;
+
+      // Fetch account
+      const res = await Api.get('/api/auth/me', true);
+      if (res && res.ok && res.data.account) {
+        currentBalance = parseFloat(res.data.account.balance);
+        document.getElementById('availableBalance').textContent = fmt(currentBalance);
+        document.getElementById('summFromAcc').textContent =
+          `****${res.data.account.account_number.slice(-4)}`;
+      }
+
+      // Check URL param for tab
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('type') === 'international') switchTab('international');
+
+      setupPinInputs('l');
+      setupPinInputs('i');
+    }
+
+    function setupPinInputs(prefix) {
+      const ids = [`${prefix}pin1`, `${prefix}pin2`, `${prefix}pin3`, `${prefix}pin4`];
+      ids.forEach((id, i) => {
+        const el = document.getElementById(id);
+        if (!el) return;
+
+        // Only numbers
+        el.addEventListener('keypress', e => {
+          if (e.key < '0' || e.key > '9') e.preventDefault();
+        });
+
+        el.addEventListener('input', function () {
+          this.value = this.value.replace(/[^0-9]/g, '');
+          if (this.value && i < 3) document.getElementById(ids[i + 1]).focus();
+        });
+
+        el.addEventListener('keydown', function (e) {
+          if (e.key === 'Backspace' && !this.value && i > 0) {
+            document.getElementById(ids[i - 1]).focus();
+          }
+        });
+
+        el.addEventListener('paste', e => {
+          e.preventDefault();
+          const paste = (e.clipboardData || window.clipboardData).getData('text').replace(/[^0-9]/g, '');
+          if (!paste) return;
+          paste.split('').forEach((char, idx) => {
+            if (i + idx < 4) {
+              const target = document.getElementById(ids[i + idx]);
+              target.value = char;
+              if (i + idx < 3) document.getElementById(ids[i + idx + 1]).focus();
+            }
+          });
+        });
+      });
+    }
+
+    function getPin(prefix) {
+      return ['pin1', 'pin2', 'pin3', 'pin4']
+        .map(id => document.getElementById(`${prefix}${id}`).value)
+        .join('');
+    }
+
+    function clearPin(prefix) {
+      ['pin1', 'pin2', 'pin3', 'pin4'].forEach(id => {
+        document.getElementById(`${prefix}${id}`).value = '';
+      });
+    }
+
+    function fmt(n) {
+      return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(n || 0);
+    }
+
+    // ── Tab switch ──
+    function switchTab(tab) {
+      currentTab = tab;
+      hideAllErrors();
+
+      document.getElementById('panelLocal').classList.toggle('active', tab === 'local');
+      document.getElementById('panelIntl').classList.toggle('active', tab === 'international');
+      document.getElementById('tabLocal').classList.toggle('active', tab === 'local');
+      document.getElementById('tabIntl').classList.toggle('active', tab === 'international');
+    }
+
+    // ── Alert ──
+    function showAlert(msg) {
+      const alert = document.getElementById('formAlert');
+      document.getElementById('alertText').textContent = msg;
+      alert.classList.add('show');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function hideAlert() {
+      document.getElementById('formAlert').classList.remove('show');
+    }
+
+    // ── Field Errors ──
+    function showFieldError(id, msg) {
+      const err = document.getElementById(id);
+      if (err) {
+        err.textContent = msg;
+        err.classList.add('show');
+        const inputId = id.replace('error_', '');
+        const input = document.getElementById(inputId) || (inputId === 'intlCountry' ? document.getElementById('countrySelect') : null);
+        if (input) input.classList.add('error-field');
+      }
+    }
+
+    function hideFieldError(id) {
+      const err = document.getElementById(id);
+      if (err) {
+        err.classList.remove('show');
+        const inputId = id.replace('error_', '');
+        const input = document.getElementById(inputId) || (inputId === 'intlCountry' ? document.getElementById('countrySelect') : null);
+        if (input) input.classList.remove('error-field');
+      }
+    }
+
+    function hideAllErrors() {
+      hideAlert();
+      document.querySelectorAll('.field-error').forEach(el => el.classList.remove('show'));
+      document.querySelectorAll('.error-field').forEach(el => el.classList.remove('error-field'));
+    }
+
+    function setLoading(btnId, dotsId, loading) {
+      const btn = document.getElementById(btnId);
+      const dots = document.getElementById(dotsId);
+      if (!btn) return;
+      btn.disabled = loading;
+      const text = btn.querySelector('.btn-text');
+      const ldr = btn.querySelector('.dot-loader');
+      if (text) text.style.display = loading ? 'none' : 'inline';
+      if (ldr) ldr.style.display = loading ? 'flex' : 'none';
+      if (loading) btn.classList.add('loading');
+      else btn.classList.remove('loading');
+    }
+
+    // ── Local verify ──
+    function onAccNumberInput() {
+      const val = document.getElementById('localAccNumber').value.trim();
+      hideFieldError('error_localAccNumber');
+      document.getElementById('verifiedBadge').classList.remove('show');
+      verifiedRecipient = null;
+      document.getElementById('summToName').textContent = '—';
+      document.getElementById('summToAcc').textContent = '—';
+
+      if (verifyTimeout) clearTimeout(verifyTimeout);
+      if (val.length === 10) {
+        verifyTimeout = setTimeout(verifyAccount, 500);
+      }
+      updateSummary();
+    }
+
+    async function verifyAccount() {
+      const accNum = document.getElementById('localAccNumber').value.trim();
+      if (accNum.length !== 10) return;
+
+      document.getElementById('verifyingDots').classList.add('show');
+      const res = await Api.get(`/api/transfers/verify-account/${accNum}`, true);
+      document.getElementById('verifyingDots').classList.remove('show');
+
+      if (res && res.ok) {
+        verifiedRecipient = res.data;
+        document.getElementById('verifiedName').textContent = res.data.account_name;
+        document.getElementById('verifiedBadge').classList.add('show');
+        document.getElementById('summToName').textContent = res.data.account_name;
+        document.getElementById('summToAcc').textContent = `****${accNum.slice(-4)}`;
+      } else {
+        showFieldError('error_localAccNumber', res?.data?.detail || 'Account not found.');
+      }
+    }
+
+    function updateSummary() {
+      const amount = parseFloat(document.getElementById('localAmount').value) || 0;
+      const desc = document.getElementById('localDesc').value.trim();
+      document.getElementById('summAmount').textContent = fmt(amount);
+      document.getElementById('summDesc').textContent = desc || '—';
+    }
+
+    function updateIntlSummary() {
+      const name = document.getElementById('intlName').value.trim();
+      const bank = document.getElementById('intlBank').value.trim();
+      const country = document.getElementById('selectedCountry').textContent.trim();
+      const desc = document.getElementById('intlDesc').value.trim();
+      const amount = parseFloat(document.getElementById('intlAmount').value) || 0;
+
+      document.getElementById('isummName').textContent = name || '—';
+      document.getElementById('isummBank').textContent = bank || '—';
+      document.getElementById('isummCountry').textContent = country === 'Select Country' ? '—' : country;
+      document.getElementById('isummDesc').textContent = desc || '—';
+      document.getElementById('isummAmount').textContent = fmt(amount);
+    }
+
+    function checkCodeRequirement() {
+      const amount = parseFloat(document.getElementById('intlAmount').value) || 0;
+      const show = amount >= 10000;
+      document.getElementById('codeInfoBox').classList.toggle('show', show);
+      document.getElementById('cotField').style.display = show ? 'block' : 'none';
+      document.getElementById('bopField').style.display = show ? 'block' : 'none';
+    }
+
+    async function submitLocalTransfer() {
+      hideAllErrors();
+      const accNum = document.getElementById('localAccNumber').value.trim();
+      const amountInput = document.getElementById('localAmount');
+      const amount = parseFloat(amountInput.value);
+      const pin = getPin('l');
+
+      let valid = true;
+      if (!accNum) { showFieldError('error_localAccNumber', 'Account required.'); valid = false; }
+      else if (!verifiedRecipient) { showFieldError('error_localAccNumber', 'Verify account first.'); valid = false; }
+      if (!amountInput.value) { showFieldError('error_localAmount', 'Amount required.'); valid = false; }
+      else if (amount <= 0) { showFieldError('error_localAmount', 'Invalid amount.'); valid = false; }
+      else if (amount > currentBalance) { showFieldError('error_localAmount', 'Insufficient balance.'); valid = false; }
+      if (pin.length !== 4) { showFieldError('error_localPin', '4-digit PIN required.'); valid = false; }
+
+      if (!valid) return;
+
+      setLoading('localSubmitBtn', 'localDots', true);
+      const res = await Api.post('/api/transfers/local', {
+        recipient_account_number: accNum,
+        amount, description: document.getElementById('localDesc').value.trim() || null, pin
+      }, true);
+      setLoading('localSubmitBtn', 'localDots', false);
+      clearPin('l');
+
+      if (res && res.ok) {
+        currentBalance = res.data.new_balance;
+        document.getElementById('availableBalance').textContent = fmt(currentBalance);
+        showModal('Transfer Successful', `Sent ${fmt(amount)} to ${verifiedRecipient.account_name}.`, res.data.reference, false);
+        document.getElementById('localAccNumber').value = '';
+        amountInput.value = '';
+        document.getElementById('verifiedBadge').classList.remove('show');
+        verifiedRecipient = null;
+        updateSummary();
+      } else {
+        showAlert(res?.data?.detail || 'Transaction failed.');
+      }
+    }
+    async function submitIntlTransfer() {
+      hideAllErrors();
+
+      const name = document.getElementById('intlName').value.trim();
+      const bank = document.getElementById('intlBank').value.trim();
+      const account = document.getElementById('intlAccount').value.trim();
+      const swift = document.getElementById('intlSwift').value.trim();
+      const country = document.getElementById('selectedCountry').textContent.trim();
+      const amount = parseFloat(document.getElementById('intlAmount').value);
+      const desc = document.getElementById('intlDesc').value.trim();
+      const pin = getPin('i');
+
+      let valid = true;
+      if (!name) { showFieldError('error_intlName', 'Recipient name is required.'); valid = false; }
+      if (!bank) { showFieldError('error_intlBank', 'Bank name is required.'); valid = false; }
+      if (country === 'Select Country') { showFieldError('error_intlCountry', 'Select a country.'); valid = false; }
+      if (!account) { showFieldError('error_intlAccount', 'Account/IBAN is required.'); valid = false; }
+      if (!swift) { showFieldError('error_intlSwift', 'SWIFT/BIC is required.'); valid = false; }
+      if (!amount || amount < 10) { showFieldError('error_intlAmount', 'Min amount $10.00.'); valid = false; }
+      else if (amount > currentBalance) { showFieldError('error_intlAmount', 'Insufficient balance.'); valid = false; }
+      if (!desc) { showFieldError('error_intlDesc', 'Description is required.'); valid = false; }
+      if (pin.length !== 4) { showFieldError('error_intlPin', '4-digit PIN required.'); valid = false; }
+
+      if (!valid) return;
+
+      setLoading('intlSubmitBtn', 'intlDots', true);
+      const res = await Api.post('/api/transfers/international', {
+        recipient_name: name, recipient_bank: bank,
+        recipient_bank_address: document.getElementById('intlBankAddress').value.trim() || null,
+        recipient_account: account, recipient_swift: swift, recipient_country: country,
+        recipient_routing: document.getElementById('intlRouting').value.trim() || null,
+        amount, description: desc, pin,
+        cot_code: document.getElementById('cotCode').value.trim() || null,
+        bop_code: document.getElementById('bopCode').value.trim() || null
+      }, true);
+
+      setLoading('intlSubmitBtn', 'intlDots', false);
+      clearPin('i');
+
+      if (res && res.ok) {
+        currentBalance = res.data.new_balance;
+        document.getElementById('availableBalance').textContent = fmt(currentBalance);
+        showModal('Wire Submitted', `Wire of ${fmt(amount)} to ${name} is processing.`, res.data.reference, true);
+      } else {
+        showAlert(res?.data?.detail || 'Wire failed. Please try again.');
+      }
+    }
+
+    // ── Modal ──
+    function showModal(title, message, ref, isPending) {
+      document.getElementById('modalTitle').textContent = title;
+      document.getElementById('modalMessage').textContent = message;
+      document.getElementById('modalRef').textContent = `REF: ${ref}`;
+      document.getElementById('modalPending').style.display = isPending ? 'flex' : 'none';
+      document.getElementById('successModal').classList.add('show');
+    }
+
+    function closeModal() {
+      document.getElementById('successModal').classList.remove('show');
+    }
+
+    // ── Mobile sidebar ──
+    function openSidebar() {
+      document.getElementById('sidebar').classList.add('open');
+      document.getElementById('sidebarOverlay').classList.add('show');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeSidebar() {
+      document.getElementById('sidebar').classList.remove('open');
+      document.getElementById('sidebarOverlay').classList.remove('show');
+      document.body.style.overflow = '';
+    }
+
+    function nav(e, path) {
+      if (e) e.preventDefault();
+      closeSidebar();
+      Utils.navigateTo(path);
+    }
+
+    // init() is now called by the async IIFE at the top
+
+  </script>
+</body>
+
+</html>
