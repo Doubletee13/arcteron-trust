@@ -4,6 +4,9 @@ from app.config import settings
 from app.database import Base, engine
 import app.models
 from app.routers import auth
+from app.routers import transactions
+from app.routers import notifications
+from app.routers import transfers
 
 app = FastAPI(
     title=settings.APP_NAME,
@@ -13,17 +16,24 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[settings.FRONTEND_URL],
+    allow_origins=[
+        settings.FRONTEND_URL,
+        "http://127.0.0.1:5500",
+        "http://localhost:5500",
+        "http://127.0.0.1:5501",
+        "http://localhost:5501",
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# Create tables
 Base.metadata.create_all(bind=engine)
 
-# Register routers
 app.include_router(auth.router)
+app.include_router(transactions.router)
+app.include_router(notifications.router)
+app.include_router(transfers.router)
 
 @app.get("/")
 def root():

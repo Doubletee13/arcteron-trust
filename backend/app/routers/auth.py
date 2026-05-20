@@ -7,13 +7,19 @@ from app.schemas.user import (
     RegisterStep3,
     LoginRequest,
     TokenResponse,
-    UserResponse
+    UserResponse,
+    user_to_response,
+    PasswordResetRequest,
+    PasswordResetConfirm,
+    SetPinRequest,
+    PinResetRequest,
+    PinResetConfirm,
 )
 from app.services.auth_service import (
     register_step1,
     register_step2,
     register_step3,
-    login_user
+    login_user,
 )
 from app.middleware.auth import get_current_user
 from app.models.user import User
@@ -22,17 +28,10 @@ from app.utils.tokens import (
     generate_reset_token,
     verify_reset_token,
     generate_pin_reset_token,
-    verify_pin_reset_token
+    verify_pin_reset_token,
 )
 from app.services.email_service import send_password_reset_email, send_pin_reset_email
 from app.utils.hashing import hash_password, hash_pin, verify_pin
-from app.schemas.user import (
-    PasswordResetRequest,
-    PasswordResetConfirm,
-    SetPinRequest,
-    PinResetRequest,
-    PinResetConfirm
-)
 
 router = APIRouter(prefix="/api/auth", tags=["Authentication"])
 
@@ -69,7 +68,7 @@ def login(data: LoginRequest, db: Session = Depends(get_db)):
 
 @router.get("/me", response_model=UserResponse)
 def get_me(current_user: User = Depends(get_current_user)):
-    return current_user
+    return user_to_response(current_user)
 
 
 @router.post("/password-reset/request")
@@ -130,3 +129,17 @@ def confirm_pin_reset(data: PinResetConfirm, db: Session = Depends(get_db)):
     user.transaction_pin = hash_pin(data.new_pin)
     db.commit()
     return {"message": "PIN reset successfully"}
+
+@router.post("/verify-pin")
+def verify_pin_login(
+    data: dict,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    from app.utils.hashing import verify_pin
+    pin = data.get("pin", "")
+    if not current_user.transaction_pin:
+        raise HTTPException(status_code=400, detail="No PIN set. Please set your PIN first.")
+    if not verify_pin(pin, current_user.transaction_pin):
+        raise HTTPException(status_code=401, detail="Incorrect PIN.")
+    return {"message": "PIN verified", "verified": True}

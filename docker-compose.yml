@@ -1,0 +1,28 @@
+version: '3.3'
+
+services:
+  db:
+    container_name: arcteron_postgres_dev
+    image: postgres:15-alpine
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=arcteronpass123
+      - POSTGRES_DB=arcterontrust
+    env_file:
+      - backend/.env
+    ports:
+      - "5432:5432"
+    volumes:
+      - arcteron_pgdata:/var/lib/postgresql/data
+
+  mailhog:
+    container_name: arcteron_mailhog_dev
+    image: mailhog/mailhog:latest
+    restart: always
+    ports:
+      - "1025:1025" # SMTP
+      - "8025:8025" # Web UI
+
+volumes:
+  arcteron_pgdata:

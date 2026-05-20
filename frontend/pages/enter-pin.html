@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Enter PIN — Arcteron Trust</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/theme.css">
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <script src="../assets/js/theme.js"></script>
+  <style>
+    body { font-family: 'DM Sans', sans-serif; margin: 0; min-height: 100vh; display: flex; align-items: center; justify-content: center; background: var(--bg-primary); padding: 24px; }
+    .card {
+      width: 100%; max-width: 400px;
+      background: var(--bg-secondary);
+      border: 1.5px solid var(--border-color);
+      border-radius: 14px;
+      padding: 32px 28px;
+      box-shadow: var(--shadow-md);
+      position: relative;
+    }
+    .theme-wrap { position: absolute; top: 16px; right: 16px; }
+    .theme-btn {
+      width: 34px; height: 34px; border-radius: 8px;
+      background: var(--bg-primary); border: 1.5px solid var(--border-color);
+      color: var(--text-secondary); display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+    }
+    h1 { font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 600; color: var(--text-primary); margin-bottom: 8px; }
+    .sub { font-size: 14px; color: var(--text-secondary); margin-bottom: 20px; }
+    .user-preview { text-align: center; margin-bottom: 20px; }
+    .user-preview-avatar {
+      width: 56px; height: 56px; border-radius: 50%; background: #111827; color: #fff;
+      display: inline-flex; align-items: center; justify-content: center;
+      font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 600;
+      border: 3px solid var(--border-color); margin-bottom: 8px;
+    }
+    [data-theme="dark"] .user-preview-avatar { background: #E5E7EB; color: #111827; }
+    .user-preview-name { font-size: 15px; font-weight: 600; color: var(--text-primary); }
+    .user-preview-email { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+    .pin-inputs { display: flex; gap: 10px; justify-content: center; margin: 20px 0; }
+    .pin-digit {
+      width: 48px; height: 52px; border: 1.5px solid var(--border-color); border-radius: 10px;
+      background: var(--bg-primary); font-size: 20px; font-weight: 700; text-align: center;
+      color: var(--text-primary); font-family: 'DM Sans', sans-serif;
+    }
+    [data-theme="dark"] .pin-digit { background: #0F1115; border-color: #2B2F36; color: #E5E7EB; }
+    .submit-btn {
+      width: 100%; background: #111827; color: #fff; border: none; border-radius: 8px;
+      padding: 14px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: 'DM Sans', sans-serif;
+    }
+    [data-theme="dark"] .submit-btn { background: #E5E7EB; color: #0F1115; }
+    [data-theme="dark"] .card { background: #171A20; border-color: #2B2F36; }
+    [data-theme="dark"] h1 { color: #E5E7EB; }
+    .form-alert { display: none; padding: 12px; border-radius: 8px; font-size: 13px; margin-bottom: 16px; border-left: 3px solid #EF4444; background: rgba(239,68,68,0.08); color: #DC2626; }
+    [data-theme="dark"] .form-alert { color: #FCA5A5; background: rgba(239,68,68,0.12); }
+    .form-alert.show { display: block; }
+    .footer-links { margin-top: 16px; text-align: center; font-size: 13px; }
+    .footer-links a { color: var(--text-secondary); }
+    .footer-links a:hover { color: var(--text-primary); }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="theme-wrap">
+      <button type="button" class="theme-btn" onclick="Theme.toggle()" title="Toggle theme">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+    </div>
+    <h1>Enter your PIN</h1>
+    <p class="sub">4-digit transaction PIN to continue to your account.</p>
+    <div id="formAlert" class="form-alert"></div>
+    <div class="user-preview">
+      <div class="user-preview-avatar" id="previewAvatar">—</div>
+      <div class="user-preview-name" id="previewName">…</div>
+      <div class="user-preview-email" id="previewEmail">…</div>
+    </div>
+    <div class="pin-inputs">
+      <input class="pin-digit" id="pin1" type="password" maxlength="1" inputmode="numeric">
+      <input class="pin-digit" id="pin2" type="password" maxlength="1" inputmode="numeric">
+      <input class="pin-digit" id="pin3" type="password" maxlength="1" inputmode="numeric">
+      <input class="pin-digit" id="pin4" type="password" maxlength="1" inputmode="numeric">
+    </div>
+    <button type="button" class="submit-btn" id="btnSubmit" onclick="submitPin()">Continue</button>
+    <div class="footer-links">
+      <a href="#" onclick="Auth.logout(); return false;">Use a different account</a>
+      &nbsp;·&nbsp;
+      <a href="/frontend/pages/forgot-pin.html">Forgot PIN?</a>
+    </div>
+  </div>
+  <script src="../assets/js/api.js"></script>
+  <script src="../assets/js/auth.js"></script>
+  <script src="../assets/js/utils.js"></script>
+  <script>
+    const pinIds = ['pin1', 'pin2', 'pin3', 'pin4'];
+
+    (async function gate() {
+      if (!Api.getToken()) {
+        window.location.href = '/frontend/pages/login.html';
+        return;
+      }
+      let user = Api.getUser();
+      if (!user) {
+        Auth.logout();
+        return;
+      }
+      if (typeof user.has_pin !== 'boolean') {
+        const res = await Api.get('/api/auth/me', true);
+        if (!res || !res.ok) {
+          Auth.logout();
+          return;
+        }
+        Api.setUser(res.data);
+        user = res.data;
+      }
+      if (user.has_pin === false) {
+        window.location.href = '/frontend/pages/set-pin.html';
+        return;
+      }
+      if (Auth.isPinSessionVerified()) {
+        Auth.redirectByRole(user);
+        return;
+      }
+
+      const initials = Auth.getInitials(user.first_name, user.last_name);
+      document.getElementById('previewAvatar').textContent = initials;
+      document.getElementById('previewName').textContent = `${user.first_name} ${user.last_name}`;
+      document.getElementById('previewEmail').textContent = user.email;
+    })();
+
+    pinIds.forEach((id, i) => {
+      const el = document.getElementById(id);
+      el.addEventListener('input', function() {
+        if (this.value && i < 3) document.getElementById(pinIds[i + 1]).focus();
+        if (this.value && i === 3) submitPin();
+      });
+      el.addEventListener('keydown', function(e) {
+        if (e.key === 'Backspace' && !this.value && i > 0) {
+          document.getElementById(pinIds[i - 1]).focus();
+        }
+      });
+    });
+
+    function showAlert(msg) {
+      const el = document.getElementById('formAlert');
+      el.textContent = msg;
+      el.classList.add('show');
+    }
+    function hideAlert() {
+      document.getElementById('formAlert').classList.remove('show');
+    }
+
+    async function submitPin() {
+      hideAlert();
+      const pin = pinIds.map(id => document.getElementById(id).value).join('');
+      if (pin.length !== 4) {
+        return showAlert('Please enter your 4-digit PIN.');
+      }
+      const btn = document.getElementById('btnSubmit');
+      btn.disabled = true;
+      const res = await Api.post('/api/auth/verify-pin', { pin }, true);
+      btn.disabled = false;
+      if (res && res.ok) {
+        Auth.markPinSessionVerified();
+        Auth.redirectByRole(Api.getUser());
+      } else {
+        pinIds.forEach(id => { document.getElementById(id).value = ''; });
+        document.getElementById('pin1').focus();
+        const detail = res?.data?.detail;
+        showAlert(typeof detail === 'string' ? detail : 'Incorrect PIN. Try again.');
+      }
+    }
+  </script>
+</body>
+</html>

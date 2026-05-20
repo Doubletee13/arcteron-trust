@@ -3,7 +3,13 @@ from fastapi import HTTPException, status
 from datetime import datetime
 from app.models.user import User, UserRole, UserStatus
 from app.models.account import Account
-from app.schemas.user import RegisterStep1, RegisterStep2, RegisterStep3, LoginRequest
+from app.schemas.user import (
+    RegisterStep1,
+    RegisterStep2,
+    RegisterStep3,
+    LoginRequest,
+    user_to_response,
+)
 from app.utils.hashing import hash_password, verify_password
 from app.utils.jwt import create_access_token
 from app.utils.account_number import generate_account_number
@@ -109,7 +115,7 @@ def register_step3(user_id: str, data: RegisterStep3, db: Session) -> dict:
     # Generate token
     token = create_access_token(data={"sub": str(user.id), "role": user.role})
 
-    return {"access_token": token, "token_type": "bearer", "user": user}
+    return {"access_token": token, "token_type": "bearer", "user": user_to_response(user)}
 
 
 def login_user(data: LoginRequest, db: Session) -> dict:
@@ -148,4 +154,4 @@ def login_user(data: LoginRequest, db: Session) -> dict:
 
     token = create_access_token(data={"sub": str(user.id), "role": user.role})
 
-    return {"access_token": token, "token_type": "bearer", "user": user}
+    return {"access_token": token, "token_type": "bearer", "user": user_to_response(user)}
