@@ -1,16 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sign In — Arcteron Trust</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=DM+Sans:wght@300;400;500;600&display=swap"
+    rel="stylesheet">
   <link rel="stylesheet" href="../assets/css/theme.css">
   <link rel="stylesheet" href="../assets/css/style.css">
   <script src="../assets/js/theme.js"></script>
   <style>
-    body { font-family: 'DM Sans', sans-serif; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+    }
 
     .login-wrap {
       display: grid;
@@ -33,8 +38,8 @@
       position: absolute;
       inset: 0;
       background:
-        radial-gradient(ellipse 60% 50% at 80% 20%, rgba(255,255,255,0.03) 0%, transparent 70%),
-        radial-gradient(ellipse 50% 60% at 10% 80%, rgba(255,255,255,0.02) 0%, transparent 70%);
+        radial-gradient(ellipse 60% 50% at 80% 20%, rgba(255, 255, 255, 0.03) 0%, transparent 70%),
+        radial-gradient(ellipse 50% 60% at 10% 80%, rgba(255, 255, 255, 0.02) 0%, transparent 70%);
       pointer-events: none;
     }
 
@@ -43,13 +48,16 @@
       position: absolute;
       inset: 0;
       background-image:
-        linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+        linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
       background-size: 48px 48px;
       pointer-events: none;
     }
 
-    .brand-top { position: relative; z-index: 1; }
+    .brand-top {
+      position: relative;
+      z-index: 1;
+    }
 
     .brand-wordmark {
       font-family: 'Cormorant Garamond', serif;
@@ -67,7 +75,10 @@
       margin-top: 4px;
     }
 
-    .brand-mid { position: relative; z-index: 1; }
+    .brand-mid {
+      position: relative;
+      z-index: 1;
+    }
 
     .brand-quote {
       font-family: 'Cormorant Garamond', serif;
@@ -79,8 +90,15 @@
       font-style: italic;
     }
 
-    .brand-quote span { color: #6B7280; }
-    .brand-stats { display: flex; gap: 40px; margin-top: 48px; }
+    .brand-quote span {
+      color: #6B7280;
+    }
+
+    .brand-stats {
+      display: flex;
+      gap: 40px;
+      margin-top: 48px;
+    }
 
     .stat-value {
       font-family: 'Cormorant Garamond', serif;
@@ -90,7 +108,11 @@
       line-height: 1;
     }
 
-    .stat-label { font-size: 11px; color: #4B5563; margin-top: 4px; }
+    .stat-label {
+      font-size: 11px;
+      color: #4B5563;
+      margin-top: 4px;
+    }
 
     .brand-bottom {
       position: relative;
@@ -100,30 +122,48 @@
       justify-content: space-between;
     }
 
-    .brand-legal { font-size: 11px; color: #374151; }
+    .brand-legal {
+      font-size: 11px;
+      color: #374151;
+    }
 
     .fdic-badge {
       display: flex;
       align-items: center;
       gap: 6px;
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.06);
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.06);
       border-radius: 6px;
       padding: 6px 12px;
     }
 
-    .fdic-badge span { font-size: 10px; font-weight: 600; letter-spacing: 1px; color: #6B7280; }
+    .fdic-badge span {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      color: #6B7280;
+    }
 
     .fdic-dot {
-      width: 6px; height: 6px;
+      width: 6px;
+      height: 6px;
       background: #10B981;
       border-radius: 50%;
       animation: pulse 2s ease-in-out infinite;
     }
 
     @keyframes pulse {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.5; transform: scale(0.85); }
+
+      0%,
+      100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+
+      50% {
+        opacity: 0.5;
+        transform: scale(0.85);
+      }
     }
 
     .form-panel {
@@ -143,7 +183,8 @@
     }
 
     .theme-btn {
-      width: 34px; height: 34px;
+      width: 34px;
+      height: 34px;
       border-radius: 8px;
       background: var(--bg-primary);
       border: 1.5px solid var(--border-color);
@@ -155,9 +196,15 @@
       transition: all 0.2s;
     }
 
-    .theme-btn:hover { color: var(--text-primary); border-color: var(--text-primary); }
+    .theme-btn:hover {
+      color: var(--text-primary);
+      border-color: var(--text-primary);
+    }
 
-    .form-inner { width: 100%; max-width: 380px; }
+    .form-inner {
+      width: 100%;
+      max-width: 380px;
+    }
 
     .mobile-brand {
       display: none;
@@ -193,10 +240,17 @@
     }
 
     /* Step panels */
-    .step { display: none; }
-    .step.active { display: block; }
+    .step {
+      display: none;
+    }
 
-    .form-heading { margin-bottom: 8px; }
+    .step.active {
+      display: block;
+    }
+
+    .form-heading {
+      margin-bottom: 8px;
+    }
 
     .form-heading h2 {
       font-family: 'Cormorant Garamond', serif;
@@ -205,11 +259,21 @@
       color: var(--text-primary);
     }
 
-    .form-heading p { font-size: 14px; color: var(--text-secondary); margin-top: 6px; }
+    .form-heading p {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-top: 6px;
+    }
 
-    .form-divider { height: 1px; background: var(--border-color); margin: 20px 0; }
+    .form-divider {
+      height: 1px;
+      background: var(--border-color);
+      margin: 20px 0;
+    }
 
-    .field { margin-bottom: 18px; }
+    .field {
+      margin-bottom: 18px;
+    }
 
     .field label {
       display: block;
@@ -221,7 +285,9 @@
       margin-bottom: 8px;
     }
 
-    .input-wrap { position: relative; }
+    .input-wrap {
+      position: relative;
+    }
 
     .input-wrap input {
       width: 100%;
@@ -236,38 +302,55 @@
       outline: none;
     }
 
-    .input-wrap input::placeholder { color: var(--text-muted); font-size: 13px; }
+    .input-wrap input::placeholder {
+      color: var(--text-muted);
+      font-size: 13px;
+    }
 
     .input-wrap input:focus {
       border-color: var(--text-primary);
-      box-shadow: 0 0 0 3px rgba(17,24,39,0.06);
+      box-shadow: 0 0 0 3px rgba(17, 24, 39, 0.06);
     }
 
     [data-theme="dark"] .input-wrap input:focus {
-      box-shadow: 0 0 0 3px rgba(229,231,235,0.06);
+      box-shadow: 0 0 0 3px rgba(229, 231, 235, 0.06);
     }
 
     .eye-btn {
       position: absolute;
-      right: 14px; top: 50%;
+      right: 14px;
+      top: 50%;
       transform: translateY(-50%);
-      background: none; border: none;
+      background: none;
+      border: none;
       color: var(--text-muted);
       cursor: pointer;
-      display: flex; align-items: center;
-      transition: color 0.2s; padding: 0;
+      display: flex;
+      align-items: center;
+      transition: color 0.2s;
+      padding: 0;
     }
 
-    .eye-btn:hover { color: var(--text-primary); }
+    .eye-btn:hover {
+      color: var(--text-primary);
+    }
 
-    .field-meta { display: flex; justify-content: flex-end; margin-top: 8px; }
+    .field-meta {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 8px;
+    }
 
     .field-meta a {
-      font-size: 12px; color: var(--text-secondary);
-      font-weight: 500; transition: color 0.2s;
+      font-size: 12px;
+      color: var(--text-secondary);
+      font-weight: 500;
+      transition: color 0.2s;
     }
 
-    .field-meta a:hover { color: var(--text-primary); }
+    .field-meta a:hover {
+      color: var(--text-primary);
+    }
 
     /* User avatar on PIN step */
     .user-preview {
@@ -278,7 +361,8 @@
     }
 
     .user-preview-avatar {
-      width: 64px; height: 64px;
+      width: 64px;
+      height: 64px;
       border-radius: 50%;
       background: #111827;
       color: #fff;
@@ -318,7 +402,8 @@
     }
 
     .pin-digit {
-      width: 52px; height: 56px;
+      width: 52px;
+      height: 56px;
       border: 1.5px solid var(--border-color);
       border-radius: 10px;
       background: var(--bg-primary);
@@ -333,7 +418,7 @@
 
     .pin-digit:focus {
       border-color: var(--text-primary);
-      box-shadow: 0 0 0 3px rgba(17,24,39,0.06);
+      box-shadow: 0 0 0 3px rgba(17, 24, 39, 0.06);
     }
 
     [data-theme="dark"] .pin-digit {
@@ -344,7 +429,7 @@
 
     [data-theme="dark"] .pin-digit:focus {
       border-color: #E5E7EB;
-      box-shadow: 0 0 0 3px rgba(229,231,235,0.06);
+      box-shadow: 0 0 0 3px rgba(229, 231, 235, 0.06);
     }
 
     .form-alert {
@@ -358,22 +443,24 @@
       gap: 10px;
     }
 
-    .form-alert.show { display: flex; }
+    .form-alert.show {
+      display: flex;
+    }
 
     .form-alert.error {
-      background: rgba(239,68,68,0.06);
+      background: rgba(239, 68, 68, 0.06);
       border-color: #EF4444;
       color: #DC2626;
     }
 
     [data-theme="dark"] .form-alert.error {
-      background: rgba(239,68,68,0.1);
+      background: rgba(239, 68, 68, 0.1);
       color: #FCA5A5;
     }
 
     .submit-btn {
       width: 100%;
-      background: #111827;
+      background: #0D0F12;
       color: #ffffff;
       border: none;
       border-radius: 8px;
@@ -391,28 +478,63 @@
       margin-top: 4px;
     }
 
-    [data-theme="dark"] .submit-btn { background: #E5E7EB; color: #0F1115; }
+    [data-theme="dark"] .submit-btn {
+      background: #E5E7EB;
+      color: #0F1115;
+    }
 
-    .submit-btn:hover:not(:disabled) { opacity: 0.85; }
-    .submit-btn:active:not(:disabled) { transform: scale(0.99); }
-    .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .submit-btn:hover:not(:disabled) {
+      opacity: 0.85;
+    }
 
-    .dot-loader { display: none; align-items: center; gap: 4px; }
+    .submit-btn:active:not(:disabled) {
+      transform: scale(0.99);
+    }
+
+    .submit-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .dot-loader {
+      display: none;
+      align-items: center;
+      gap: 4px;
+    }
 
     .dot-loader span {
-      width: 5px; height: 5px;
+      width: 5px;
+      height: 5px;
       border-radius: 50%;
       background: #ffffff;
       animation: dotBounce 1.2s ease-in-out infinite;
     }
 
-    [data-theme="dark"] .dot-loader span { background: #0F1115; }
-    .dot-loader span:nth-child(2) { animation-delay: 0.2s; }
-    .dot-loader span:nth-child(3) { animation-delay: 0.4s; }
+    [data-theme="dark"] .dot-loader span {
+      background: #0F1115;
+    }
+
+    .dot-loader span:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+
+    .dot-loader span:nth-child(3) {
+      animation-delay: 0.4s;
+    }
 
     @keyframes dotBounce {
-      0%, 80%, 100% { transform: scale(0.7); opacity: 0.4; }
-      40% { transform: scale(1); opacity: 1; }
+
+      0%,
+      80%,
+      100% {
+        transform: scale(0.7);
+        opacity: 0.4;
+      }
+
+      40% {
+        transform: scale(1);
+        opacity: 1;
+      }
     }
 
     .form-footer {
@@ -422,7 +544,10 @@
       color: var(--text-secondary);
     }
 
-    .form-footer a { color: var(--text-primary); font-weight: 600; }
+    .form-footer a {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
 
     .security-note {
       display: flex;
@@ -449,316 +574,422 @@
       transition: color 0.2s;
     }
 
-    .back-link:hover { color: var(--text-primary); }
+    .back-link:hover {
+      color: var(--text-primary);
+    }
 
     /* Dark mode */
-    [data-theme="dark"] .form-panel { background: #171A20; }
-    [data-theme="dark"] .input-wrap input { background: #0F1115; border-color: #2B2F36; color: #E5E7EB; }
-    [data-theme="dark"] .input-wrap input::placeholder { color: #4B5563; }
-    [data-theme="dark"] .mobile-brand { border-color: #2B2F36; }
-    [data-theme="dark"] .mobile-brand h1 { color: #E5E7EB; }
-    [data-theme="dark"] .mobile-brand p { color: #4B5563; }
-    [data-theme="dark"] .form-divider { background: #2B2F36; }
-    [data-theme="dark"] .theme-btn { background: #1E2128; border-color: #2B2F36; color: #6B7280; }
-    [data-theme="dark"] .field-meta a { color: #6B7280; }
-    [data-theme="dark"] .security-note { color: #4B5563; }
-    [data-theme="dark"] .form-footer { color: #6B7280; }
-    [data-theme="dark"] .form-footer a { color: #E5E7EB; }
-    [data-theme="dark"] .form-heading h2 { color: #E5E7EB; }
-    [data-theme="dark"] .form-heading p { color: #9CA3AF; }
-    [data-theme="dark"] .field label { color: #9CA3AF; }
-    [data-theme="dark"] .back-link { color: #6B7280; }
+    [data-theme="dark"] .form-panel {
+      background: #171A20;
+    }
 
-    [data-theme="light"] .input-wrap input { background: #F9FAFB; }
+    [data-theme="dark"] .input-wrap input {
+      background: #0F1115;
+      border-color: #2B2F36;
+      color: #E5E7EB;
+    }
+
+    [data-theme="dark"] .input-wrap input::placeholder {
+      color: #4B5563;
+    }
+
+    [data-theme="dark"] .mobile-brand {
+      border-color: #2B2F36;
+    }
+
+    [data-theme="dark"] .mobile-brand h1 {
+      color: #E5E7EB;
+    }
+
+    [data-theme="dark"] .mobile-brand p {
+      color: #4B5563;
+    }
+
+    [data-theme="dark"] .form-divider {
+      background: #2B2F36;
+    }
+
+    [data-theme="dark"] .theme-btn {
+      background: #1E2128;
+      border-color: #2B2F36;
+      color: #6B7280;
+    }
+
+    [data-theme="dark"] .field-meta a {
+      color: #6B7280;
+    }
+
+    [data-theme="dark"] .security-note {
+      color: #4B5563;
+    }
+
+    [data-theme="dark"] .form-footer {
+      color: #6B7280;
+    }
+
+    [data-theme="dark"] .form-footer a {
+      color: #E5E7EB;
+    }
+
+    [data-theme="dark"] .form-heading h2 {
+      color: #E5E7EB;
+    }
+
+    [data-theme="dark"] .form-heading p {
+      color: #9CA3AF;
+    }
+
+    [data-theme="dark"] .field label {
+      color: #9CA3AF;
+    }
+
+    [data-theme="dark"] .back-link {
+      color: #6B7280;
+    }
+
+    [data-theme="light"] .input-wrap input {
+      background: #F9FAFB;
+    }
 
     @media (max-width: 900px) {
-      .login-wrap { grid-template-columns: 1fr; }
-      .brand-panel { display: none; }
-      .form-panel { padding: 32px 24px; justify-content: flex-start; padding-top: 72px; }
-      .mobile-brand { display: block; }
+      .login-wrap {
+        grid-template-columns: 1fr;
+      }
+
+      .brand-panel {
+        display: none;
+      }
+
+      .form-panel {
+        padding: 32px 24px;
+        justify-content: flex-start;
+        padding-top: 72px;
+      }
+
+      .mobile-brand {
+        display: block;
+      }
     }
   </style>
 </head>
+
 <body>
-<div class="login-wrap">
+  <div class="login-wrap">
 
 
-  <!-- Brand Panel -->
-  <div class="brand-panel">
-    <div class="brand-top">
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px;">
-      <img src="../assets/images/logo.svg" style="width:28px;height:28px;filter:invert(1);opacity:0.8;" alt="logo">
-      <div class="brand-wordmark">Arcteron Trust</div>
-    </div>
-      <div class="brand-tagline">Private Banking &amp; Wealth Management</div>
-    </div>
-    <div class="brand-mid">
-      <p class="brand-quote">"Banking built on trust,<br><span>powered by technology.</span>"</p>
-      <div class="brand-stats">
-        <div><div class="stat-value">$2.4B+</div><div class="stat-label">Assets Managed</div></div>
-        <div><div class="stat-value">50K+</div><div class="stat-label">Trusted Clients</div></div>
-        <div><div class="stat-value">99.9%</div><div class="stat-label">Uptime SLA</div></div>
+    <!-- Brand Panel -->
+    <div class="brand-panel">
+      <div class="brand-top">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px;">
+          <img src="../assets/images/logo.svg" style="width:28px;height:28px;filter:invert(1);opacity:0.8;" alt="logo">
+          <div class="brand-wordmark">Arcteron Trust</div>
+        </div>
+        <div class="brand-tagline">Private Banking &amp; Wealth Management</div>
+      </div>
+      <div class="brand-mid">
+        <p class="brand-quote">"Banking built on trust,<br><span>powered by technology.</span>"</p>
+        <div class="brand-stats">
+          <div>
+            <div class="stat-value">$2.4B+</div>
+            <div class="stat-label">Assets Managed</div>
+          </div>
+          <div>
+            <div class="stat-value">50K+</div>
+            <div class="stat-label">Trusted Clients</div>
+          </div>
+          <div>
+            <div class="stat-value">99.9%</div>
+            <div class="stat-label">Uptime SLA</div>
+          </div>
+        </div>
+      </div>
+      <div class="brand-bottom">
+        <p class="brand-legal">© 2025 Arcteron Trust. FDIC Insured.</p>
+        <div class="fdic-badge">
+          <div class="fdic-dot"></div>
+          <span>SYSTEMS SECURE</span>
+        </div>
       </div>
     </div>
-    <div class="brand-bottom">
-      <p class="brand-legal">© 2025 Arcteron Trust. FDIC Insured.</p>
-      <div class="fdic-badge">
-        <div class="fdic-dot"></div>
-        <span>SYSTEMS SECURE</span>
+
+    <!-- Form Panel -->
+    <div class="form-panel">
+      <div class="form-panel-top">
+        <button class="theme-btn" onclick="Theme.toggle()">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+          </svg>
+        </button>
+      </div>
+
+      <div class="form-inner">
+
+        <div class="mobile-brand">
+
+          <!-- In mobile brand (register/login) -->
+          <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:4px;">
+            <img src="../assets/images/logo.svg" class="mobile-brand-logo" alt="logo">
+            <h1 style="font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:600;">Arcteron Trust</h1>
+          </div>
+          <p>Private Banking &amp; Wealth Management</p>
+        </div>
+
+        <!-- Alert -->
+        <div id="formAlert" class="form-alert error">
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
+            style="flex-shrink:0;margin-top:1px">
+            <circle cx="12" cy="12" r="10" />
+            <line x1="12" y1="8" x2="12" y2="12" />
+            <line x1="12" y1="16" x2="12.01" y2="16" />
+          </svg>
+          <span id="alertText"></span>
+        </div>
+
+        <!-- ── STEP 1: Email + Password ── -->
+        <div class="step active" id="step1">
+          <div class="form-heading">
+            <h2>Welcome back</h2>
+            <p>Sign in to access your account</p>
+          </div>
+          <div class="form-divider"></div>
+
+          <div class="field">
+            <label>Email Address</label>
+            <div class="input-wrap">
+              <input type="email" id="email" placeholder="you@example.com" autocomplete="email">
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Password</label>
+            <div class="input-wrap">
+              <input type="password" id="password" placeholder="Enter your password" style="padding-right:44px;"
+                autocomplete="current-password">
+              <button type="button" class="eye-btn" id="togglePwd">
+                <svg id="eyeIcon" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24"
+                  fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                  <circle cx="12" cy="12" r="3" />
+                </svg>
+              </button>
+            </div>
+            <div class="field-meta">
+              <a href="/frontend/pages/forgot-password.html">Forgot password?</a>
+            </div>
+          </div>
+
+          <button class="submit-btn" id="btn1" onclick="submitPassword()">
+            <span class="btn-text">Continue</span>
+            <div class="dot-loader" id="dots1"><span></span><span></span><span></span></div>
+          </button>
+
+          <div class="form-footer">
+            Don't have an account? <a href="/frontend/pages/register.html">Open an Account</a>
+          </div>
+
+          <div class="security-note">
+            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+              <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+            </svg>
+            256-bit SSL encryption &nbsp;·&nbsp; Your data is protected
+          </div>
+        </div>
+
+        <!-- ── STEP 2: PIN ── -->
+        <div class="step" id="step2">
+          <button class="back-link" onclick="goBack()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="19" y1="12" x2="5" y2="12" />
+              <polyline points="12 19 5 12 12 5" />
+            </svg>
+            Back
+          </button>
+
+          <div class="user-preview">
+            <div class="user-preview-avatar" id="previewAvatar">AT</div>
+            <div class="user-preview-name" id="previewName">Loading...</div>
+            <div class="user-preview-email" id="previewEmail">...</div>
+          </div>
+
+          <div class="form-heading" style="text-align:center;">
+            <h2>Enter your PIN</h2>
+            <p>Enter your 4-digit transaction PIN to continue</p>
+          </div>
+
+          <div class="pin-inputs">
+            <input class="pin-digit" id="pin1" type="password" maxlength="1" inputmode="numeric">
+            <input class="pin-digit" id="pin2" type="password" maxlength="1" inputmode="numeric">
+            <input class="pin-digit" id="pin3" type="password" maxlength="1" inputmode="numeric">
+            <input class="pin-digit" id="pin4" type="password" maxlength="1" inputmode="numeric">
+          </div>
+
+          <button class="submit-btn" id="btn2" onclick="submitPin()">
+            <span class="btn-text">Sign In</span>
+            <div class="dot-loader" id="dots2"><span></span><span></span><span></span></div>
+          </button>
+
+          <div style="text-align:center;margin-top:16px;">
+            <a href="/frontend/pages/forgot-pin.html" style="font-size:12px;color:var(--text-muted);">Forgot PIN? Reset
+              it</a>
+          </div>
+
+          <div class="security-note">
+            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+              <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+            </svg>
+            Never share your PIN with anyone
+          </div>
+        </div>
+
       </div>
     </div>
   </div>
 
-  <!-- Form Panel -->
-  <div class="form-panel">
-    <div class="form-panel-top">
-      <button class="theme-btn" onclick="Theme.toggle()">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-      </button>
-    </div>
+  <script src="../assets/js/api.js"></script>
+  <script src="../assets/js/auth.js"></script>
+  <script src="../assets/js/utils.js"></script>
+  <script>
+    Auth.requireGuest();
 
-    <div class="form-inner">
+    let loginToken = null;
+    let loginUser = null;
 
-      <div class="mobile-brand">
-
-      <!-- In mobile brand (register/login) -->
-      <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:4px;">
-        <img src="../assets/images/logo.svg" class="mobile-brand-logo" alt="logo">
-        <h1 style="font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:600;">Arcteron Trust</h1>
-      </div>
-        <p>Private Banking &amp; Wealth Management</p>
-      </div>
-
-      <!-- Alert -->
-      <div id="formAlert" class="form-alert error">
-        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-        <span id="alertText"></span>
-      </div>
-
-      <!-- ── STEP 1: Email + Password ── -->
-      <div class="step active" id="step1">
-        <div class="form-heading">
-          <h2>Welcome back</h2>
-          <p>Sign in to access your account</p>
-        </div>
-        <div class="form-divider"></div>
-
-        <div class="field">
-          <label>Email Address</label>
-          <div class="input-wrap">
-            <input type="email" id="email" placeholder="you@example.com" autocomplete="email">
-          </div>
-        </div>
-
-        <div class="field">
-          <label>Password</label>
-          <div class="input-wrap">
-            <input type="password" id="password" placeholder="Enter your password" style="padding-right:44px;" autocomplete="current-password">
-            <button type="button" class="eye-btn" id="togglePwd">
-              <svg id="eyeIcon" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-            </button>
-          </div>
-          <div class="field-meta">
-            <a href="/frontend/pages/forgot-password.html">Forgot password?</a>
-          </div>
-        </div>
-
-        <button class="submit-btn" id="btn1" onclick="submitPassword()">
-          <span class="btn-text">Continue</span>
-          <div class="dot-loader" id="dots1"><span></span><span></span><span></span></div>
-        </button>
-
-        <div class="form-footer">
-          Don't have an account? <a href="/frontend/pages/register.html">Open an Account</a>
-        </div>
-
-        <div class="security-note">
-          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-          256-bit SSL encryption &nbsp;·&nbsp; Your data is protected
-        </div>
-      </div>
-
-      <!-- ── STEP 2: PIN ── -->
-      <div class="step" id="step2">
-        <button class="back-link" onclick="goBack()">
-          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
-          Back
-        </button>
-
-        <div class="user-preview">
-          <div class="user-preview-avatar" id="previewAvatar">AT</div>
-          <div class="user-preview-name" id="previewName">Loading...</div>
-          <div class="user-preview-email" id="previewEmail">...</div>
-        </div>
-
-        <div class="form-heading" style="text-align:center;">
-          <h2>Enter your PIN</h2>
-          <p>Enter your 4-digit transaction PIN to continue</p>
-        </div>
-
-        <div class="pin-inputs">
-          <input class="pin-digit" id="pin1" type="password" maxlength="1" inputmode="numeric">
-          <input class="pin-digit" id="pin2" type="password" maxlength="1" inputmode="numeric">
-          <input class="pin-digit" id="pin3" type="password" maxlength="1" inputmode="numeric">
-          <input class="pin-digit" id="pin4" type="password" maxlength="1" inputmode="numeric">
-        </div>
-
-        <button class="submit-btn" id="btn2" onclick="submitPin()">
-          <span class="btn-text">Sign In</span>
-          <div class="dot-loader" id="dots2"><span></span><span></span><span></span></div>
-        </button>
-
-        <div style="text-align:center;margin-top:16px;">
-          <a href="/frontend/pages/forgot-pin.html" style="font-size:12px;color:var(--text-muted);">Forgot PIN? Reset it</a>
-        </div>
-
-        <div class="security-note">
-          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-          Never share your PIN with anyone
-        </div>
-      </div>
-
-    </div>
-  </div>
-</div>
-
-<script src="../assets/js/api.js"></script>
-<script src="../assets/js/auth.js"></script>
-<script src="../assets/js/utils.js"></script>
-<script>
-  Auth.requireGuest();
-
-  let loginToken = null;
-  let loginUser = null;
-
-  // Password toggle
-  document.getElementById('togglePwd').addEventListener('click', function() {
-    const input = document.getElementById('password');
-    const isPassword = input.type === 'password';
-    input.type = isPassword ? 'text' : 'password';
-    document.getElementById('eyeIcon').innerHTML = isPassword
-      ? `<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>`
-      : `<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>`;
-  });
-
-  // PIN auto-advance
-  const pinIds = ['pin1','pin2','pin3','pin4'];
-  pinIds.forEach((id, i) => {
-    const el = document.getElementById(id);
-    el.addEventListener('input', function() {
-      if (this.value && i < 3) document.getElementById(pinIds[i+1]).focus();
-      if (this.value && i === 3) submitPin();
+    // Password toggle
+    document.getElementById('togglePwd').addEventListener('click', function () {
+      const input = document.getElementById('password');
+      const isPassword = input.type === 'password';
+      input.type = isPassword ? 'text' : 'password';
+      document.getElementById('eyeIcon').innerHTML = isPassword
+        ? `<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>`
+        : `<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>`;
     });
-    el.addEventListener('keydown', function(e) {
-      if (e.key === 'Backspace' && !this.value && i > 0) {
-        document.getElementById(pinIds[i-1]).focus();
+
+    // PIN auto-advance
+    const pinIds = ['pin1', 'pin2', 'pin3', 'pin4'];
+    pinIds.forEach((id, i) => {
+      const el = document.getElementById(id);
+      el.addEventListener('input', function () {
+        if (this.value && i < 3) document.getElementById(pinIds[i + 1]).focus();
+        if (this.value && i === 3) submitPin();
+      });
+      el.addEventListener('keydown', function (e) {
+        if (e.key === 'Backspace' && !this.value && i > 0) {
+          document.getElementById(pinIds[i - 1]).focus();
+        }
+      });
+    });
+
+    function showAlert(msg) {
+      document.getElementById('alertText').textContent = msg;
+      document.getElementById('formAlert').classList.add('show');
+    }
+
+    function hideAlert() {
+      document.getElementById('formAlert').classList.remove('show');
+    }
+
+    function setLoading(btnId, dotsId, loading) {
+      const btn = document.getElementById(btnId);
+      btn.disabled = loading;
+      btn.querySelector('.btn-text').style.display = loading ? 'none' : 'inline';
+      btn.querySelector('.dot-loader').style.display = loading ? 'flex' : 'none';
+    }
+
+    function goBack() {
+      hideAlert();
+      document.getElementById('step2').classList.remove('active');
+      document.getElementById('step1').classList.add('active');
+      pinIds.forEach(id => document.getElementById(id).value = '');
+      loginToken = null;
+      loginUser = null;
+    }
+
+    function getInitials(first, last) {
+      return `${first?.[0] || ''}${last?.[0] || ''}`.toUpperCase();
+    }
+
+    // Step 1 — verify password
+    async function submitPassword() {
+      hideAlert();
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+
+      if (!email || !password) return showAlert('Please enter your email and password.');
+
+      setLoading('btn1', 'dots1', true);
+      const res = await Api.post('/api/auth/login', { email, password });
+      setLoading('btn1', 'dots1', false);
+
+      if (res.ok) {
+        loginToken = res.data.access_token;
+        loginUser = res.data.user;
+
+        // No PIN on file (or stale client) — create PIN before dashboard
+        if (loginUser.has_pin !== true) {
+          Auth.clearPinSession();
+          Api.setToken(loginToken);
+          Api.setUser(loginUser);
+          Utils.navigateTo('/frontend/pages/set-pin.html');
+          return;
+        }
+
+        // PIN on file — second step on this page (token stored only after PIN OK)
+        document.getElementById('step1').classList.remove('active');
+        document.getElementById('step2').classList.add('active');
+
+        // Fill user preview
+        const initials = getInitials(loginUser.first_name, loginUser.last_name);
+        document.getElementById('previewAvatar').textContent = initials;
+        document.getElementById('previewName').textContent = `${loginUser.first_name} ${loginUser.last_name}`;
+        document.getElementById('previewEmail').textContent = loginUser.email;
+
+        // Focus first PIN digit
+        setTimeout(() => document.getElementById('pin1').focus(), 100);
+
+      } else {
+        showAlert(res.data.detail || 'Login failed. Please try again.');
       }
-    });
-  });
+    }
 
-  function showAlert(msg) {
-    document.getElementById('alertText').textContent = msg;
-    document.getElementById('formAlert').classList.add('show');
-  }
+    // Step 2 — verify PIN
+    async function submitPin() {
+      hideAlert();
+      const pin = pinIds.map(id => document.getElementById(id).value).join('');
+      if (pin.length !== 4) return showAlert('Please enter your 4-digit PIN.');
 
-  function hideAlert() {
-    document.getElementById('formAlert').classList.remove('show');
-  }
+      setLoading('btn2', 'dots2', true);
 
-  function setLoading(btnId, dotsId, loading) {
-    const btn = document.getElementById(btnId);
-    btn.disabled = loading;
-    btn.querySelector('.btn-text').style.display = loading ? 'none' : 'inline';
-    btn.querySelector('.dot-loader').style.display = loading ? 'flex' : 'none';
-  }
+      // Temporarily set token to make auth'd request
+      localStorage.setItem('arcteronToken', loginToken);
 
-  function goBack() {
-    hideAlert();
-    document.getElementById('step2').classList.remove('active');
-    document.getElementById('step1').classList.add('active');
-    pinIds.forEach(id => document.getElementById(id).value = '');
-    loginToken = null;
-    loginUser = null;
-  }
+      const res = await Api.post('/api/auth/verify-pin', { pin }, true);
+      setLoading('btn2', 'dots2', false);
 
-  function getInitials(first, last) {
-    return `${first?.[0] || ''}${last?.[0] || ''}`.toUpperCase();
-  }
-
-  // Step 1 — verify password
-  async function submitPassword() {
-    hideAlert();
-    const email = document.getElementById('email').value.trim();
-    const password = document.getElementById('password').value;
-
-    if (!email || !password) return showAlert('Please enter your email and password.');
-
-    setLoading('btn1', 'dots1', true);
-    const res = await Api.post('/api/auth/login', { email, password });
-    setLoading('btn1', 'dots1', false);
-
-    if (res.ok) {
-      loginToken = res.data.access_token;
-      loginUser = res.data.user;
-
-      // No PIN on file (or stale client) — create PIN before dashboard
-      if (loginUser.has_pin !== true) {
-        Auth.clearPinSession();
+      if (res && res.ok) {
         Api.setToken(loginToken);
         Api.setUser(loginUser);
-        Utils.navigateTo('/frontend/pages/set-pin.html');
-        return;
+        Auth.markPinSessionVerified();
+        Auth.redirectByRole(loginUser);
+      } else {
+        localStorage.removeItem('arcteronToken');
+        pinIds.forEach(id => document.getElementById(id).value = '');
+        document.getElementById('pin1').focus();
+        showAlert(res?.data?.detail || 'Incorrect PIN. Please try again.');
       }
-
-      // PIN on file — second step on this page (token stored only after PIN OK)
-      document.getElementById('step1').classList.remove('active');
-      document.getElementById('step2').classList.add('active');
-
-      // Fill user preview
-      const initials = getInitials(loginUser.first_name, loginUser.last_name);
-      document.getElementById('previewAvatar').textContent = initials;
-      document.getElementById('previewName').textContent = `${loginUser.first_name} ${loginUser.last_name}`;
-      document.getElementById('previewEmail').textContent = loginUser.email;
-
-      // Focus first PIN digit
-      setTimeout(() => document.getElementById('pin1').focus(), 100);
-
-    } else {
-      showAlert(res.data.detail || 'Login failed. Please try again.');
     }
-  }
 
-  // Step 2 — verify PIN
-  async function submitPin() {
-    hideAlert();
-    const pin = pinIds.map(id => document.getElementById(id).value).join('');
-    if (pin.length !== 4) return showAlert('Please enter your 4-digit PIN.');
-
-    setLoading('btn2', 'dots2', true);
-
-    // Temporarily set token to make auth'd request
-    localStorage.setItem('arcteronToken', loginToken);
-
-    const res = await Api.post('/api/auth/verify-pin', { pin }, true);
-    setLoading('btn2', 'dots2', false);
-
-    if (res && res.ok) {
-      Api.setToken(loginToken);
-      Api.setUser(loginUser);
-      Auth.markPinSessionVerified();
-      Auth.redirectByRole(loginUser);
-    } else {
-      localStorage.removeItem('arcteronToken');
-      pinIds.forEach(id => document.getElementById(id).value = '');
-      document.getElementById('pin1').focus();
-      showAlert(res?.data?.detail || 'Incorrect PIN. Please try again.');
-    }
-  }
-
-  // Allow Enter key on password
-  document.getElementById('password').addEventListener('keydown', function(e) {
-    if (e.key === 'Enter') submitPassword();
-  });
-</script>
+    // Allow Enter key on password
+    document.getElementById('password').addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') submitPassword();
+    });
+  </script>
 </body>
+
 </html>

@@ -42,7 +42,7 @@ const Api = {
       const res = await fetch(`${API_BASE}${endpoint}`, config);
       const data = await res.json();
 
-      if (res.status === 401) {
+      if (res.status === 401 && auth) {
         this.removeToken();
         window.location.href = '/frontend/pages/login.html';
         return;
@@ -50,7 +50,7 @@ const Api = {
 
       return { ok: res.ok, status: res.status, data };
     } catch (err) {
-      return { ok: false, status: 0, data: { detail: 'Network error. Please check your connection.' } };
+      return { ok: false, status: 0, data: { detail: 'Network error. Please check your connection and try again.' } };
     }
   },
 

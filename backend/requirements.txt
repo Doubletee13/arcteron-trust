@@ -10,7 +10,7 @@ python-jose[cryptography]
 python-multipart
 emails
 jinja2
-reportlab
+reportlab==3.6.12
 pillow
 httpx
 pydantic[email]
