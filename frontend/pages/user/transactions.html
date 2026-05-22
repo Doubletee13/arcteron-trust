@@ -1,0 +1,1773 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transactions — Arcteron Trust</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=DM+Sans:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../../assets/css/theme.css">
+    <link rel="stylesheet" href="../../assets/css/style.css">
+    <script src="../../assets/js/theme.js"></script>
+    <style>
+        body {
+            font-family: 'DM Sans', sans-serif;
+            margin: 0;
+        }
+
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Fix: Use CSS Variables for Sidebar consistency */
+        .sidebar {
+            width: 260px;
+            background: var(--bg-secondary);
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            z-index: 300;
+            transition: transform 0.3s ease;
+            border-right: 1px solid var(--border-color);
+        }
+
+        [data-theme="dark"] .sidebar {
+            background: var(--bg-secondary);
+            border-right: none;
+        }
+
+        .sidebar-logo {
+            padding: 0 20px;
+            height: 60px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-shrink: 0;
+        }
+
+        .sidebar-logo-text h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 16px;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .sidebar-logo-text p {
+            font-size: 9px;
+            color: rgba(255, 255, 255, 0.3);
+            margin-top: 1px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .sidebar-nav {
+            padding: 10px;
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .nav-section-label {
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.25);
+            padding: 10px 10px 4px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-bottom: 1px;
+            text-decoration: none;
+        }
+
+        .nav-item:hover {
+            background: rgba(255, 255, 255, 0.07);
+            color: rgba(255, 255, 255, 0.85);
+        }
+
+        .nav-item.active {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .nav-item svg {
+            width: 16px;
+            height: 16px;
+            flex-shrink: 0;
+        }
+
+        .nav-item.danger {
+            color: rgba(239, 68, 68, 0.7);
+        }
+
+        .nav-item.danger:hover {
+            background: rgba(239, 68, 68, 0.1);
+            color: #EF4444;
+        }
+
+        .sidebar-footer {
+            padding: 12px 10px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .user-card {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            border-radius: 8px;
+            margin-bottom: 4px;
+        }
+
+        .sidebar-avatar {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.12);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 700;
+            flex-shrink: 0;
+            font-family: 'Cormorant Garamond', serif;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .user-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.85);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .user-role {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        .main-content {
+            margin-left: 260px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            background: var(--bg-primary);
+        }
+
+        .topbar {
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-color);
+            padding: 0 28px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 200;
+        }
+
+        .topbar-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .menu-btn {
+            display: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--text-secondary);
+            flex-shrink: 0;
+        }
+
+        .topbar-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .icon-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--text-secondary);
+            transition: all 0.2s;
+            text-decoration: none;
+        }
+
+        .icon-btn:hover {
+            color: var(--text-primary);
+        }
+
+        .topbar-avatar {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: #111827;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            flex-shrink: 0;
+            font-family: 'Cormorant Garamond', serif;
+        }
+
+        [data-theme="dark"] .topbar-avatar {
+            background: #E5E7EB;
+            color: #111827;
+        }
+
+        .page-content {
+            padding: 28px;
+            flex: 1;
+        }
+
+        /* Page header */
+        .page-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .page-header-left h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 26px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .page-header-left p {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-top: 3px;
+        }
+
+        .statement-btn {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            background: var(--text-primary);
+            color: var(--bg-secondary);
+            border: none;
+            border-radius: 8px;
+            padding: 10px 18px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: 'DM Sans', sans-serif;
+            transition: opacity 0.2s;
+        }
+
+        .statement-btn:hover {
+            opacity: 0.85;
+        }
+
+        .statement-btn svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        /* Filter bar */
+        .filter-bar {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 16px 20px;
+            margin-bottom: 20px;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            align-items: flex-end;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .filter-group label {
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+        }
+
+        .filter-input,
+        .filter-select {
+            height: 36px;
+            padding: 0 12px;
+            background: var(--bg-primary);
+            border: 1.5px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 13px;
+            color: var(--text-primary);
+            font-family: 'DM Sans', sans-serif;
+            outline: none;
+            transition: border-color 0.2s;
+            appearance: none;
+        }
+
+        .filter-input:focus,
+        .filter-select:focus {
+            border-color: var(--text-primary);
+        }
+
+        [data-theme="dark"] .filter-input,
+        [data-theme="dark"] .filter-select {
+            background: #0F1115;
+            border-color: #2B2F36;
+            color: #E5E7EB;
+        }
+
+        .filter-search {
+            width: 200px;
+        }
+
+        .statement-btn {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            height: 36px;
+            padding: 0 16px;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 1.5px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: 'DM Sans', sans-serif;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .statement-btn:hover {
+            border-color: var(--text-primary);
+        }
+
+        .filter-btn {
+            height: 36px;
+            padding: 0 16px;
+            background: var(--text-primary);
+            color: var(--bg-secondary);
+            border: none;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: 'DM Sans', sans-serif;
+            transition: opacity 0.2s;
+            white-space: nowrap;
+        }
+
+        .filter-btn:hover {
+            opacity: 0.85;
+        }
+
+        .filter-clear {
+            height: 36px;
+            padding: 0 14px;
+            background: transparent;
+            color: var(--text-secondary);
+            border: 1.5px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            font-family: 'DM Sans', sans-serif;
+            transition: all 0.2s;
+        }
+
+        .filter-clear:hover {
+            color: var(--text-primary);
+            border-color: var(--text-primary);
+        }
+
+        /* Stats row */
+        .stats-mini {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .stat-mini-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 14px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .stat-mini-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 14px;
+        }
+
+        .stat-mini-icon.credit {
+            background: rgba(16, 185, 129, 0.1);
+            color: #10B981;
+        }
+
+        .stat-mini-icon.debit {
+            background: rgba(239, 68, 68, 0.1);
+            color: #EF4444;
+        }
+
+        .stat-mini-icon.total {
+            background: rgba(59, 130, 246, 0.1);
+            color: #3B82F6;
+        }
+
+        .stat-mini-value {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-primary);
+            line-height: 1;
+        }
+
+        .stat-mini-label {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        /* Transactions table */
+        .transactions-wrap {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        /* Fix: Add Time column and Action column */
+        .tx-table-header {
+            display: grid;
+            grid-template-columns: 100px 90px 1fr 120px 100px 90px 90px 48px;
+            gap: 8px;
+            padding: 11px 18px;
+            background: var(--bg-primary);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .tx-table-header span {
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+        }
+
+        .tx-row {
+            display: grid;
+            grid-template-columns: 100px 90px 1fr 120px 100px 90px 90px 48px;
+            gap: 8px;
+            padding: 13px 18px;
+            border-bottom: 1px solid var(--border-color);
+            transition: background 0.15s;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .tx-row:last-child {
+            border-bottom: none;
+        }
+
+        .tx-row:hover {
+            background: var(--bg-primary);
+        }
+
+        .tx-row-date {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .tx-row-time {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .tx-row-desc {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 0;
+        }
+
+        .tx-icon {
+            width: 28px;
+            height: 28px;
+            border-radius: 7px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 12px;
+        }
+
+        .tx-icon.credit {
+            background: rgba(16, 185, 129, 0.1);
+            color: #10B981;
+        }
+
+        .tx-icon.debit {
+            background: rgba(239, 68, 68, 0.1);
+            color: #EF4444;
+        }
+
+        .tx-desc-text {
+            min-width: 0;
+        }
+
+        .tx-desc-main {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-primary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .tx-desc-sub {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 1px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .tx-row-ref {
+            font-size: 11px;
+            color: var(--text-muted);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .tx-row-type {
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 2px 8px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: 600;
+        }
+
+        .badge-success {
+            background: rgba(16, 185, 129, 0.1);
+            color: #10B981;
+        }
+
+        .badge-warning {
+            background: rgba(245, 158, 11, 0.1);
+            color: #F59E0B;
+        }
+
+        .badge-danger {
+            background: rgba(239, 68, 68, 0.1);
+            color: #EF4444;
+        }
+
+        .tx-row-amount {
+            font-size: 13px;
+            font-weight: 600;
+            text-align: right;
+        }
+
+        .tx-row-amount.credit {
+            color: #10B981;
+        }
+
+        .tx-row-amount.debit {
+            color: #EF4444;
+        }
+
+        .dl-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .dl-btn:hover {
+            color: var(--text-primary);
+            border-color: var(--text-primary);
+        }
+
+        .dl-btn svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        /* Pagination */
+        .pagination {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 18px;
+            border-top: 1px solid var(--border-color);
+            background: var(--bg-secondary);
+            border-radius: 0 0 12px 12px;
+        }
+
+        .pagination-info {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .pagination-btns {
+            display: flex;
+            gap: 6px;
+        }
+
+        .page-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'DM Sans', sans-serif;
+        }
+
+        .page-btn:hover {
+            color: var(--text-primary);
+            border-color: var(--text-primary);
+        }
+
+        .page-btn.active {
+            background: var(--text-primary);
+            color: var(--bg-secondary);
+            border-color: var(--text-primary);
+        }
+
+        .page-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 48px 24px;
+            color: var(--text-muted);
+        }
+
+        .empty-state svg {
+            width: 40px;
+            height: 40px;
+            margin: 0 auto 12px;
+            opacity: 0.3;
+            display: block;
+        }
+
+        .empty-state p {
+            font-size: 13px;
+        }
+
+        /* Receipt Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(4px);
+            padding: 20px;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+        }
+
+        .modal {
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            max-width: 440px;
+            width: 100%;
+            border: 1px solid var(--border-color);
+            animation: modalIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+        }
+
+        @keyframes modalIn {
+            from {
+                transform: translateY(10px) scale(0.98);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0) scale(1);
+                opacity: 1;
+            }
+        }
+
+        .receipt-modal-header {
+            padding: 24px;
+            background: #111827;
+            color: #fff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .receipt-modal-header h2 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 20px;
+            margin: 0;
+            font-weight: 600;
+        }
+
+        .receipt-modal-body {
+            padding: 24px;
+        }
+
+        .receipt-amount-box {
+            text-align: center;
+            padding: 20px 0;
+            border-bottom: 1px dashed var(--border-color);
+            margin-bottom: 20px;
+        }
+
+        .receipt-amount {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 32px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .receipt-amount.credit {
+            color: #10B981;
+        }
+
+        .receipt-amount.debit {
+            color: #EF4444;
+        }
+
+        .receipt-status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            background: var(--bg-primary);
+            margin-top: 8px;
+        }
+
+        .receipt-info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .receipt-info-item label {
+            display: block;
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-bottom: 4px;
+        }
+
+        .receipt-info-item p {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin: 0;
+        }
+
+        .receipt-modal-footer {
+            padding: 20px 24px 24px;
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn-receipt-dl {
+            flex: 1;
+            height: 44px;
+            background: #111827;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-family: 'DM Sans', sans-serif;
+        }
+
+        [data-theme="dark"] .btn-receipt-dl {
+            background: #E5E7EB;
+            color: #111827;
+        }
+
+        .btn-receipt-dl:hover {
+            opacity: 0.9;
+        }
+
+        .btn-receipt-close {
+            width: 44px;
+            height: 44px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            cursor: pointer;
+            background: transparent;
+        }
+
+        .btn-receipt-close:hover {
+            color: var(--text-primary);
+            border-color: var(--text-primary);
+        }
+
+        /* Sidebar overlay */
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 299;
+            backdrop-filter: blur(2px);
+        }
+
+        .sidebar-overlay.show {
+            display: block;
+        }
+
+        .skeleton {
+            background: linear-gradient(90deg, var(--border-color) 25%, var(--bg-primary) 50%, var(--border-color) 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.4s infinite;
+            border-radius: 6px;
+        }
+
+        @keyframes shimmer {
+            0% {
+                background-position: 200% 0;
+            }
+
+            100% {
+                background-position: -200% 0;
+            }
+        }
+
+        @media (max-width: 1024px) {
+
+            .tx-table-header,
+            .tx-row {
+                grid-template-columns: 90px 1fr 90px 90px 40px;
+            }
+
+            .tx-table-header span:nth-child(2),
+            .tx-table-header span:nth-child(4),
+            .tx-table-header span:nth-child(5),
+            .tx-row>*:nth-child(2),
+            .tx-row>*:nth-child(4),
+            .tx-row>*:nth-child(5) {
+                display: none;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .sidebar {
+                transform: translateX(-260px);
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+                box-shadow: 4px 0 24px rgba(0, 0, 0, 0.4);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .menu-btn {
+                display: flex;
+            }
+
+            .page-content {
+                padding: 16px;
+            }
+
+            .topbar {
+                padding: 0 16px;
+            }
+
+            .stats-mini {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        /* Filter bar: always visible on desktop, collapsible on mobile */
+        .filter-bar {
+            display: flex;
+        }
+
+        @media (max-width: 900px) {
+            .filter-bar {
+                display: none;
+                flex-direction: column;
+                align-items: stretch;
+                gap: 12px;
+            }
+
+            .filter-bar.show {
+                display: flex;
+            }
+
+            .filter-search,
+            .filter-group,
+            .filter-input,
+            .filter-select,
+            .filter-btn,
+            .filter-clear {
+                width: 100% !important;
+                box-sizing: border-box;
+            }
+        }
+
+        @media (max-width: 480px) {
+
+            .tx-table-header,
+            .tx-row {
+                grid-template-columns: 1fr 90px 40px;
+            }
+
+            .tx-row-date {
+                display: none;
+            }
+
+            .tx-table-header span:first-child {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="layout layout--fixed-sidebar">
+
+        <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-logo">
+                <svg width="28" height="28" viewBox="0 0 40 40" fill="none" style="flex-shrink:0;opacity:0.8">
+                    <circle cx="20" cy="20" r="18" stroke="white" stroke-width="1.5" opacity="0.3" />
+                    <path d="M20 8 L30 28 H24 L20 20 L16 28 H10 Z" fill="white" opacity="0.9" />
+                    <path d="M14 23 H26" stroke="white" stroke-width="1.5" opacity="0.6" />
+                    <circle cx="20" cy="6" r="2" fill="white" opacity="0.5" />
+                </svg>
+                <div class="sidebar-logo-text">
+                    <h1>Arcteron Trust</h1>
+                    <p>Private Banking</p>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <div class="nav-section-label">Main</div>
+                <a class="nav-item" href="dashboard.html" onclick="nav(event,'dashboard.html')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <rect x="3" y="3" width="7" height="7" />
+                        <rect x="14" y="3" width="7" height="7" />
+                        <rect x="14" y="14" width="7" height="7" />
+                        <rect x="3" y="14" width="7" height="7" />
+                    </svg>
+                    Dashboard
+                </a>
+                <a class="nav-item" href="transfer.html" onclick="nav(event,'transfer.html')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <line x1="22" y1="2" x2="11" y2="13" />
+                        <polygon points="22 2 15 22 11 13 2 9 22 2" />
+                    </svg>
+                    Transfer
+                </a>
+                <a class="nav-item active" href="transactions.html">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <line x1="8" y1="6" x2="21" y2="6" />
+                        <line x1="8" y1="12" x2="21" y2="12" />
+                        <line x1="8" y1="18" x2="21" y2="18" />
+                        <line x1="3" y1="6" x2="3.01" y2="6" />
+                        <line x1="3" y1="12" x2="3.01" y2="12" />
+                        <line x1="3" y1="18" x2="3.01" y2="18" />
+                    </svg>
+                    Transactions
+                </a>
+                <a class="nav-item" href="notifications.html" onclick="nav(event,'notifications.html')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+                        <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+                    </svg>
+                    Notifications
+                </a>
+                <div class="nav-section-label">Account</div>
+                <a class="nav-item" href="profile.html" onclick="nav(event,'profile.html')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                        <circle cx="12" cy="7" r="4" />
+                    </svg>
+                    Profile
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="user-card">
+                    <div class="sidebar-avatar" id="sidebarAvatar">—</div>
+                    <div style="flex:1;min-width:0;">
+                        <div class="user-name" id="sidebarName">Loading...</div>
+                        <div class="user-role">Personal Account</div>
+                    </div>
+                </div>
+                <a class="nav-item danger" onclick="Auth.logout()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                        <polyline points="16 17 21 12 16 7" />
+                        <line x1="21" y1="12" x2="9" y2="12" />
+                    </svg>
+                    Sign Out
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main -->
+        <div class="main-content">
+            <header class="topbar">
+                <div class="topbar-left">
+                    <button class="menu-btn" onclick="openSidebar()">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="3" y1="12" x2="21" y2="12" />
+                            <line x1="3" y1="6" x2="21" y2="6" />
+                            <line x1="3" y1="18" x2="21" y2="18" />
+                        </svg>
+                    </button>
+                    <span class="topbar-title">Transactions</span>
+                </div>
+                <div class="topbar-right">
+                    <button class="icon-btn" onclick="Theme.toggle()">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+                        </svg>
+                    </button>
+                    <div class="topbar-avatar" id="topbarAvatar">—</div>
+                </div>
+            </header>
+
+            <main class="page-content">
+
+                <div class="page-header">
+                    <div class="page-header-left">
+                        <h1>Transaction History</h1>
+                        <p>View, filter, and download your complete transaction history.</p>
+                    </div>
+                </div>
+
+                <!-- Stats mini -->
+                <div class="stats-mini">
+                    <div class="stat-mini-card">
+                        <div class="stat-mini-icon credit">↓</div>
+                        <div>
+                            <div class="stat-mini-value" id="totalCredit">$0.00</div>
+                            <div class="stat-mini-label">Total Credits</div>
+                        </div>
+                    </div>
+                    <div class="stat-mini-card">
+                        <div class="stat-mini-icon debit">↑</div>
+                        <div>
+                            <div class="stat-mini-value" id="totalDebit">$0.00</div>
+                            <div class="stat-mini-label">Total Debits</div>
+                        </div>
+                    </div>
+                    <div class="stat-mini-card">
+                        <div class="stat-mini-icon total">#</div>
+                        <div>
+                            <div class="stat-mini-value" id="totalCount">0</div>
+                            <div class="stat-mini-label">Total Transactions</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action bar: Filter + Download Statement -->
+                <div style="display:flex; gap:10px; align-items:center; margin-bottom:16px; flex-wrap:wrap;">
+                    <button class="statement-btn" id="filterToggleBtn" onclick="toggleMobileFilters()" style="gap:8px;">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+                        </svg>
+                        Filter
+                    </button>
+                    <button class="statement-btn" onclick="openStatementModal()" style="margin-left:auto;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                            <polyline points="7 10 12 15 17 10" />
+                            <line x1="12" y1="15" x2="12" y2="3" />
+                        </svg>
+                        Download Statement
+                    </button>
+                </div>
+
+                <!-- Filters -->
+                <div class="filter-bar" id="filterBar">
+                    <div class="filter-group">
+                        <label>Search</label>
+                        <input type="text" class="filter-input filter-search" id="filterSearch"
+                            placeholder="Reference, description..." onkeydown="if(event.key==='Enter') applyFilters()">
+                    </div>
+                    <div class="filter-group">
+                        <label>Type</label>
+                        <select class="filter-select" id="filterType" style="width:130px">
+                            <option value="">All Types</option>
+                            <option value="credit">Credit (In)</option>
+                            <option value="debit">Debit (Out)</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Status</label>
+                        <select class="filter-select" id="filterStatus" style="width:130px">
+                            <option value="">All Statuses</option>
+                            <option value="completed">Completed</option>
+                            <option value="pending">Pending</option>
+                            <option value="failed">Failed</option>
+                            <option value="reversed">Reversed</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>From Date</label>
+                        <input type="date" class="filter-input" id="filterFrom" style="width:140px">
+                    </div>
+                    <div class="filter-group">
+                        <label>To Date</label>
+                        <input type="date" class="filter-input" id="filterTo" style="width:140px">
+                    </div>
+                    <button class="filter-btn" onclick="applyFilters()">Apply</button>
+                    <button class="filter-clear" onclick="clearFilters()">Clear</button>
+                </div>
+
+                <!-- Table -->
+                <div class="transactions-wrap">
+                    <div class="tx-table-header">
+                        <span>Date</span>
+                        <span>Time</span>
+                        <span>Description</span>
+                        <span>Reference</span>
+                        <span>Type</span>
+                        <span>Status</span>
+                        <span style="text-align:right">Amount</span>
+                        <span>DL</span>
+                    </div>
+
+                    <div id="txBody">
+                        <!-- Skeletons... -->
+                        <div class="tx-row" style="cursor:default">
+                            <div class="skeleton" style="height:12px;width:80px"></div>
+                            <div class="skeleton" style="height:12px;width:60px"></div>
+                            <div style="display:flex;gap:10px;align-items:center">
+                                <div class="skeleton" style="width:28px;height:28px;border-radius:7px;flex-shrink:0">
+                                </div>
+                                <div>
+                                    <div class="skeleton" style="height:12px;width:140px;margin-bottom:5px"></div>
+                                </div>
+                            </div>
+                            <div class="skeleton" style="height:10px;width:80px"></div>
+                            <div class="skeleton" style="height:10px;width:70px"></div>
+                            <div class="skeleton" style="height:18px;width:60px;border-radius:20px"></div>
+                            <div class="skeleton" style="height:12px;width:60px;margin-left:auto"></div>
+                            <div class="skeleton" style="height:32px;width:32px;border-radius:6px"></div>
+                        </div>
+                    </div>
+
+                    <div class="pagination" id="paginationBar" style="display:none">
+                        <span class="pagination-info" id="paginationInfo"></span>
+                        <div class="pagination-btns" id="paginationBtns"></div>
+                    </div>
+                </div>
+
+            </main>
+        </div>
+    </div>
+
+
+    <!-- Receipt Modal -->
+    <div class="modal-overlay" id="receiptModal" onclick="if(event.target===this) closeReceiptModal()">
+        <div class="modal">
+            <div class="receipt-modal-header"
+                style="flex-direction: column; align-items: center; gap: 12px; padding: 32px 24px;">
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <svg width="28" height="28" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="20" cy="20" r="18" stroke="white" stroke-width="1.5" opacity="0.3" />
+                        <path d="M20 8 L30 28 H24 L20 20 L16 28 H10 Z" fill="white" opacity="0.9" />
+                        <path d="M14 23 H26" stroke="white" stroke-width="1.5" opacity="0.6" />
+                        <circle cx="20" cy="6" r="2" fill="white" opacity="0.5" />
+                    </svg>
+                    <span
+                        style="font-family: 'Cormorant Garamond', serif; font-size: 24px; font-weight: 600; color: #fff;">Arcteron
+                        Trust</span>
+                </div>
+                <h2
+                    style="font-size: 16px; opacity: 0.7; font-weight: 500; letter-spacing: 1px; text-transform: uppercase;">
+                    Transaction Receipt</h2>
+                <button class="icon-btn" onclick="closeReceiptModal()"
+                    style="position: absolute; top: 16px; right: 16px; background:transparent; border:none; color:#fff; opacity: 0.5;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18" />
+                        <line x1="6" y1="6" x2="18" y2="18" />
+                    </svg>
+                </button>
+            </div>
+            <div class="receipt-modal-body">
+                <div class="receipt-amount-box">
+                    <label
+                        style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px">Transaction
+                        Amount</label>
+                    <div class="receipt-amount" id="rcpAmount">$0.00</div>
+                    <div class="receipt-status-pill" id="rcpStatus">Completed</div>
+                </div>
+                <div class="receipt-info-grid">
+                    <div class="receipt-info-item">
+                        <label id="rcpPartyLabel">Transfer To</label>
+                        <p id="rcpParty">Unknown</p>
+                    </div>
+                    <div class="receipt-info-item">
+                        <label>Reference</label>
+                        <p id="rcpRef">#000000</p>
+                    </div>
+                    <div class="receipt-info-item">
+                        <label>Bank</label>
+                        <p id="rcpBank">—</p>
+                    </div>
+                    <div class="receipt-info-item">
+                        <label>Account No.</label>
+                        <p id="rcpRecipientAcct">—</p>
+                    </div>
+                    <div class="receipt-info-item">
+                        <label>Date</label>
+                        <p id="rcpDate">Jan 1, 2026</p>
+                    </div>
+                    <div class="receipt-info-item">
+                        <label>Time</label>
+                        <p id="rcpTime">00:00:00 UTC</p>
+                    </div>
+                    <div class="receipt-info-item">
+                        <label>Type</label>
+                        <p id="rcpType">Transfer</p>
+                    </div>
+                    <div class="receipt-info-item">
+                        <label>Your Account</label>
+                        <p id="rcpAccount">**** 0000</p>
+                    </div>
+                </div>
+            </div>
+            <div class="receipt-modal-footer">
+                <button class="btn-receipt-dl" id="rcpDlBtn">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                        <polyline points="7 10 12 15 17 10" />
+                        <line x1="12" y1="15" x2="12" y2="3" />
+                    </svg>
+                    Download Receipt
+                </button>
+                <button class="btn-receipt-close" onclick="closeReceiptModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statement Modal -->
+    <div class="modal-overlay" id="statementModal" onclick="if(event.target===this) closeStatementModal()">
+        <div class="modal">
+            <div class="receipt-modal-header"
+                style="background:var(--bg-secondary);color:var(--text-primary);border-bottom:1px solid var(--border-color)">
+                <h2 style="color:var(--text-primary)">Download Statement</h2>
+            </div>
+            <div style="padding: 24px;">
+                <p style="font-size:13px;color:var(--text-secondary);margin-bottom:20px;">Select a date range for your
+                    account statement.</p>
+                <div style="margin-bottom:14px;">
+                    <label
+                        style="display:block;font-size:11px;font-weight:600;color:var(--text-muted);text-transform:uppercase;margin-bottom:6px;">From
+                        Date</label>
+                    <input type="date" id="stmtFrom"
+                        style="width:100%;height:38px;padding:0 12px;border:1.5px solid var(--border-color);border-radius:8px;background:var(--bg-primary);color:var(--text-primary);">
+                </div>
+                <div style="margin-bottom:14px;">
+                    <label
+                        style="display:block;font-size:11px;font-weight:600;color:var(--text-muted);text-transform:uppercase;margin-bottom:6px;">To
+                        Date</label>
+                    <input type="date" id="stmtTo"
+                        style="width:100%;height:38px;padding:0 12px;border:1.5px solid var(--border-color);border-radius:8px;background:var(--bg-primary);color:var(--text-primary);">
+                </div>
+                <button class="btn-receipt-dl" onclick="downloadStatement()" style="width:100%;margin-top:10px;">
+                    Generate PDF Statement
+                </button>
+                <button class="btn-receipt-close" onclick="closeStatementModal()"
+                    style="width:100%;margin-top:8px;">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../../assets/js/api.js"></script>
+    <script src="../../assets/js/auth.js"></script>
+    <script src="../../assets/js/utils.js"></script>
+    <script>
+        // Proper async auth gate — runs init only after auth is confirmed
+        (async function () {
+            const ok = await Auth.requireAuthAsync();
+            if (!ok) return;
+
+            let currentPage = 1;
+            let totalPages = 1;
+            let allTransactions = [];
+
+            function nav(e, path) {
+                if (e) e.preventDefault();
+                closeSidebar();
+                Utils.navigateTo(path);
+            }
+
+            function openSidebar() {
+                document.getElementById('sidebar').classList.add('open');
+                document.getElementById('sidebarOverlay').classList.add('show');
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeSidebar() {
+                document.getElementById('sidebar').classList.remove('open');
+                document.getElementById('sidebarOverlay').classList.remove('show');
+                document.body.style.overflow = '';
+            }
+
+            function fmt(n) {
+                return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(n || 0);
+            }
+
+            function fmtDate(str) {
+                if (!str) return '—';
+                return new Date(str).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+            }
+
+            function fmtTime(str) {
+                if (!str) return '—';
+                return new Date(str).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
+            }
+
+            async function init() {
+                // Always refresh user data from the server to ensure fresh data
+                const meRes = await Api.get('/api/auth/me', true);
+                let user;
+                if (meRes && meRes.ok) {
+                    user = meRes.data;
+                    Api.setUser(user);
+                } else {
+                    user = Api.getUser();
+                }
+                if (!user) { Auth.logout(); return; }
+                const initials = Auth.getInitials(user.first_name, user.last_name);
+                document.getElementById('sidebarAvatar').textContent = initials;
+                document.getElementById('topbarAvatar').textContent = initials;
+                document.getElementById('sidebarName').textContent = `${user.first_name} ${user.last_name}`;
+                await loadTransactions(1);
+            }
+
+            function buildQueryString(page) {
+                const params = new URLSearchParams();
+                params.set('page', page);
+                params.set('per_page', 15);
+
+                const search = document.getElementById('filterSearch').value.trim();
+                const type = document.getElementById('filterType').value;
+                const status = document.getElementById('filterStatus').value;
+                const from = document.getElementById('filterFrom').value;
+                const to = document.getElementById('filterTo').value;
+
+                if (search) params.set('search', search);
+                if (type) params.set('tx_type', type);
+                if (status) params.set('status', status);
+                if (from) params.set('date_from', from);
+                if (to) params.set('date_to', to);
+
+                return params.toString();
+            }
+
+            async function loadTransactions(page = 1) {
+                currentPage = page;
+                const qs = buildQueryString(page);
+                const res = await Api.get(`/api/transactions/all?${qs}`, true);
+
+                if (!res || !res.ok) {
+                    document.getElementById('txBody').innerHTML =
+                        '<div class="empty-state"><p>Failed to load transactions.</p></div>';
+                    return;
+                }
+
+                const { transactions, total, pages } = res.data;
+                totalPages = pages;
+                allTransactions = transactions;
+
+                // Stats
+                let credit = 0, debit = 0;
+                transactions.forEach(tx => {
+                    const amt = parseFloat(tx.amount || 0);
+                    if (tx.is_credit) credit += amt;
+                    else debit += amt;
+                });
+
+                document.getElementById('totalCredit').textContent = fmt(credit);
+                document.getElementById('totalDebit').textContent = fmt(debit);
+                document.getElementById('totalCount').textContent = total;
+
+                renderTransactions(transactions);
+                renderPagination(page, pages, total);
+            }
+
+            function renderTransactions(txs) {
+                const body = document.getElementById('txBody');
+
+                if (!txs || txs.length === 0) {
+                    body.innerHTML = `
+        <div class="empty-state" style="padding: 48px 24px; text-align: center; color: var(--text-muted);">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width: 48px; height: 48px; margin: 0 auto 16px; opacity: 0.3; display: block;"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+          <p style="font-size: 14px; line-height: 1.6;">No transactions available at the moment. <br><span style="opacity: 0.7;">Detailed message: There are currently no transactions to display. Once you initiate a transfer or receive funds, they will appear here.</span></p>
+        </div>`;
+                    return;
+                }
+
+                const statusMap = {
+                    completed: 'badge-success',
+                    pending: 'badge-warning',
+                    failed: 'badge-danger',
+                    reversed: 'badge-neutral'
+                };
+
+                body.innerHTML = txs.map(tx => {
+                    const cls = tx.is_credit ? 'credit' : 'debit';
+                    const icon = tx.is_credit ? '↓' : '↑';
+                    const sign = tx.is_credit ? '+' : '-';
+                    const typeLabel = tx.transaction_type ? tx.transaction_type.replace(/_/g, ' ') : '—';
+                    const date = fmtDate(tx.transaction_date || tx.created_at);
+                    const time = fmtTime(tx.transaction_date || tx.created_at);
+
+                    const partyLabel = tx.is_credit ? 'Transfer from' : 'Transfer to';
+                    const partyName = tx.recipient_name || (tx.is_credit ? 'External Sender' : '—');
+                    const subDesc = tx.description || typeLabel;
+
+                    return `
+        <div class="tx-row" onclick="openReceiptModal('${tx.id}')">
+          <div class="tx-row-date">${date}</div>
+          <div class="tx-row-time" style="opacity: 0.6;">${time}</div>
+          <div class="tx-row-desc">
+            <div class="tx-icon ${cls}">${icon}</div>
+            <div class="tx-desc-text">
+              <div class="tx-desc-main">${partyLabel} ${partyName}</div>
+              <div class="tx-desc-sub">${subDesc}</div>
+            </div>
+          </div>
+          <div class="tx-row-ref">${tx.reference || '—'}</div>
+          <div class="tx-row-type" style="text-transform:capitalize">${typeLabel}</div>
+          <div><span class="badge ${statusMap[tx.status] || 'badge-neutral'}">${tx.status || '—'}</span></div>
+          <div class="tx-row-amount ${cls}">${sign}${fmt(tx.amount)}</div>
+          <div style="display:flex;justify-content:flex-end">
+            <button class="dl-btn" title="Download Receipt" onclick="event.stopPropagation(); downloadReceipt('${tx.id}', '${tx.reference}')">
+               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            </button>
+          </div>
+        </div>`;
+                }).join('');
+            }
+
+            function toggleMobileFilters() {
+                const bar = document.getElementById('filterBar');
+                bar.classList.toggle('show');
+            }
+
+            function renderPagination(page, pages, total) {
+                const bar = document.getElementById('paginationBar');
+                const info = document.getElementById('paginationInfo');
+                const btns = document.getElementById('paginationBtns');
+
+                if (pages <= 1) { bar.style.display = 'none'; return; }
+
+                bar.style.display = 'flex';
+                const start = (page - 1) * 15 + 1;
+                const end = Math.min(page * 15, total);
+                info.textContent = `Showing ${start}–${end} of ${total} transactions`;
+
+                let html = `<button class="page-btn" onclick="loadTransactions(${page - 1})" ${page === 1 ? 'disabled' : ''}>‹</button>`;
+
+                for (let i = 1; i <= pages; i++) {
+                    if (i === 1 || i === pages || (i >= page - 1 && i <= page + 1)) {
+                        html += `<button class="page-btn ${i === page ? 'active' : ''}" onclick="loadTransactions(${i})">${i}</button>`;
+                    } else if (i === page - 2 || i === page + 2) {
+                        html += `<span style="color:var(--text-muted);padding:0 4px">...</span>`;
+                    }
+                }
+
+                html += `<button class="page-btn" onclick="loadTransactions(${page + 1})" ${page === pages ? 'disabled' : ''}>›</button>`;
+                btns.innerHTML = html;
+            }
+
+            function applyFilters() { loadTransactions(1); }
+
+            function clearFilters() {
+                document.getElementById('filterSearch').value = '';
+                document.getElementById('filterType').value = '';
+                document.getElementById('filterStatus').value = '';
+                document.getElementById('filterFrom').value = '';
+                document.getElementById('filterTo').value = '';
+                loadTransactions(1);
+            }
+
+            function toggleMobileFilters() {
+                const bar = document.getElementById('filterBar');
+                bar.classList.toggle('show');
+            }
+
+            window.openReceiptModal = function (txId) {
+                const tx = allTransactions.find(t => t.id === txId);
+                if (!tx) return;
+
+                const modal = document.getElementById('receiptModal');
+                const sign = tx.is_credit ? '+' : '-';
+                const cls = tx.is_credit ? 'credit' : 'debit';
+
+                document.getElementById('rcpAmount').textContent = `${sign}${fmt(tx.amount)}`;
+                document.getElementById('rcpAmount').className = `receipt-amount ${cls}`;
+                document.getElementById('rcpStatus').textContent = tx.status;
+
+                const partyLabel = tx.is_credit ? 'Transfer from' : 'Transfer to';
+                const partyName = tx.recipient_name || (tx.is_credit ? 'External Sender' : '—');
+                document.getElementById('rcpPartyLabel').textContent = partyLabel;
+                document.getElementById('rcpParty').textContent = partyName;
+
+                document.getElementById('rcpBank').textContent = tx.recipient_bank || '—';
+                document.getElementById('rcpRecipientAcct').textContent = tx.recipient_account || '—';
+
+                document.getElementById('rcpRef').textContent = tx.reference;
+
+                const txDateObj = new Date(tx.transaction_date || tx.created_at);
+                document.getElementById('rcpDate').textContent = txDateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+                document.getElementById('rcpTime').textContent = txDateObj.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false }) + ' UTC';
+                document.getElementById('rcpType').textContent = (tx.transaction_type || 'Transfer').replace(/_/g, ' ');
+
+                // Show own account (the current user's account number)
+                const ownAcct = tx.own_account_number;
+                document.getElementById('rcpAccount').textContent = ownAcct ? ownAcct : '—';
+
+                document.getElementById('rcpDlBtn').onclick = () => downloadReceipt(tx.id, tx.reference);
+
+                modal.classList.add('show');
+            }
+
+            window.closeReceiptModal = function () {
+                document.getElementById('receiptModal').classList.remove('show');
+            }
+
+            window.downloadReceipt = async function (txId, reference) {
+                const token = Api.getToken();
+                if (!token) return;
+
+                const theme = document.documentElement.getAttribute('data-theme') || 'dark';
+                const url = `${API_BASE}/api/transactions/${txId}/receipt?theme=${theme}`;
+
+                try {
+                    const res = await fetch(url, {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+
+                    if (!res.ok) {
+                        let msg = 'Could not download receipt.';
+                        try {
+                            const errData = await res.json();
+                            if (errData && errData.detail) msg = errData.detail;
+                        } catch (_) { }
+                        Utils.showToast(msg);
+                        return;
+                    }
+
+                    const contentType = res.headers.get('content-type') || '';
+                    if (!contentType.includes('pdf')) {
+                        Utils.showToast('Server returned an unexpected response.');
+                        return;
+                    }
+
+                    const blob = await res.blob();
+                    const objUrl = URL.createObjectURL(blob);
+                    const link = document.createElement('a');
+                    link.href = objUrl;
+                    link.download = `receipt-${reference}.pdf`;
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    setTimeout(() => URL.revokeObjectURL(objUrl), 1000);
+                } catch (err) {
+                    console.error('Download error:', err);
+                    Utils.showToast('Download failed. Please check your connection.');
+                }
+            }
+
+            window.openStatementModal = function () {
+                document.getElementById('statementModal').classList.add('show');
+            }
+
+            window.closeStatementModal = function () {
+                document.getElementById('statementModal').classList.remove('show');
+            }
+
+            window.downloadStatement = async function () {
+                const from = document.getElementById('stmtFrom').value;
+                const to = document.getElementById('stmtTo').value;
+
+                const theme = document.documentElement.getAttribute('data-theme') || 'light';
+                let url = `${API_BASE}/api/transactions/statement/download`;
+                const params = [`theme=${theme}`];
+                if (from) params.push(`date_from=${from}`);
+                if (to) params.push(`date_to=${to}`);
+                url += '?' + params.join('&');
+
+                const token = Api.getToken();
+                if (!token) return;
+
+                try {
+                    const res = await fetch(url, {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+
+                    if (!res.ok) {
+                        let msg = 'Could not generate statement.';
+                        try {
+                            const errData = await res.json();
+                            if (errData && errData.detail) msg = errData.detail;
+                        } catch (_) { }
+                        Utils.showToast(msg);
+                        return;
+                    }
+
+                    const contentType = res.headers.get('content-type') || '';
+                    if (!contentType.includes('pdf')) {
+                        Utils.showToast('Server returned an unexpected response.');
+                        return;
+                    }
+
+                    const blob = await res.blob();
+                    const objUrl = URL.createObjectURL(blob);
+                    const link = document.createElement('a');
+                    link.href = objUrl;
+                    link.download = `arcteron-statement-${new Date().toISOString().slice(0, 10)}.pdf`;
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    setTimeout(() => URL.revokeObjectURL(objUrl), 1000);
+                    closeStatementModal();
+                } catch (err) {
+                    console.error('Statement download error:', err);
+                    Utils.showToast('Download failed. Please check your connection.');
+                }
+            }
+
+            init();
+        })();
+    </script>
+</body>
+
+</html>

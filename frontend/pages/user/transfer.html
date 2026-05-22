@@ -23,10 +23,10 @@
       min-height: 100vh;
     }
 
-    /* Sidebar — same as dashboard */
+    /* ── Sidebar ── */
     .sidebar {
       width: 260px;
-      background: #111827;
+      background: var(--bg-secondary);
       border-right: none;
       display: flex;
       flex-direction: column;
@@ -38,16 +38,21 @@
       transition: transform 0.3s ease;
     }
 
-    [data-theme="dark"] .sidebar {
-      background: #0D0F12;
-    }
-
     .sidebar-logo {
-      padding: 22px 20px 18px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 0 20px;
+      height: 60px;
+      border-bottom: 1px solid var(--border-color);
       display: flex;
       align-items: center;
       gap: 10px;
+      flex-shrink: 0;
+    }
+
+    .sidebar-logo-icon {
+      width: 28px;
+      height: 28px;
+      flex-shrink: 0;
+      opacity: 0.8;
     }
 
     .sidebar-logo-text h1 {
@@ -55,6 +60,7 @@
       font-size: 16px;
       font-weight: 600;
       color: #ffffff;
+      line-height: 1.2;
     }
 
     .sidebar-logo-text p {
@@ -66,7 +72,7 @@
     }
 
     .sidebar-nav {
-      padding: 10px;
+      padding: 10px 10px;
       flex: 1;
       overflow-y: auto;
     }
@@ -123,7 +129,7 @@
 
     .sidebar-footer {
       padding: 12px 10px;
-      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      border-top: 1px solid var(--border-color);
     }
 
     .user-card {
@@ -132,7 +138,13 @@
       gap: 10px;
       padding: 10px 12px;
       border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.2s;
       margin-bottom: 4px;
+    }
+
+    .user-card:hover {
+      background: rgba(255, 255, 255, 0.07);
     }
 
     .sidebar-avatar {
@@ -175,6 +187,7 @@
       background: var(--bg-primary);
     }
 
+    /* ── Topbar ── */
     .topbar {
       background: var(--bg-secondary);
       border-bottom: 1px solid var(--border-color);
@@ -186,6 +199,7 @@
       position: sticky;
       top: 0;
       z-index: 200;
+      flex-shrink: 0;
     }
 
     .topbar-left {
@@ -232,11 +246,24 @@
       cursor: pointer;
       color: var(--text-secondary);
       transition: all 0.2s;
+      position: relative;
       text-decoration: none;
     }
 
     .icon-btn:hover {
       color: var(--text-primary);
+      background: var(--border-color);
+    }
+
+    .notif-dot {
+      width: 7px;
+      height: 7px;
+      background: #EF4444;
+      border-radius: 50%;
+      position: absolute;
+      top: 7px;
+      right: 7px;
+      border: 2px solid var(--bg-secondary);
     }
 
     .topbar-avatar {
@@ -255,7 +282,7 @@
       font-family: 'Cormorant Garamond', serif;
     }
 
-    [data-theme="dark"] .topbar-avatar {
+    [data-theme="dark"] .main-content .topbar-avatar {
       background: #E5E7EB;
       color: #111827;
     }
@@ -1154,15 +1181,14 @@
 </head>
 
 <body>
-  <div class="layout">
+  <div class="layout layout--fixed-sidebar">
 
     <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
 
     <!-- Sidebar -->
     <aside class="sidebar" id="sidebar">
       <div class="sidebar-logo">
-        <svg width="28" height="28" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg"
-          style="flex-shrink:0;opacity:0.8">
+        <svg class="sidebar-logo-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
           <circle cx="20" cy="20" r="18" stroke="white" stroke-width="1.5" opacity="0.3" />
           <path d="M20 8 L30 28 H24 L20 20 L16 28 H10 Z" fill="white" opacity="0.9" />
           <path d="M14 23 H26" stroke="white" stroke-width="1.5" opacity="0.6" />
@@ -1186,7 +1212,7 @@
           </svg>
           Dashboard
         </a>
-        <a class="nav-item active" href="transfer.html">
+        <a class="nav-item active" href="transfer.html" onclick="nav(event,'transfer.html')">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
             stroke-linejoin="round">
             <line x1="22" y1="2" x2="11" y2="13" />
@@ -1214,6 +1240,7 @@
           </svg>
           Notifications
         </a>
+
         <div class="nav-section-label">Account</div>
         <a class="nav-item" href="profile.html" onclick="nav(event,'profile.html')">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -1249,7 +1276,7 @@
     <div class="main-content">
       <header class="topbar">
         <div class="topbar-left">
-          <button class="menu-btn" onclick="openSidebar()">
+          <button class="menu-btn" id="menuBtn" onclick="openSidebar()">
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
               stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <line x1="3" y1="12" x2="21" y2="12" />
@@ -1266,7 +1293,15 @@
               <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
             </svg>
           </button>
-          <div class="topbar-avatar" id="topbarAvatar">AT</div>
+          <a class="icon-btn" href="notifications.html" onclick="nav(event,'notifications.html')">
+            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+              <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+            </svg>
+            <div class="notif-dot" id="notifDot" style="display:none"></div>
+          </a>
+          <div class="topbar-avatar" id="topbarAvatar" onclick="nav(event,'profile.html')">AT</div>
         </div>
       </header>
 

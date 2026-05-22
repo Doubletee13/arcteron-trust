@@ -954,6 +954,7 @@
 
     .tx-item:hover {
       background: var(--bg-primary);
+      cursor: pointer;
     }
 
     .tx-icon {
@@ -1080,6 +1081,177 @@
       }
     }
 
+    /* ── Receipt Modal ── */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.6);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(4px);
+      padding: 20px;
+    }
+
+    .modal-overlay.show {
+      display: flex;
+    }
+
+    .modal {
+      background: var(--bg-secondary);
+      border-radius: 16px;
+      max-width: 440px;
+      width: 100%;
+      border: 1px solid var(--border-color);
+      animation: modalIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      overflow: hidden;
+      box-shadow: var(--shadow-lg);
+    }
+
+    @keyframes modalIn {
+      from {
+        transform: translateY(10px) scale(0.98);
+        opacity: 0;
+      }
+
+      to {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+      }
+    }
+
+    .receipt-modal-header {
+      padding: 24px;
+      background: #111827;
+      color: #fff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .receipt-modal-header h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 20px;
+      margin: 0;
+      font-weight: 600;
+    }
+
+    .receipt-modal-body {
+      padding: 24px;
+    }
+
+    .receipt-amount-box {
+      text-align: center;
+      padding: 20px 0;
+      border-bottom: 1px dashed var(--border-color);
+      margin-bottom: 20px;
+    }
+
+    .receipt-amount {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 32px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .receipt-amount.credit {
+      color: #10B981;
+    }
+
+    .receipt-amount.debit {
+      color: #EF4444;
+    }
+
+    .receipt-status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      background: var(--bg-primary);
+      margin-top: 8px;
+    }
+
+    .receipt-info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .receipt-info-item label {
+      display: block;
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 4px;
+    }
+
+    .receipt-info-item p {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-primary);
+      margin: 0;
+    }
+
+    .receipt-modal-footer {
+      padding: 20px 24px 24px;
+      display: flex;
+      gap: 12px;
+    }
+
+    .btn-receipt-dl {
+      flex: 1;
+      height: 44px;
+      background: #111827;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 13px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    [data-theme="dark"] .btn-receipt-dl {
+      background: #E5E7EB;
+      color: #111827;
+    }
+
+    .btn-receipt-dl:hover {
+      opacity: 0.9;
+    }
+
+    .btn-receipt-close {
+      width: auto;
+      height: 44px;
+      padding: 0 16px;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-secondary);
+      cursor: pointer;
+      background: transparent;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .btn-receipt-close:hover {
+      color: var(--text-primary);
+      border-color: var(--text-primary);
+    }
+
     /* Overlay */
     .sidebar-overlay {
       display: none;
@@ -1144,7 +1316,8 @@
 
       .atm-card-scene {
         width: 100%;
-        max-width: 320px;
+        max-width: 100%;
+        height: 200px;
       }
     }
 
@@ -1234,7 +1407,7 @@
 
       <div class="sidebar-footer">
         <div class="user-card">
-          <div class="sidebar-avatar" id="sidebarAvatar">AT</div>
+          <div class="sidebar-avatar" id="sidebarAvatar">—</div>
           <div style="flex:1;min-width:0;">
             <div class="user-name" id="sidebarName">Loading...</div>
             <div class="user-role">Personal Account</div>
@@ -1282,7 +1455,7 @@
             </svg>
             <div class="notif-dot" id="notifDot" style="display:none"></div>
           </a>
-          <div class="topbar-avatar" id="topbarAvatar" onclick="nav(event,'profile.html')">AT</div>
+          <div class="topbar-avatar" id="topbarAvatar" onclick="nav(event,'profile.html')">—</div>
         </div>
       </header>
 
@@ -1290,7 +1463,7 @@
 
         <!-- Greeting -->
         <div class="greeting-row">
-          <div class="greeting-avatar" id="greetingAvatar">AT</div>
+          <div class="greeting-avatar" id="greetingAvatar">—</div>
           <div class="greeting-text">
             <h2 id="greetingText">Good morning.</h2>
             <p id="greetingSub">Here's your financial overview for today.</p>
@@ -1345,7 +1518,7 @@
                 </svg>
                 Send Money
               </button>
-              <button class="bal-btn">
+              <button class="bal-btn" onclick="downloadStatement()">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                   stroke-linejoin="round">
                   <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
@@ -1527,6 +1700,90 @@
     </div>
   </div>
 
+  <!-- Receipt Modal -->
+  <div class="modal-overlay" id="receiptModal" onclick="if(event.target===this) closeReceiptModal()">
+    <div class="modal">
+      <div class="receipt-modal-header"
+        style="flex-direction: column; align-items: center; gap: 12px; padding: 32px 24px;">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <svg width="28" height="28" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="20" cy="20" r="18" stroke="white" stroke-width="1.5" opacity="0.3" />
+            <path d="M20 8 L30 28 H24 L20 20 L16 28 H10 Z" fill="white" opacity="0.9" />
+            <path d="M14 23 H26" stroke="white" stroke-width="1.5" opacity="0.6" />
+            <circle cx="20" cy="6" r="2" fill="white" opacity="0.5" />
+          </svg>
+          <span
+            style="font-family: 'Cormorant Garamond', serif; font-size: 24px; font-weight: 600; color: #fff;">Arcteron
+            Trust</span>
+        </div>
+        <h2 style="font-size: 16px; opacity: 0.7; font-weight: 500; letter-spacing: 1px; text-transform: uppercase;">
+          Transaction Receipt</h2>
+        <button class="icon-btn" onclick="closeReceiptModal()"
+          style="position: absolute; top: 16px; right: 16px; background:transparent; border:none; color:#fff; opacity: 0.5;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </button>
+      </div>
+      <div class="receipt-modal-body">
+        <div class="receipt-amount-box">
+          <label style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px">Transaction
+            Amount</label>
+          <div class="receipt-amount" id="rcpAmount">$0.00</div>
+          <div class="receipt-status-pill" id="rcpStatus">Completed</div>
+        </div>
+        <div class="receipt-info-grid">
+          <div class="receipt-info-item">
+            <label id="rcpPartyLabel">Transfer To</label>
+            <p id="rcpParty">Unknown</p>
+          </div>
+          <div class="receipt-info-item">
+            <label>Reference</label>
+            <p id="rcpRef">#000000</p>
+          </div>
+          <div class="receipt-info-item">
+            <label>Bank</label>
+            <p id="rcpBank">—</p>
+          </div>
+          <div class="receipt-info-item">
+            <label>Account No.</label>
+            <p id="rcpRecipientAcct">—</p>
+          </div>
+          <div class="receipt-info-item">
+            <label>Date</label>
+            <p id="rcpDate">Jan 1, 2026</p>
+          </div>
+          <div class="receipt-info-item">
+            <label>Time</label>
+            <p id="rcpTime">00:00:00 UTC</p>
+          </div>
+          <div class="receipt-info-item">
+            <label>Type</label>
+            <p id="rcpType">Transfer</p>
+          </div>
+          <div class="receipt-info-item">
+            <label>Your Account</label>
+            <p id="rcpAccount">**** 0000</p>
+          </div>
+        </div>
+      </div>
+      <div class="receipt-modal-footer">
+        <button class="btn-receipt-dl" id="rcpDlBtn">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+            <polyline points="7 10 12 15 17 10" />
+            <line x1="12" y1="15" x2="12" y2="3" />
+          </svg>
+          Download Receipt
+        </button>
+        <button class="btn-receipt-close" onclick="closeReceiptModal()">Close</button>
+      </div>
+    </div>
+  </div>
+
   <script src="../../assets/js/api.js"></script>
   <script src="../../assets/js/auth.js"></script>
   <script src="../../assets/js/utils.js"></script>
@@ -1566,11 +1823,11 @@
 
       if (balanceVisible) {
         amountEl.innerHTML = `${actualBalance} <span class="balance-currency">USD</span>`;
-        if (acctEl) acctEl.textContent = lastFourAcct ? `**** ${lastFourAcct}` : '**** ****';
+        acctEl.textContent = lastFourAcct ? `**** ${lastFourAcct}` : '**** ****';
         icon.innerHTML = `<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>`;
       } else {
         amountEl.innerHTML = `•••••• <span class="balance-currency">USD</span>`;
-        if (acctEl) acctEl.textContent = '•••• ••••';
+        acctEl.textContent = '•••• ••••';
         icon.innerHTML = `<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>`;
       }
     }
@@ -1657,41 +1914,72 @@
       }
 
       async function loadTransactions() {
-        const res = await Api.get('/api/transactions/recent', true);
         const container = document.getElementById('txContainer');
-        container.innerHTML = '';
+        // Show loading skeleton initially
+        container.innerHTML = `
+          <div class="tx-item">
+            <div class="skeleton" style="width:34px;height:34px;border-radius:9px;flex-shrink:0"></div>
+            <div style="flex:1">
+              <div class="skeleton" style="height:12px;width:55%;margin-bottom:7px"></div>
+              <div class="skeleton" style="height:10px;width:30%"></div>
+            </div>
+          </div>
+          <div class="tx-item">
+            <div class="skeleton" style="width:34px;height:34px;border-radius:9px;flex-shrink:0"></div>
+            <div style="flex:1">
+              <div class="skeleton" style="height:12px;width:45%;margin-bottom:7px"></div>
+              <div class="skeleton" style="height:10px;width:25%"></div>
+            </div>
+          </div>
+        `;
 
-        if (!res || !res.ok || !res.data || res.data.length === 0) {
+        const res = await Api.get('/api/transactions/recent', true);
+
+        if (!res || !res.ok) {
           container.innerHTML = `
-        <div class="empty-state">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
-          <p>No transactions yet. Make your first transfer to get started.</p>
-        </div>`;
+            <div class="empty-state">
+              <p>Failed to load transactions. Please refresh.</p>
+            </div>`;
+          return;
+        }
+
+        let transactions = res.data || [];
+        if (transactions.length === 0) {
+          container.innerHTML = `
+            <div class="empty-state" style="padding: 48px 24px; text-align: center; color: var(--text-muted);">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width: 48px; height: 48px; margin: 0 auto 16px; opacity: 0.3; display: block;"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+              <p style="font-size: 14px; line-height: 1.6;">No transactions available at the moment. <br><span style="opacity: 0.7;">Your recent activity will appear here once you make or receive a transfer.</span></p>
+            </div>`;
           return;
         }
 
         let creditTotal = 0, debitTotal = 0;
-        const userId = Api.getUser()?.id;
+        transactions.forEach(tx => {
+          const amount = parseFloat(tx.amount);
+          if (tx.is_credit) creditTotal += amount; else debitTotal += amount;
+        });
 
-        container.innerHTML = res.data.slice(0, 8).map(tx => {
-          const isCredit = tx.transaction_type === 'credit' ||
-            (tx.transaction_type !== 'debit' && tx.receiver_id === userId);
+        container.innerHTML = transactions.slice(0, 8).map(tx => {
+          const isCredit = tx.is_credit;
           const cls = isCredit ? 'credit' : 'debit';
           const icon = isCredit ? '↓' : '↑';
           const sign = isCredit ? '+' : '-';
           const amount = parseFloat(tx.amount);
-          if (isCredit) creditTotal += amount; else debitTotal += amount;
 
           const desc = tx.description || (isCredit ? 'Credit' : 'Debit');
-          const date = Utils.formatDate(tx.transaction_date || tx.created_at);
+          const dateObj = new Date(tx.transaction_date || tx.created_at);
+          const date = dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+          const time = dateObj.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
+          const partyLabel = isCredit ? 'Transfer from' : 'Transfer to';
+          const partyName = tx.recipient_name || (isCredit ? 'External Sender' : 'Recipient');
           const statusMap = { completed: 'badge-success', pending: 'badge-warning', failed: 'badge-danger' };
 
           return `
-        <div class="tx-item">
+        <div class="tx-item" onclick="openReceiptModal('${tx.id}')">
           <div class="tx-icon ${cls}">${icon}</div>
           <div class="tx-info">
-            <div class="tx-name">${desc}</div>
-            <div class="tx-date">${date}</div>
+            <div class="tx-name">${partyLabel} ${partyName}</div>
+            <div class="tx-date">${date} <span style="margin-left: 8px; opacity: 0.6;">${time}</span></div>
           </div>
           <div class="tx-right">
             <div class="tx-amount ${cls}">${sign}${fmt(amount)}</div>
@@ -1702,7 +1990,110 @@
 
         document.getElementById('statCredit').textContent = fmt(creditTotal);
         document.getElementById('statDebit').textContent = fmt(debitTotal);
-        document.getElementById('statCount').textContent = res.data.length;
+        document.getElementById('statCount').textContent = transactions.length;
+
+        // ── Receipt Modal Logic ──
+        window.openReceiptModal = function (txId) {
+          const tx = transactions.find(t => t.id === txId);
+          if (!tx) return;
+
+          const modal = document.getElementById('receiptModal');
+          const isCredit = tx.is_credit;
+          const sign = isCredit ? '+' : '-';
+          const cls = isCredit ? 'credit' : 'debit';
+
+          document.getElementById('rcpAmount').textContent = `${sign}${fmt(tx.amount)}`;
+          document.getElementById('rcpAmount').className = `receipt-amount ${cls}`;
+          document.getElementById('rcpStatus').textContent = tx.status;
+
+          const partyLabel = isCredit ? "Transfer from" : "Transfer to";
+          const partyName = tx.recipient_name || (isCredit ? "External Sender" : "—");
+          document.getElementById('rcpPartyLabel').textContent = partyLabel;
+          document.getElementById('rcpParty').textContent = partyName;
+
+          document.getElementById('rcpBank').textContent = tx.recipient_bank || '—';
+          document.getElementById('rcpRecipientAcct').textContent = tx.recipient_account || '—';
+
+          document.getElementById('rcpRef').textContent = tx.reference;
+
+          const txDateObj = new Date(tx.transaction_date || tx.created_at);
+          document.getElementById('rcpDate').textContent = txDateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+          document.getElementById('rcpTime').textContent = txDateObj.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false }) + ' UTC';
+          document.getElementById('rcpType').textContent = (tx.transaction_type || 'Transfer').replace(/_/g, ' ');
+
+          // Show own account (full)
+          document.getElementById('rcpAccount').textContent = tx.own_account_number || '—';
+
+          document.getElementById('rcpDlBtn').onclick = () => downloadReceipt(tx.id, tx.reference);
+          modal.classList.add('show');
+        };
+
+        window.closeReceiptModal = function () {
+          document.getElementById('receiptModal').classList.remove('show');
+        };
+
+        window.downloadReceipt = async function (txId, reference) {
+          const token = Api.getToken();
+          if (!token) return;
+
+          const theme = document.documentElement.getAttribute('data-theme') || 'dark';
+          const url = `${API_BASE}/api/transactions/${txId}/receipt?theme=${theme}`;
+
+          try {
+            const res = await fetch(url, { headers: { 'Authorization': `Bearer ${token}` } });
+            if (!res.ok) {
+              let msg = 'Could not download receipt.';
+              try { const e = await res.json(); if (e && e.detail) msg = e.detail; } catch (_) { }
+              Utils.showToast(msg);
+              return;
+            }
+            const contentType = res.headers.get('content-type') || '';
+            if (!contentType.includes('pdf')) { Utils.showToast('Server returned an unexpected response.'); return; }
+            const blob = await res.blob();
+            const objUrl = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = objUrl;
+            link.download = `receipt-${reference}.pdf`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            setTimeout(() => URL.revokeObjectURL(objUrl), 1000);
+          } catch (err) {
+            console.error('Download error:', err);
+            Utils.showToast('Download failed. Please check your connection.');
+          }
+        };
+
+        window.downloadStatement = async function () {
+          const token = Api.getToken();
+          if (!token) return;
+
+          const theme = document.documentElement.getAttribute('data-theme') || 'light';
+          const url = `${API_BASE}/api/transactions/statement/download?theme=${theme}`;
+
+          try {
+            Utils.showToast('Preparing your statement...');
+            const res = await fetch(url, { headers: { 'Authorization': `Bearer ${token}` } });
+            if (!res.ok) {
+              let msg = 'Could not download statement.';
+              try { const e = await res.json(); if (e && e.detail) msg = e.detail; } catch (_) { }
+              Utils.showToast(msg);
+              return;
+            }
+            const blob = await res.blob();
+            const objUrl = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = objUrl;
+            link.download = `statement-${new Date().toISOString().split('T')[0]}.pdf`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            setTimeout(() => URL.revokeObjectURL(objUrl), 1000);
+          } catch (err) {
+            console.error('Download error:', err);
+            Utils.showToast('Statement download failed.');
+          }
+        };
 
         const notifRes = await Api.get('/api/notifications/unread-count', true);
         if (notifRes?.ok && notifRes.data?.count > 0) {
