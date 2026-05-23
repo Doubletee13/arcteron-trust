@@ -154,6 +154,25 @@ def get_all_transactions(
     }
 
 
+@router.get("/{tx_id}")
+def get_single_transaction(
+    tx_id: str,
+    current_user: User = Depends(get_current_active_user),
+    db: Session = Depends(get_db)
+):
+    """Fetch a single transaction by ID — used by the frontend receipt modal."""
+    tx = db.query(Transaction).filter(
+        Transaction.id == tx_id,
+        or_(
+            Transaction.sender_id == current_user.id,
+            Transaction.receiver_id == current_user.id
+        )
+    ).first()
+    if not tx:
+        raise HTTPException(status_code=404, detail="Transaction not found.")
+    return tx_to_dict(tx, current_user.id, db)
+
+
 @router.get("/{tx_id}/receipt")
 def download_receipt(
     tx_id: str,
@@ -275,7 +294,7 @@ class LogoFlowable(Flowable):
         canvas.restoreState()
 
 
-def generate_receipt_pdf(tx, user, account, is_credit: bool, theme: str = 'dark', db: Session = None) -> bytes:
+def generate_receipt_pdf(tx, user, account, is_credit: bool, theme: str = 'dark', db: Session = None) -> bytes:  # noqa: C901
     from reportlab.lib.pagesizes import A4
     from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
     from reportlab.lib.colors import HexColor, white, black, transparent
@@ -287,169 +306,242 @@ def generate_receipt_pdf(tx, user, account, is_credit: bool, theme: str = 'dark'
     
     # Theme-Aware Colors
     if theme == 'dark':
-        bg_main = HexColor('#0F1115')
-        text_primary = white
+        bg_main       = HexColor('#111827')
+        card_bg       = HexColor('#1F2937')
+        text_primary  = white
         text_secondary = HexColor('#9CA3AF')
-        text_muted = HexColor('#6B7280')
-        border_color = HexColor('#2B2F36')
-        logo_color = '#FFFFFF'
+        text_muted    = HexColor('#6B7280')
+        border_color  = HexColor('#2B2F36')
+        wm_color      = HexColor('#FFFFFF')
+        logo_color    = '#FFFFFF'
     else:
-        bg_main = white
-        text_primary = HexColor('#111827')
+        bg_main       = white
+        card_bg       = HexColor('#F9FAFB')
+        text_primary  = HexColor('#111827')
         text_secondary = HexColor('#4B5563')
-        text_muted = HexColor('#9CA3AF')
-        border_color = HexColor('#E5E7EB')
-        logo_color = '#111827'
+        text_muted    = HexColor('#9CA3AF')
+        border_color  = HexColor('#E5E7EB')
+        wm_color      = HexColor('#111827')
+        logo_color    = '#111827'
 
     accent_success = HexColor('#10B981')
-    accent_danger = HexColor('#EF4444')
+    accent_danger  = HexColor('#EF4444')
     accent_warning = HexColor('#F59E0B')
 
-    def on_page(canvas, doc):
+    # ── Watermark: diagonal repeating logo + text ──
+    def draw_watermark(canvas, doc):
+        from reportlab.lib.colors import HexColor
         canvas.saveState()
-        canvas.setTitle("Arcteron Trust")
+        # Fill page background
         canvas.setFillColor(bg_main)
-        canvas.rect(0, 0, A4[0], A4[1], fill=1)
+        canvas.rect(0, 0, A4[0], A4[1], fill=1, stroke=0)
+
+        # Watermark settings
+        canvas.setFillColor(wm_color)
+        canvas.setFillAlpha(0.04) 
+        canvas.setFont('Times-Bold', 9)
+
+        import math
+        step_x, step_y = 100, 70
+        angle = -25  # degrees
+        rad = math.radians(angle)
+
+        page_w, page_h = A4
+        for row in range(-2, int(page_h / step_y) + 3):
+            for col in range(-2, int(page_w / step_x) + 3):
+                cx = col * step_x
+                cy = row * step_y
+                canvas.saveState()
+                canvas.translate(cx, cy)
+                canvas.rotate(angle)
+
+                # Mini logo
+                scale = 0.28
+                canvas.saveState()
+                canvas.scale(scale, scale)
+                canvas.setStrokeColor(wm_color)
+                canvas.setStrokeAlpha(0.04)
+                canvas.setLineWidth(1.2)
+                canvas.circle(20, 20, 18, fill=0, stroke=1)
+                canvas.setFillAlpha(0.04)
+                p = canvas.beginPath()
+                p.moveTo(20, 32); p.lineTo(30, 12); p.lineTo(24, 12)
+                p.lineTo(20, 20); p.lineTo(16, 12); p.lineTo(10, 12)
+                p.close()
+                canvas.drawPath(p, fill=1, stroke=0)
+                canvas.restoreState()
+
+                canvas.setFillColor(wm_color)
+                canvas.setFillAlpha(0.04)
+                canvas.drawString(14, 2, 'Arcteron Trust')
+                canvas.restoreState()
+
         canvas.restoreState()
-
-    doc = SimpleDocTemplate(
-        buffer, pagesize=A4,
-        leftMargin=25*mm, rightMargin=25*mm,
-        topMargin=20*mm, bottomMargin=20*mm
-    )
-
-    styles = getSampleStyleSheet()
-    brand_font = 'Times-Bold'
-
-    h1 = ParagraphStyle('h1', fontSize=24, fontName=brand_font, textColor=text_primary, alignment=TA_CENTER, spaceAfter=8)
-    h2 = ParagraphStyle('h2', fontSize=14, fontName='Helvetica-Bold', textColor=text_primary, spaceAfter=6, spaceBefore=12)
-    label_style = ParagraphStyle('label', fontSize=9, fontName='Helvetica', textColor=text_muted, textTransform='uppercase', letterSpacing=1)
-    value_style = ParagraphStyle('value', fontSize=11, fontName='Helvetica-Bold', textColor=text_primary)
-    amount_style = ParagraphStyle('amount', fontSize=38, fontName=brand_font, leading=45,
-                                   textColor=accent_success if is_credit else accent_danger, alignment=TA_CENTER, spaceAfter=4)
-    status_style = ParagraphStyle('status', fontSize=10, fontName='Helvetica-Bold', 
-                                   textColor=white, alignment=TA_CENTER)
-
-    elements = []
-
-    # ── Header with Logo (Dark indigo/navy background like modal) ──
-    modal_header_bg = HexColor('#1F2937') # Dark gray/indigo matching the dashboard/modal header
-    
-    branding_logo = LogoFlowable(size=52, color='#FFFFFF') # Always white in dark header
-    
-    # We use a full-width table with background for the header
-    header_data = [
-        [branding_logo],
-        [Paragraph('Arcteron Trust', h1.clone('h1_white', textColor=white))],
-        [Paragraph('TRANSACTION RECEIPT', 
-                  ParagraphStyle('subh', fontSize=10, fontName='Helvetica', textColor=HexColor('#D1D5DB'), 
-                                 alignment=TA_CENTER, letterSpacing=2.5))]
-    ]
-    
-    # Nested table for background
-    header_table = Table(header_data, colWidths=[160*mm])
-    header_table.setStyle(TableStyle([
-        ('BACKGROUND', (0,0), (-1,-1), modal_header_bg),
-        ('ALIGN', (0,0), (-1,-1), 'CENTER'),
-        ('VALIGN', (0,0), (-1,-1), 'MIDDLE'),
-        ('TOPPADDING', (0,0), (0,0), 12*mm),
-        ('BOTTOMPADDING', (0,1), (0,1), 4*mm),
-        ('BOTTOMPADDING', (0,2), (0,2), 8*mm),
-    ]))
-    elements.append(header_table)
-    
-    # Added explicit margin between header and content
-    elements.append(Spacer(1, 18*mm))
-
-    # ── Amount & Status ──
-    sign = '+' if is_credit else '-'
-    amount_val = f'{sign}${float(tx.amount):,.2f}'
-    
-    status_label = tx.status.upper()
-    status_bg = accent_success if tx.status == 'completed' else accent_warning if tx.status == 'pending' else accent_danger
-    
-    # Use two separate elements with fixed spacing to prevent overlap
-    elements.append(Paragraph(amount_val, amount_style))
-    elements.append(Spacer(1, 10*mm))
-    
-    status_badge = Table([[Paragraph(status_label, status_style)]], colWidths=[30*mm])
-    status_badge.setStyle(TableStyle([
-        ('BACKGROUND', (0,0), (-1,-1), status_bg),
-        ('ROUNDEDCORNERS', [4,4,4,4]),
-        ('ALIGN', (0,0), (-1,-1), 'CENTER'),
-        ('TOPPADDING', (0,0), (-1,-1), 4),
-        ('BOTTOMPADDING', (0,0), (-1,-1), 4),
-    ]))
-    elements.append(status_badge)
-    elements.append(Spacer(1, 18*mm))
-    
-    elements.append(HRFlowable(width="100%", thickness=1, color=border_color, vAlign='TOP'))
-    elements.append(Spacer(1, 12*mm))
-
-    # ── Info Grid ──
-    def grid_item(label, value):
-        return [
-            Paragraph(label, label_style),
-            Spacer(1, 1.5*mm),
-            Paragraph(str(value) if value else '—', value_style),
-            Spacer(1, 8*mm)
-        ]
 
     tx_date_val = tx.transaction_date or tx.created_at
     tx_date_str = tx_date_val.strftime("%b %d, %Y") if tx_date_val else "—"
-    tx_time_str = tx_date_val.strftime("%H:%M:%S UTC") if tx_date_val else "—"
-    
-    party_label = "Transfer from" if is_credit else "Transfer to"
-    party_name = "External Sender"
-    recipient_acct = tx.recipient_account or '—'
-    
+    tx_time_str = tx_date_val.strftime("%I:%M:%S %p UTC") if tx_date_val else "—"
+    tx_datetime_str = f"{tx_date_str} · {tx_time_str}" if tx_date_val else "—"
+
+    party_label = "Transfer From" if is_credit else "Transfer To"
+    party_name  = "External Sender"
+    recipient_acct = tx.recipient_account or "—"
+    bank_name = tx.recipient_bank or "Arcteron Trust"
+
     if is_credit:
         if tx.sender_id and db:
             sender = db.query(User).filter(User.id == tx.sender_id).first()
-            if sender: party_name = f"{sender.first_name} {sender.last_name}"
+            if sender:
+                party_name = f"{sender.first_name} {sender.last_name}"
+                bank_name  = "Arcteron Trust"
+                sender_acct = db.query(Account).filter(Account.user_id == sender.id).first()
+                if sender_acct: recipient_acct = sender_acct.account_number
     else:
         party_name = tx.recipient_name or "Unknown Recipient"
         if tx.receiver_id and db:
             receiver = db.query(User).filter(User.id == tx.receiver_id).first()
-            if receiver: 
+            if receiver:
                 party_name = f"{receiver.first_name} {receiver.last_name}"
-                # Lookup recipient account for local transfers
+                bank_name  = "Arcteron Trust"
                 rec_acc = db.query(Account).filter(Account.user_id == receiver.id).first()
                 if rec_acc: recipient_acct = rec_acc.account_number
 
-    grid_data = [
-        [grid_item(party_label, party_name), grid_item('Reference', tx.reference)],
-        [grid_item('Bank', tx.recipient_bank or 'Arcteron Trust'), grid_item('Account No.', recipient_acct)],
-        [grid_item('Date', tx_date_str), grid_item('Time', tx_time_str)],
-        [grid_item('Type', (tx.transaction_type or 'Transfer').replace('_', ' ').title()), grid_item('Your Account', (account.account_number if account else '—'))]
+    def mask_acct(n):
+        if not n or n == '—': return '—'
+        d = ''.join(c for c in str(n) if c.isdigit())
+        return ('**** ' + d[-4:]) if len(d) > 4 else ('**** ' + d.zfill(4))
+
+    def fmt_acct(n):
+        if not n or n == '—': return '—'
+        d = ''.join(c for c in str(n) if c.isdigit())
+        groups = [d[i:i+4] for i in range(0, len(d), 4)]
+        return ' '.join(groups)
+
+    if is_credit:
+        display_recipient_acct = mask_acct(recipient_acct)
+        display_user_acct      = fmt_acct(account.account_number) if account else '—'
+    else:
+        display_recipient_acct = fmt_acct(recipient_acct)
+        display_user_acct      = mask_acct(account.account_number) if account else '—'
+
+    tx_type_str = (tx.transaction_type or 'Transfer').replace('_', ' ').title()
+    sign        = '+' if is_credit else '-'
+    amount_val  = f"{sign}${float(tx.amount):,.2f}"
+
+    status_str      = (tx.status or 'Completed').title()
+    amount_color    = accent_success if is_credit else accent_danger
+    status_color    = (accent_success if tx.status == 'completed'
+                       else accent_warning if tx.status == 'pending'
+                       else accent_danger)
+
+    doc = SimpleDocTemplate(
+        buffer,
+        pagesize=A4,
+        leftMargin=22*mm, rightMargin=22*mm,
+        topMargin=15*mm, bottomMargin=15*mm
+    )
+
+    brand_font = 'Times-Bold'
+    FULL_W     = A4[0] - 44*mm  
+
+    def sty(name, **kw):
+        return ParagraphStyle(name, **kw)
+
+    label_sty  = sty('lbl',   fontSize=9,  fontName='Helvetica',      textColor=text_muted,
+                               leading=10, spaceAfter=2)
+    value_sty  = sty('val',   fontSize=11, fontName='Helvetica-Bold',  textColor=text_primary, leading=14)
+    amount_sty = sty('amt',   fontSize=32, fontName=brand_font,        textColor=amount_color,
+                               alignment=TA_CENTER, leading=38)
+    status_sty = sty('sts',   fontSize=12, fontName='Helvetica',       textColor=status_color,
+                               alignment=TA_CENTER, leading=16)
+    dt_sty     = sty('dt',    fontSize=9,  fontName='Helvetica',       textColor=text_secondary,
+                               alignment=TA_CENTER, leading=13)
+    brand_sty  = sty('brd',   fontSize=16, fontName=brand_font,        textColor=text_primary, leading=20)
+    footer_sty = sty('foot',  fontSize=7.5, fontName='Helvetica',      textColor=text_muted,
+                               alignment=TA_CENTER, leading=11)
+
+    elements = []
+
+    logo_fl = LogoFlowable(size=28, color=logo_color)
+    brand_p = Paragraph('Arcteron Trust', brand_sty)
+    receipt_label_p = Paragraph('Transaction Receipt',
+                                 sty('rl', fontSize=9, fontName='Helvetica',
+                                     textColor=text_muted, alignment=TA_RIGHT, leading=12))
+
+    header_inner = Table(
+        [[logo_fl, brand_p, receipt_label_p]],
+        colWidths=[10*mm, 100*mm, 56*mm]
+    )
+    header_inner.setStyle(TableStyle([
+        ('VALIGN',      (0, 0), (-1, -1), 'MIDDLE'),
+        ('LEFTPADDING', (0, 0), (-1, -1), 0),
+        ('RIGHTPADDING',(0, 0), (-1, -1), 0),
+        ('TOPPADDING',  (0, 0), (-1, -1), 0),
+        ('BOTTOMPADDING', (0,0), (-1,-1), 0),
+    ]))
+    elements.append(header_inner)
+    elements.append(Spacer(1, 4*mm))
+    elements.append(HRFlowable(width="100%", thickness=0.5, color=border_color))
+    elements.append(Spacer(1, 8*mm))
+
+    elements.append(Paragraph(amount_val, amount_sty))
+    elements.append(Spacer(1, 3*mm))
+    elements.append(Paragraph(status_str, status_sty))
+    elements.append(Spacer(1, 2*mm))
+    elements.append(Paragraph(tx_datetime_str, dt_sty))
+    elements.append(Spacer(1, 8*mm))
+
+    elements.append(HRFlowable(width="100%", thickness=1, color=border_color,
+                                lineCap='round', dash=[2, 4]))
+    elements.append(Spacer(1, 6*mm))
+
+    rows = [
+        (party_label,    party_name),
+        ('Bank',         bank_name),
+        ('Account No.',  display_recipient_acct),
+        ('Reference',    tx.reference or '—'),
+        ('Type',         tx_type_str),
+        ('Your Account', display_user_acct),
     ]
 
-    info_table = Table(grid_data, colWidths=[80*mm, 80*mm])
-    info_table.setStyle(TableStyle([
-        ('VALIGN', (0,0), (-1,-1), 'TOP'),
-        ('LEFTPADDING', (0,0), (-1,-1), 0),
-        ('RIGHTPADDING', (0,0), (-1,-1), 0),
-    ]))
-    elements.append(info_table)
-    
-    elements.append(Spacer(1, 12*mm))
-    elements.append(HRFlowable(width="100%", thickness=1, color=border_color, vAlign='TOP'))
-    elements.append(Spacer(1, 18*mm))
+    def make_row(lbl, val, is_last=False):
+        lbl_p = Paragraph(lbl, label_sty)
+        val_p = Paragraph(str(val) if val else '—', value_sty)
+        row_table = Table([[lbl_p, val_p]], colWidths=[FULL_W * 0.42, FULL_W * 0.58])
+        style = [
+            ('VALIGN',      (0, 0), (-1, -1), 'MIDDLE'),
+            ('LEFTPADDING', (0, 0), (-1, -1), 0),
+            ('RIGHTPADDING',(0, 0), (-1, -1), 0),
+            ('TOPPADDING',  (0, 0), (-1, -1), 6),
+            ('BOTTOMPADDING', (0, 0), (-1, -1), 6),
+            ('ALIGN',       (1, 0), (1, 0), 'RIGHT'),
+        ]
+        if not is_last:
+            style.append(('LINEBELOW', (0, 0), (-1, -1), 0.5, border_color))
+        row_table.setStyle(TableStyle(style))
+        return row_table
 
-    # ── Footer ──
-    elements.append(Paragraph(
-        'This is an official transaction receipt issued by Arcteron Trust. '
-        'Private Banking & Wealth Management. For inquiries, contact support@arcterontrust.com.',
-        ParagraphStyle('footer', fontSize=8, fontName='Helvetica', textColor=text_muted,
-                       alignment=TA_CENTER, leading=12)
-    ))
+    for i, (lbl, val) in enumerate(rows):
+        elements.append(make_row(lbl, val, is_last=(i == len(rows) - 1)))
+
     elements.append(Spacer(1, 6*mm))
+
+    elements.append(HRFlowable(width="100%", thickness=1, color=border_color,
+                                lineCap='round', dash=[2, 4]))
+    elements.append(Spacer(1, 8*mm))
+
+    elements.append(Paragraph(
+        'This is an official transaction receipt issued by Arcteron Trust — Private Banking &amp; Wealth '
+        'Management. FDIC Insured · Member SIPC. For inquiries: support@arcterontrust.com',
+        footer_sty
+    ))
+    elements.append(Spacer(1, 3*mm))
     elements.append(Paragraph(
         f'© {datetime.now().year} Arcteron Trust',
-        ParagraphStyle('copy', fontSize=9, fontName=brand_font, textColor=text_primary, alignment=TA_CENTER)
+        sty('copy', fontSize=8, fontName=brand_font, textColor=text_primary, alignment=TA_CENTER)
     ))
 
-    doc.build(elements, onFirstPage=on_page, onLaterPages=on_page)
+    doc.build(elements, onFirstPage=draw_watermark, onLaterPages=draw_watermark)
     return buffer.getvalue()
 
 

@@ -1,6 +1,8 @@
 const API_BASE = 'http://127.0.0.1:8000';
 
 const Api = {
+  API_BASE: API_BASE,
+  
   getToken() {
     return localStorage.getItem('arcteronToken');
   },

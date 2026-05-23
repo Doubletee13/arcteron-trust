@@ -40,13 +40,15 @@ class InternationalTransferRequest(BaseModel):
     bop_code: Optional[str] = None
 
 
-def create_notification(db, user_id, title, message, notif_type, transaction_id=None):
+def create_notification(db, user_id, title, message, notif_type, related_id=None, related_type=None, data=None):
     notif = Notification(
         user_id=user_id,
         title=title,
         message=message,
-        notification_type=notif_type,
-        related_transaction_id=transaction_id
+        type=notif_type,
+        related_id=related_id,
+        related_type=related_type,
+        data=data
     )
     db.add(notif)
 
@@ -142,7 +144,13 @@ def local_transfer(
         "Transfer Sent",
         f"You sent {fmt_amount(amount)} to {recipient_user.first_name} {recipient_user.last_name}. Ref: {reference}",
         NotificationType.transaction,
-        transaction.id
+        related_id=transaction.id,
+        related_type="transaction",
+        data={
+            "amount": float(amount),
+            "recipient": f"{recipient_user.first_name} {recipient_user.last_name}",
+            "reference": reference
+        }
     )
 
     create_notification(
@@ -150,7 +158,13 @@ def local_transfer(
         "Money Received",
         f"You received {fmt_amount(amount)} from {current_user.first_name} {current_user.last_name}. Ref: {reference}",
         NotificationType.transaction,
-        transaction.id
+        related_id=transaction.id,
+        related_type="transaction",
+        data={
+            "amount": float(amount),
+            "sender": f"{current_user.first_name} {current_user.last_name}",
+            "reference": reference
+        }
     )
 
     db.commit()
@@ -251,7 +265,14 @@ def international_transfer(
         "International Transfer Initiated",
         f"Your wire of {fmt_amount(amount)} to {data.recipient_name} is pending review. Ref: {reference}",
         NotificationType.transaction,
-        transaction.id
+        related_id=transaction.id,
+        related_type="transaction",
+        data={
+            "amount": float(amount),
+            "recipient": data.recipient_name,
+            "bank": data.recipient_bank,
+            "reference": reference
+        }
     )
 
     db.commit()

@@ -256,14 +256,21 @@
     }
 
     .notif-dot {
-      width: 7px;
-      height: 7px;
+      min-width: 16px;
+      height: 16px;
       background: #EF4444;
       border-radius: 50%;
       position: absolute;
-      top: 7px;
-      right: 7px;
+      top: 5px;
+      right: 5px;
       border: 2px solid var(--bg-secondary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 600;
+      color: white;
+      padding: 0 4px;
     }
 
     .topbar-avatar {
@@ -991,6 +998,138 @@
       }
     }
 
+    /* Receipt Modal */
+    .receipt-modal-header {
+      padding: 24px;
+      background: #111827;
+      color: #fff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .receipt-modal-header h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 20px;
+      margin: 0;
+      font-weight: 600;
+    }
+
+    .receipt-modal-body {
+      padding: 24px;
+    }
+
+    .receipt-amount-box {
+      text-align: center;
+      padding: 20px 0;
+      border-bottom: 1px dashed var(--border-color);
+      margin-bottom: 20px;
+    }
+
+    .receipt-amount {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 32px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .receipt-amount.credit {
+      color: #10B981;
+    }
+
+    .receipt-amount.debit {
+      color: #EF4444;
+    }
+
+    .receipt-status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      background: var(--bg-primary);
+      margin-top: 8px;
+    }
+
+    .receipt-info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .receipt-info-item label {
+      display: block;
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 4px;
+    }
+
+    .receipt-info-item p {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-primary);
+      margin: 0;
+    }
+
+    .receipt-modal-footer {
+      padding: 20px 24px 24px;
+      display: flex;
+      gap: 12px;
+    }
+
+    .btn-receipt-dl {
+      flex: 1;
+      height: 44px;
+      background: #111827;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 13px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    [data-theme="dark"] .btn-receipt-dl {
+      background: #E5E7EB;
+      color: #111827;
+    }
+
+    .btn-receipt-dl:hover {
+      opacity: 0.9;
+    }
+
+    .btn-receipt-close {
+      width: auto;
+      height: 44px;
+      padding: 0 16px;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-secondary);
+      cursor: pointer;
+      background: transparent;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .btn-receipt-close:hover {
+      color: var(--text-primary);
+      border-color: var(--text-primary);
+    }
+
     .modal-icon {
       width: 56px;
       height: 56px;
@@ -1293,14 +1432,16 @@
               <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
             </svg>
           </button>
-          <a class="icon-btn" href="notifications.html" onclick="nav(event,'notifications.html')">
-            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none"
-              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
-              <path d="M13.73 21a2 2 0 0 1-3.46 0" />
-            </svg>
-            <div class="notif-dot" id="notifDot" style="display:none"></div>
-          </a>
+          <div class="icon-btn-wrapper" style="position:relative">
+            <button class="icon-btn" id="notifBtn" onclick="nav(event,'notifications.html')">
+              <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+                <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+              </svg>
+              <div class="notif-dot" id="notifDot" style="display:none">0</div>
+            </button>
+          </div>
           <div class="topbar-avatar" id="topbarAvatar" onclick="nav(event,'profile.html')">AT</div>
         </div>
       </header>
@@ -1658,6 +1799,8 @@
   <script src="../../assets/js/api.js"></script>
   <script src="../../assets/js/auth.js"></script>
   <script src="../../assets/js/utils.js"></script>
+  <script src="../../assets/js/timeUtils.js"></script>
+  <script src="../../assets/js/receiptModal.js"></script>
   <script>
     (async () => {
       const authenticated = await Auth.requireAuthAsync();
@@ -1752,6 +1895,10 @@
 
       setupPinInputs('l');
       setupPinInputs('i');
+      updateNotificationDot();
+      
+      // Initialize receipt modal component
+      ReceiptModal.init();
     }
 
     function setupPinInputs(prefix) {
@@ -1969,6 +2116,7 @@
         document.getElementById('verifiedBadge').classList.remove('show');
         verifiedRecipient = null;
         updateSummary();
+        updateNotificationDot();
       } else {
         showAlert(res?.data?.detail || 'Transaction failed.');
       }
@@ -2016,6 +2164,7 @@
         currentBalance = res.data.new_balance;
         document.getElementById('availableBalance').textContent = fmt(currentBalance);
         showModal('Wire Submitted', `Wire of ${fmt(amount)} to ${name} is processing.`, res.data.reference, true);
+        updateNotificationDot();
       } else {
         showAlert(res?.data?.detail || 'Wire failed. Please try again.');
       }
@@ -2053,8 +2202,75 @@
       Utils.navigateTo(path);
     }
 
+    // Update notification dot
+    async function updateNotificationDot() {
+      try {
+        const res = await Api.get('/api/notifications/unread-count', true);
+        if (res && res.ok) {
+          const data = res.data;
+          const notifDot = document.getElementById('notifDot');
+          if (data.count > 0) {
+            notifDot.style.display = 'flex';
+            notifDot.textContent = data.count > 99 ? '99+' : data.count;
+          } else {
+            notifDot.style.display = 'none';
+          }
+        }
+      } catch (err) {
+        console.error('Error updating notification dot:', err);
+      }
+    }
+
+    // Mark single notification as read
+    async function markNotificationAsRead(notifId) {
+      try {
+        const res = await Api.post(`/api/notifications/${notifId}/mark-read`, {}, true);
+        if (res && res.ok) {
+          updateNotificationDot();
+        }
+      } catch (err) {
+        console.error('Error marking notification as read:', err);
+      }
+    }
+
+    // Open receipt modal from notification
+    async function openNotificationReceipt(notifId) {
+      try {
+        const res = await Api.get(`/api/notifications/${notifId}`, true);
+        if (res && res.ok) {
+          const notif = res.data;
+          // If it's a transaction notification, populate and show receipt modal
+          if (notif.type === 'transaction' && notif.data) {
+            const isSent = notif.title.toLowerCase().includes('sent');
+            ReceiptModal.open({
+              amount: notif.data.amount,
+              partyLabel: isSent ? 'Transfer To' : 'Transfer From',
+              party: notif.data.recipient || notif.data.sender || 'Unknown',
+              reference: notif.data.reference || '#000000',
+              bank: 'Arcteron Trust',
+              recipientAccount: notif.data.recipient_account || '0000',
+              date: TimeUtils.formatDateTime(notif.created_at).split(' at ')[0],
+              time: TimeUtils.formatDateTime(notif.created_at).split(' at ')[1],
+              type: isSent ? 'Transfer Sent' : 'Transfer Received',
+              account: '0000',
+              status: 'Completed',
+              isCredit: !isSent
+            });
+          }
+        }
+      } catch (err) {
+        console.error('Error opening notification receipt:', err);
+      }
+    }
+
     // init() is now called by the async IIFE at the top
 
+  </script>
+
+  <script>
+    function closeReceiptModal() {
+      ReceiptModal.close();
+    }
   </script>
 </body>
 
