@@ -257,6 +257,24 @@
             color: #111827;
         }
 
+        .notif-dot {
+            min-width: 16px;
+            height: 16px;
+            background: #EF4444;
+            border-radius: 50%;
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            border: 2px solid var(--bg-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: 600;
+            color: white;
+            padding: 0 4px;
+        }
+
         .page-content {
             padding: 28px;
             flex: 1;
@@ -1004,6 +1022,7 @@
         }
 
         @media (max-width: 480px) {
+
             /* Card layout works on mobile - no special changes needed */
             .transactions-wrap {
                 border: none;
@@ -1125,6 +1144,17 @@
                             <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
                         </svg>
                     </button>
+                    <div class="icon-btn-wrapper" style="position:relative">
+                        <button class="icon-btn" id="notifBtn" onclick="nav(event,'notifications.html')">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+                                <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+                            </svg>
+                            <div class="notif-dot" id="notifDot" style="display:none">0</div>
+                        </button>
+                    </div>
                     <div class="topbar-avatar" id="topbarAvatar">—</div>
                 </div>
             </header>
@@ -1165,7 +1195,8 @@
 
                 <!-- Action bar: Filter + Download Statement -->
                 <div style="display:flex; gap:10px; align-items:center; margin-bottom:16px; flex-wrap:wrap;">
-                    <button class="statement-btn" id="filterToggleBtn" onclick="toggleMobileFilters()" style="gap:8px; display:none;">
+                    <button class="statement-btn" id="filterToggleBtn" onclick="toggleMobileFilters()"
+                        style="gap:8px; display:none;">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                             stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
@@ -1189,7 +1220,8 @@
                         <div class="filter-modal-header">
                             <h3>Filter Transactions</h3>
                             <button class="filter-close-btn" onclick="closeFilterModal()">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <line x1="18" y1="6" x2="6" y2="18" />
                                     <line x1="6" y1="6" x2="18" y2="18" />
                                 </svg>
@@ -1229,7 +1261,8 @@
                             </div>
                         </div>
                         <div class="filter-modal-footer">
-                            <button class="filter-clear" onclick="clearFilters(); closeFilterModal();" style="flex:1">Clear</button>
+                            <button class="filter-clear" onclick="clearFilters(); closeFilterModal();"
+                                style="flex:1">Clear</button>
                             <button class="filter-btn" onclick="applyFiltersFromModal();" style="flex:1">Apply</button>
                         </div>
                     </div>
@@ -1283,7 +1316,8 @@
                                 <div class="skeleton" style="height:10px;width:30%"></div>
                             </div>
                             <div>
-                                <div class="skeleton" style="height:12px;width:60px;margin-bottom:7px;margin-left:auto"></div>
+                                <div class="skeleton" style="height:12px;width:60px;margin-bottom:7px;margin-left:auto">
+                                </div>
                                 <div class="skeleton" style="height:10px;width:40px;margin-left:auto"></div>
                             </div>
                         </div>
@@ -1294,7 +1328,8 @@
                                 <div class="skeleton" style="height:10px;width:25%"></div>
                             </div>
                             <div>
-                                <div class="skeleton" style="height:12px;width:55px;margin-bottom:7px;margin-left:auto"></div>
+                                <div class="skeleton" style="height:12px;width:55px;margin-bottom:7px;margin-left:auto">
+                                </div>
                                 <div class="skeleton" style="height:10px;width:40px;margin-left:auto"></div>
                             </div>
                         </div>
@@ -1310,84 +1345,6 @@
         </div>
     </div>
 
-
-    <!-- Receipt Modal -->
-    <div class="modal-overlay" id="receiptModal" onclick="if(event.target===this) closeReceiptModal()">
-        <div class="modal">
-            <div class="receipt-modal-header"
-                style="flex-direction: column; align-items: center; gap: 12px; padding: 32px 24px;">
-                <div style="display:flex; align-items:center; gap:10px;">
-                    <svg width="28" height="28" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="20" cy="20" r="18" stroke="white" stroke-width="1.5" opacity="0.3" />
-                        <path d="M20 8 L30 28 H24 L20 20 L16 28 H10 Z" fill="white" opacity="0.9" />
-                        <path d="M14 23 H26" stroke="white" stroke-width="1.5" opacity="0.6" />
-                        <circle cx="20" cy="6" r="2" fill="white" opacity="0.5" />
-                    </svg>
-                    <span
-                        style="font-family: 'Cormorant Garamond', serif; font-size: 24px; font-weight: 600; color: #fff;">Arcteron
-                        Trust</span>
-                </div>
-                <h2
-                    style="font-size: 16px; opacity: 0.7; font-weight: 500; letter-spacing: 1px; text-transform: uppercase;">
-                    Transaction Receipt</h2>
-            </div>
-            <div class="receipt-modal-body">
-                <div class="receipt-amount-box">
-                    <label
-                        style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px">Transaction
-                        Amount</label>
-                    <div class="receipt-amount" id="rcpAmount">$0.00</div>
-                    <div class="receipt-status-pill" id="rcpStatus">Completed</div>
-                </div>
-                <div class="receipt-info-grid">
-                    <div class="receipt-info-item">
-                        <label id="rcpPartyLabel">Transfer To</label>
-                        <p id="rcpParty">Unknown</p>
-                    </div>
-                    <div class="receipt-info-item">
-                        <label>Reference</label>
-                        <p id="rcpRef">#000000</p>
-                    </div>
-                    <div class="receipt-info-item">
-                        <label>Bank</label>
-                        <p id="rcpBank">—</p>
-                    </div>
-                    <div class="receipt-info-item">
-                        <label>Account No.</label>
-                        <p id="rcpRecipientAcct">—</p>
-                    </div>
-                    <div class="receipt-info-item">
-                        <label>Date</label>
-                        <p id="rcpDate">Jan 1, 2026</p>
-                    </div>
-                    <div class="receipt-info-item">
-                        <label>Time</label>
-                        <p id="rcpTime">00:00:00 UTC</p>
-                    </div>
-                    <div class="receipt-info-item">
-                        <label>Type</label>
-                        <p id="rcpType">Transfer</p>
-                    </div>
-                    <div class="receipt-info-item">
-                        <label>Your Account</label>
-                        <p id="rcpAccount">**** 0000</p>
-                    </div>
-                </div>
-            </div>
-            <div class="receipt-modal-footer">
-                <button class="btn-receipt-dl" id="rcpDlBtn">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-                        stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                        <polyline points="7 10 12 15 17 10" />
-                        <line x1="12" y1="15" x2="12" y2="3" />
-                    </svg>
-                    Download Receipt
-                </button>
-                <button class="btn-receipt-close" onclick="closeReceiptModal()">Close</button>
-            </div>
-        </div>
-    </div>
 
     <!-- Statement Modal -->
     <div class="modal-overlay" id="statementModal" onclick="if(event.target===this) closeStatementModal()">
@@ -1425,6 +1382,9 @@
     <script src="../../assets/js/api.js"></script>
     <script src="../../assets/js/auth.js"></script>
     <script src="../../assets/js/utils.js"></script>
+    <script src="../../assets/js/timeUtils.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="../../assets/js/receiptModal.js"></script>
     <script>
         // Proper async auth gate — runs init only after auth is confirmed
         (async function () {
@@ -1458,13 +1418,11 @@
             }
 
             function fmtDate(str) {
-                if (!str) return '—';
-                return new Date(str).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+                return TimeUtils.formatDate(str);
             }
 
             function fmtTime(str) {
-                if (!str) return '—';
-                return new Date(str).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
+                return TimeUtils.formatTime(str);
             }
 
             async function init() {
@@ -1483,6 +1441,10 @@
                 document.getElementById('topbarAvatar').textContent = initials;
                 document.getElementById('sidebarName').textContent = `${user.first_name} ${user.last_name}`;
                 await loadTransactions(1);
+                await updateNotificationDot();
+
+                // Initialize receipt modal component
+                ReceiptModal.init();
             }
 
             function buildQueryString(page) {
@@ -1635,7 +1597,7 @@
                 document.getElementById('modalFilterStatus').value = document.getElementById('filterStatus').value;
                 document.getElementById('modalFilterFrom').value = document.getElementById('filterFrom').value;
                 document.getElementById('modalFilterTo').value = document.getElementById('filterTo').value;
-                
+
                 document.getElementById('filterModalOverlay').classList.add('show');
                 document.body.style.overflow = 'hidden';
             }
@@ -1645,6 +1607,39 @@
                 document.body.style.overflow = '';
             }
 
+            // Update notification dot
+            async function updateNotificationDot() {
+                try {
+                    const res = await Api.get('/api/notifications/unread-count', true);
+
+                    if (res && res.ok) {
+                        const data = res.data;
+                        const notifDot = document.getElementById('notifDot');
+                        if (data.count > 0) {
+                            notifDot.style.display = 'flex';
+                            notifDot.textContent = data.count > 99 ? '99+' : data.count;
+                        } else {
+                            notifDot.style.display = 'none';
+                        }
+                    }
+                } catch (err) {
+                    console.error('Error updating notification dot:', err);
+                }
+            }
+
+            // Mark single notification as read
+            async function markNotificationAsRead(notifId) {
+                try {
+                    const res = await Api.post(`/api/notifications/${notifId}/mark-read`, {}, true);
+                    if (res && res.ok) {
+                        updateNotificationDot();
+                    }
+                } catch (err) {
+                    console.error('Error marking notification as read:', err);
+                }
+            }
+
+
             function applyFiltersFromModal() {
                 // Sync main filter inputs with modal inputs
                 document.getElementById('filterSearch').value = document.getElementById('modalFilterSearch').value;
@@ -1652,7 +1647,7 @@
                 document.getElementById('filterStatus').value = document.getElementById('modalFilterStatus').value;
                 document.getElementById('filterFrom').value = document.getElementById('modalFilterFrom').value;
                 document.getElementById('filterTo').value = document.getElementById('modalFilterTo').value;
-                
+
                 closeFilterModal();
                 applyFilters();
             }
@@ -1662,43 +1657,12 @@
             }
 
             window.openReceiptModal = function (txId) {
-                const tx = allTransactions.find(t => t.id === txId);
-                if (!tx) return;
-
-                const modal = document.getElementById('receiptModal');
-                const sign = tx.is_credit ? '+' : '-';
-                const cls = tx.is_credit ? 'credit' : 'debit';
-
-                document.getElementById('rcpAmount').textContent = `${sign}${fmt(tx.amount)}`;
-                document.getElementById('rcpAmount').className = `receipt-amount ${cls}`;
-                document.getElementById('rcpStatus').textContent = tx.status;
-
-                const partyLabel = tx.is_credit ? 'Transfer from' : 'Transfer to';
-                const partyName = tx.recipient_name || (tx.is_credit ? 'External Sender' : '—');
-                document.getElementById('rcpPartyLabel').textContent = partyLabel;
-                document.getElementById('rcpParty').textContent = partyName;
-
-                document.getElementById('rcpBank').textContent = tx.recipient_bank || '—';
-                document.getElementById('rcpRecipientAcct').textContent = tx.recipient_account || '—';
-
-                document.getElementById('rcpRef').textContent = tx.reference;
-
-                const txDateObj = new Date(tx.transaction_date || tx.created_at);
-                document.getElementById('rcpDate').textContent = txDateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-                document.getElementById('rcpTime').textContent = txDateObj.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false }) + ' UTC';
-                document.getElementById('rcpType').textContent = (tx.transaction_type || 'Transfer').replace(/_/g, ' ');
-
-                // Show own account (the current user's account number)
-                const ownAcct = tx.own_account_number;
-                document.getElementById('rcpAccount').textContent = ownAcct ? ownAcct : '—';
-
-                document.getElementById('rcpDlBtn').onclick = () => downloadReceipt(tx.id, tx.reference);
-
-                modal.classList.add('show');
+                if (!txId) return;
+                ReceiptModal.openById(txId);
             }
 
             window.closeReceiptModal = function () {
-                document.getElementById('receiptModal').classList.remove('show');
+                ReceiptModal.close();
             }
 
             window.downloadReceipt = async function (txId, reference) {
@@ -1811,12 +1775,11 @@
             window.applyFiltersFromModal = applyFiltersFromModal;
             window.toggleMobileFilters = toggleMobileFilters;
 
-            const API_BASE = window.location.origin;
-
             // Close filter modal on Escape key
             document.addEventListener('keydown', (e) => {
                 if (e.key === 'Escape') {
                     closeFilterModal();
+                    ReceiptModal.close();
                 }
             });
 

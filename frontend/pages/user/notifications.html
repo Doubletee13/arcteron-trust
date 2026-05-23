@@ -1,0 +1,1312 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notifications — Arcteron Trust</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=DM+Sans:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../../assets/css/theme.css">
+    <link rel="stylesheet" href="../../assets/css/style.css">
+    <script src="../../assets/js/theme.js"></script>
+    <style>
+        body {
+            font-family: 'DM Sans', sans-serif;
+            margin: 0;
+        }
+
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Fix: Use hardcoded dark background for Sidebar consistency */
+        .sidebar {
+            width: 260px;
+            background: #171A20;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            z-index: 300;
+            transition: transform 0.3s ease;
+            border-right: none;
+        }
+
+        .sidebar-logo {
+            padding: 0 20px;
+            height: 60px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-shrink: 0;
+        }
+
+        .sidebar-logo-text h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 16px;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .sidebar-logo-text p {
+            font-size: 9px;
+            color: rgba(255, 255, 255, 0.3);
+            margin-top: 1px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .sidebar-nav {
+            padding: 10px;
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .nav-section-label {
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.25);
+            padding: 10px 10px 4px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-bottom: 1px;
+            text-decoration: none;
+        }
+
+        .nav-item:hover {
+            background: rgba(255, 255, 255, 0.07);
+            color: rgba(255, 255, 255, 0.85);
+        }
+
+        .nav-item.active {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .nav-item svg {
+            width: 18px;
+            height: 18px;
+            flex-shrink: 0;
+        }
+
+        .sidebar-footer {
+            padding: 12px 10px;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .user-card {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            border-radius: 8px;
+            margin-bottom: 4px;
+        }
+
+        .sidebar-avatar {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.12);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 700;
+            flex-shrink: 0;
+            font-family: 'Cormorant Garamond', serif;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .user-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.85);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .user-role {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        .nav-item.danger {
+            color: rgba(239, 68, 68, 0.7);
+        }
+
+        .nav-item.danger:hover {
+            background: rgba(239, 68, 68, 0.1);
+            color: rgba(239, 68, 68, 0.9);
+        }
+
+        .main-content {
+            margin-left: 260px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            background: var(--bg-primary);
+        }
+
+        .topbar {
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-color);
+            padding: 0 28px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 200;
+        }
+
+        .topbar-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .topbar-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .icon-btn {
+            width: 38px;
+            height: 38px;
+            border-radius: 8px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--text-secondary);
+            transition: all 0.2s ease;
+            position: relative;
+            text-decoration: none;
+        }
+
+        .icon-btn:hover {
+            color: var(--text-primary);
+            background: var(--border-color);
+        }
+
+        .notif-dot {
+            min-width: 16px;
+            height: 16px;
+            background: #EF4444;
+            border-radius: 50%;
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            border: 2px solid var(--bg-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: 600;
+            color: white;
+            padding: 0 4px;
+        }
+
+        .topbar-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--text-primary);
+            color: var(--bg-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            flex-shrink: 0;
+            font-family: 'Cormorant Garamond', serif;
+        }
+
+        .menu-btn {
+            width: 38px;
+            height: 38px;
+            border-radius: 8px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--text-secondary);
+            transition: all 0.2s ease;
+        }
+
+        .menu-btn:hover {
+            color: var(--text-primary);
+            background: var(--border-color);
+        }
+
+        .page-content {
+            padding: 32px;
+            flex: 1;
+        }
+
+        .page-header {
+            margin-bottom: 24px;
+        }
+
+        .page-header h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 26px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 0 0 8px 0;
+        }
+
+        .page-header p {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin: 0;
+        }
+
+        /* Notification card */
+        .notifications-wrap {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .notif-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border-color);
+            transition: background 0.2s ease, opacity 0.2s ease;
+            cursor: pointer;
+        }
+
+        .notif-item:last-child {
+            border-bottom: none;
+        }
+
+        .notif-item:hover {
+            background: var(--bg-primary);
+        }
+
+        .notif-item.unread {
+            background: rgba(16, 185, 129, 0.03);
+        }
+
+        .notif-icon {
+            width: 34px;
+            height: 34px;
+            border-radius: 9px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 14px;
+            position: relative;
+        }
+
+        .notif-icon.company-logo {
+            background: var(--text-primary);
+            color: var(--bg-secondary);
+        }
+
+        .notif-unread-dot {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 8px;
+            height: 8px;
+            background: #EF4444;
+            border-radius: 50%;
+            border: 2px solid var(--bg-secondary);
+        }
+
+        .notif-icon.transaction {
+            background: rgba(16, 185, 129, 0.1);
+            color: #10B981;
+        }
+
+        .notif-icon.system {
+            background: rgba(59, 130, 246, 0.1);
+            color: #3B82F6;
+        }
+
+        .notif-icon.security {
+            background: rgba(245, 158, 11, 0.1);
+            color: #F59E0B;
+        }
+
+        .notif-icon.email {
+            background: rgba(59, 130, 246, 0.1);
+            color: #3B82F6;
+        }
+
+        .notif-icon.profile {
+            background: rgba(139, 92, 246, 0.1);
+            color: #8B5CF6;
+        }
+
+        .notif-icon.password {
+            background: rgba(245, 158, 11, 0.1);
+            color: #F59E0B;
+        }
+
+        .notif-icon.device {
+            background: rgba(239, 68, 68, 0.1);
+            color: #EF4444;
+        }
+
+        .notif-icon.warning {
+            background: rgba(245, 158, 11, 0.1);
+            color: #F59E0B;
+        }
+
+        .notif-icon.success {
+            background: rgba(16, 185, 129, 0.1);
+            color: #10B981;
+        }
+
+        .notif-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .notif-title {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-primary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            transition: font-weight 0.2s ease;
+        }
+
+        .notif-item.unread .notif-title {
+            font-weight: 600;
+        }
+
+        .notif-date {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .notif-right {
+            text-align: right;
+            flex-shrink: 0;
+        }
+
+        .notif-status {
+            font-size: 10px;
+            color: var(--text-muted);
+        }
+
+        /* Filter bar */
+        .filter-bar {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            flex-wrap: wrap;
+            padding: 16px;
+            background: var(--bg-primary);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .filter-group label {
+            font-size: 11px;
+            font-weight: 500;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .filter-select,
+        .filter-input {
+            font-family: inherit;
+            font-size: 13px;
+            padding: 8px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .filter-select:focus,
+        .filter-input:focus {
+            border-color: var(--text-primary);
+        }
+
+        .filter-btn,
+        .filter-clear {
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .filter-btn {
+            background: var(--text-primary);
+            color: var(--bg-primary);
+            border: none;
+        }
+
+        .filter-btn:hover {
+            opacity: 0.85;
+        }
+
+        .filter-clear {
+            background: transparent;
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+        }
+
+        .filter-clear:hover {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+        }
+
+        .statement-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+        }
+
+        .statement-btn:hover {
+            background: var(--border-color);
+        }
+
+        /* Filter modal (mobile) */
+        .filter-modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .filter-modal-overlay.show {
+            display: flex;
+        }
+
+        .filter-modal {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            width: 90%;
+            max-width: 400px;
+            animation: modalIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .filter-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .filter-modal-header h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 0;
+        }
+
+        .filter-close-btn {
+            width: 32px;
+            height: 32px;
+            border: none;
+            background: transparent;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .filter-close-btn:hover {
+            background: rgba(0, 0, 0, 0.05);
+            color: var(--text-primary);
+        }
+
+        .filter-modal-body {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .filter-modal-footer {
+            padding: 16px 20px;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            gap: 10px;
+        }
+
+        @keyframes modalIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95) translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        /* Sidebar overlay */
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 99;
+        }
+
+        .sidebar-overlay.show {
+            display: block;
+        }
+
+
+        /* Skeleton loading */
+        .skeleton {
+            background: linear-gradient(90deg, var(--border-color) 25%, var(--bg-primary) 50%, var(--border-color) 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+            border-radius: 6px;
+        }
+
+        @keyframes shimmer {
+            0% {
+                background-position: 200% 0;
+            }
+
+            100% {
+                background-position: -200% 0;
+            }
+        }
+
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 48px 24px;
+            color: var(--text-muted);
+        }
+
+        .empty-state svg {
+            width: 48px;
+            height: 48px;
+            margin: 0 auto 16px;
+            opacity: 0.4;
+        }
+
+        .empty-state p {
+            font-size: 14px;
+        }
+
+        @media (max-width: 900px) {
+            .sidebar {
+                transform: translateX(-260px);
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+                box-shadow: 4px 0 24px rgba(0, 0, 0, 0.4);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .menu-btn {
+                display: flex;
+            }
+
+            .page-content {
+                padding: 16px;
+            }
+
+            .topbar {
+                padding: 0 16px;
+            }
+
+            /* Hide filter bar on mobile */
+            .filter-bar {
+                display: none !important;
+            }
+
+            /* Show filter button only on mobile */
+            #filterToggleBtn {
+                display: flex !important;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .notifications-wrap {
+                border: none;
+                background: transparent;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="layout">
+
+        <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-logo">
+                <svg width="28" height="28" viewBox="0 0 40 40" fill="none" style="flex-shrink:0;opacity:0.8">
+                    <circle cx="20" cy="20" r="18" stroke="white" stroke-width="1.5" opacity="0.3" />
+                    <path d="M20 8 L30 28 H24 L20 20 L16 28 H10 Z" fill="white" opacity="0.9" />
+                    <path d="M14 23 H26" stroke="white" stroke-width="1.5" opacity="0.6" />
+                    <circle cx="20" cy="6" r="2" fill="white" opacity="0.5" />
+                </svg>
+                <div class="sidebar-logo-text">
+                    <h1>Arcteron Trust</h1>
+                    <p>Private Banking</p>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <div class="nav-section-label">Main</div>
+                <a class="nav-item" href="dashboard.html" onclick="nav(event,'dashboard.html')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <rect x="3" y="3" width="7" height="7" />
+                        <rect x="14" y="3" width="7" height="7" />
+                        <rect x="14" y="14" width="7" height="7" />
+                        <rect x="3" y="14" width="7" height="7" />
+                    </svg>
+                    Dashboard
+                </a>
+                <a class="nav-item" href="transfer.html" onclick="nav(event,'transfer.html')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <line x1="22" y1="2" x2="11" y2="13" />
+                        <polygon points="22 2 15 22 11 13 2 9 22 2" />
+                    </svg>
+                    Transfer
+                </a>
+                <a class="nav-item" href="transactions.html" onclick="nav(event,'transactions.html')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <line x1="12" y1="1" x2="12" y2="23" />
+                        <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+                    </svg>
+                    Transactions
+                </a>
+                <a class="nav-item active" href="notifications.html" onclick="nav(event,'notifications.html')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+                        <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+                    </svg>
+                    Notifications
+                </a>
+
+                <div class="nav-section-label">Account</div>
+                <a class="nav-item" href="profile.html" onclick="nav(event,'profile.html')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                        <circle cx="12" cy="7" r="4" />
+                    </svg>
+                    Profile
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="user-card">
+                    <div class="sidebar-avatar" id="sidebarAvatar">—</div>
+                    <div style="flex:1;min-width:0;">
+                        <div class="user-name" id="sidebarName">Loading...</div>
+                        <div class="user-role">Personal Account</div>
+                    </div>
+                </div>
+                <a class="nav-item danger" onclick="logout()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                        <polyline points="16 17 21 12 16 7" />
+                        <line x1="21" y1="12" x2="9" y2="12" />
+                    </svg>
+                    Sign Out
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main -->
+        <div class="main-content">
+            <header class="topbar">
+                <div class="topbar-left">
+                    <button class="menu-btn" onclick="openSidebar()">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="3" y1="12" x2="21" y2="12" />
+                            <line x1="3" y1="6" x2="21" y2="6" />
+                            <line x1="3" y1="18" x2="21" y2="18" />
+                        </svg>
+                    </button>
+                    <span class="topbar-title">Notifications</span>
+                </div>
+                <div class="topbar-right">
+                    <button class="icon-btn" onclick="Theme.toggle()">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+                        </svg>
+                    </button>
+                    <div class="icon-btn-wrapper" style="position:relative">
+                        <button class="icon-btn" id="notifBtn" onclick="nav(event,'notifications.html')">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+                                <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+                            </svg>
+                            <div class="notif-dot" id="notifDot" style="display:none">0</div>
+                        </button>
+                    </div>
+                    <div class="topbar-avatar" id="topbarAvatar">—</div>
+                </div>
+            </header>
+
+            <main class="page-content">
+
+                <div class="page-header">
+                    <h1>Notifications</h1>
+                    <p>View and manage your account notifications.</p>
+                </div>
+
+                <!-- Action bar: Filter + Mark All Read -->
+                <div style="display:flex; gap:10px; align-items:center; margin-bottom:16px; flex-wrap:wrap;">
+                    <button class="statement-btn" id="filterToggleBtn" onclick="toggleMobileFilters()"
+                        style="gap:8px; display:none;">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+                        </svg>
+                        Filter
+                    </button>
+                    <button class="statement-btn" onclick="markAllAsRead()" style="gap:8px;">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20 6L9 17l-5-5" />
+                        </svg>
+                        Mark All Read
+                    </button>
+                </div>
+
+                <!-- Filter Modal (mobile) -->
+                <div class="filter-modal-overlay" id="filterModalOverlay" onclick="closeFilterModal()">
+                    <div class="filter-modal" onclick="event.stopPropagation()">
+                        <div class="filter-modal-header">
+                            <h3>Filter Notifications</h3>
+                            <button class="filter-close-btn" onclick="closeFilterModal()">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="18" y1="6" x2="6" y2="18" />
+                                    <line x1="6" y1="6" x2="18" y2="18" />
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="filter-modal-body">
+                            <div class="filter-group">
+                                <label>Type</label>
+                                <select class="filter-select" id="modalFilterType">
+                                    <option value="">All Types</option>
+                                    <option value="transaction">Transaction</option>
+                                    <option value="system">System</option>
+                                    <option value="security">Security</option>
+                                </select>
+                            </div>
+                            <div class="filter-group">
+                                <label>Status</label>
+                                <select class="filter-select" id="modalFilterStatus">
+                                    <option value="">All Statuses</option>
+                                    <option value="unread">Unread</option>
+                                    <option value="read">Read</option>
+                                </select>
+                            </div>
+                            <div class="filter-group">
+                                <label>From Date</label>
+                                <input type="date" class="filter-input" id="modalFilterFrom">
+                            </div>
+                            <div class="filter-group">
+                                <label>To Date</label>
+                                <input type="date" class="filter-input" id="modalFilterTo">
+                            </div>
+                        </div>
+                        <div class="filter-modal-footer">
+                            <button class="filter-clear" onclick="clearFilters()">Clear</button>
+                            <button class="filter-btn" onclick="applyFiltersFromModal()">Apply</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Notifications Card -->
+                <div class="notifications-wrap">
+                    <!-- Filter bar (desktop) -->
+                    <div class="filter-bar" id="filterBar">
+                        <div class="filter-group">
+                            <label>Type</label>
+                            <select class="filter-select" id="filterType" style="width:110px">
+                                <option value="">All Types</option>
+                                <option value="transaction">Transaction</option>
+                                <option value="system">System</option>
+                                <option value="security">Security</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label>Status</label>
+                            <select class="filter-select" id="filterStatus" style="width:110px">
+                                <option value="">All Statuses</option>
+                                <option value="unread">Unread</option>
+                                <option value="read">Read</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label>From Date</label>
+                            <input type="date" class="filter-input" id="filterFrom" style="width:120px">
+                        </div>
+                        <div class="filter-group">
+                            <label>To Date</label>
+                            <input type="date" class="filter-input" id="filterTo" style="width:120px">
+                        </div>
+                        <button class="filter-btn" onclick="applyFilters()">Apply</button>
+                        <button class="filter-clear" onclick="clearFilters()">Clear</button>
+                    </div>
+
+                    <div id="notifBody">
+                        <!-- Skeletons... -->
+                        <div class="notif-item" style="cursor:default">
+                            <div class="skeleton" style="width:34px;height:34px;border-radius:9px;flex-shrink:0"></div>
+                            <div style="flex:1">
+                                <div class="skeleton" style="height:12px;width:55%;margin-bottom:7px"></div>
+                                <div class="skeleton" style="height:10px;width:30%"></div>
+                            </div>
+                            <div>
+                                <div class="skeleton" style="height:10px;width:40px;margin-left:auto"></div>
+                            </div>
+                        </div>
+                        <div class="notif-item" style="cursor:default">
+                            <div class="skeleton" style="width:34px;height:34px;border-radius:9px;flex-shrink:0"></div>
+                            <div style="flex:1">
+                                <div class="skeleton" style="height:12px;width:45%;margin-bottom:7px"></div>
+                                <div class="skeleton" style="height:10px;width:25%"></div>
+                            </div>
+                            <div>
+                                <div class="skeleton" style="height:10px;width:40px;margin-left:auto"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </main>
+        </div>
+    </div>
+
+    <script src="../../assets/js/api.js"></script>
+    <script src="../../assets/js/auth.js"></script>
+    <script src="../../assets/js/utils.js"></script>
+    <script src="../../assets/js/timeUtils.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="../../assets/js/receiptModal.js"></script>
+    <script>
+        // Proper async auth gate — runs init only after auth is confirmed
+        (async function () {
+            const ok = await Auth.requireAuthAsync();
+            if (!ok) return;
+
+            // Navigation helper
+            function nav(e, url) {
+                if (e) e.preventDefault();
+                window.location.href = url;
+            }
+
+            // Sidebar functions
+            function openSidebar() {
+                document.getElementById('sidebar').classList.add('open');
+                document.getElementById('sidebarOverlay').classList.add('show');
+            }
+
+            function closeSidebar() {
+                document.getElementById('sidebar').classList.remove('open');
+                document.getElementById('sidebarOverlay').classList.remove('show');
+            }
+
+            // Filter modal functions
+            function toggleMobileFilters() {
+                openFilterModal();
+            }
+
+            function openFilterModal() {
+                document.getElementById('filterModalOverlay').classList.add('show');
+                // Sync modal inputs with main filters
+                document.getElementById('modalFilterType').value = document.getElementById('filterType').value;
+                document.getElementById('modalFilterStatus').value = document.getElementById('filterStatus').value;
+                document.getElementById('modalFilterFrom').value = document.getElementById('filterFrom').value;
+                document.getElementById('modalFilterTo').value = document.getElementById('filterTo').value;
+            }
+
+            function closeFilterModal() {
+                document.getElementById('filterModalOverlay').classList.remove('show');
+            }
+
+            function applyFiltersFromModal() {
+                document.getElementById('filterType').value = document.getElementById('modalFilterType').value;
+                document.getElementById('filterStatus').value = document.getElementById('modalFilterStatus').value;
+                document.getElementById('filterFrom').value = document.getElementById('modalFilterFrom').value;
+                document.getElementById('filterTo').value = document.getElementById('modalFilterTo').value;
+                closeFilterModal();
+                applyFilters();
+            }
+
+            function applyFilters() {
+                loadNotifications();
+            }
+
+            function clearFilters() {
+                document.getElementById('filterType').value = '';
+                document.getElementById('filterStatus').value = '';
+                document.getElementById('filterFrom').value = '';
+                document.getElementById('filterTo').value = '';
+                document.getElementById('modalFilterType').value = '';
+                document.getElementById('modalFilterStatus').value = '';
+                document.getElementById('modalFilterFrom').value = '';
+                document.getElementById('modalFilterTo').value = '';
+                loadNotifications();
+            }
+
+            // Receipt modal functions
+            async function openReceiptModal(notifId) {
+                try {
+                    const res = await Api.get(`/api/notifications/${notifId}`, true);
+                    if (res && res.ok) {
+                        const notif = res.data;
+                        if (notif.type === 'transaction' && notif.related_id) {
+                            ReceiptModal.openById(notif.related_id);
+                        } else if (notif.type === 'transaction' && notif.data && notif.data.transaction_id) {
+                            ReceiptModal.openById(notif.data.transaction_id);
+                        } else {
+                            Utils.showToast('This notification type does not have a receipt');
+                        }
+                    } else {
+                        Utils.showToast('Failed to load notification details');
+                    }
+                } catch (err) {
+                    console.error('Error opening notification receipt:', err);
+                    Utils.showToast('Failed to load notification details');
+                }
+            }
+
+            function closeReceiptModal() {
+                ReceiptModal.close();
+            }
+
+            // Mark single notification as read
+            async function markNotificationAsRead(notifId) {
+                try {
+                    const res = await Api.post(`/api/notifications/${notifId}/mark-read`, {}, true);
+                    if (res && res.ok) {
+                        updateNotificationDot();
+                        // Reload notifications to update the read status
+                        loadNotifications();
+                    } else {
+                        Utils.showToast('Failed to mark notification as read');
+                    }
+                } catch (err) {
+                    console.error('Error marking notification as read:', err);
+                    Utils.showToast('Failed to mark notification as read');
+                }
+            }
+
+            // Mark all as read
+            async function markAllAsRead() {
+                try {
+                    const res = await Api.post('/api/notifications/mark-all-read', {}, true);
+
+                    if (res && res.ok) {
+                        Utils.showToast('All notifications marked as read');
+                        loadNotifications();
+                        updateNotificationDot();
+                    } else {
+                        Utils.showToast('Failed to mark all as read');
+                    }
+                } catch (err) {
+                    console.error('Error marking all as read:', err);
+                    Utils.showToast('An error occurred');
+                }
+            }
+
+            // Load notifications from API
+            async function loadNotifications() {
+                const body = document.getElementById('notifBody');
+                const filterType = document.getElementById('filterType').value;
+                const filterStatus = document.getElementById('filterStatus').value;
+                const filterFrom = document.getElementById('filterFrom').value;
+                const filterTo = document.getElementById('filterTo').value;
+
+                // Show loading state
+                body.innerHTML = `
+                    <div class="notif-item" style="cursor:default">
+                        <div class="skeleton" style="width:34px;height:34px;border-radius:9px;flex-shrink:0"></div>
+                        <div style="flex:1">
+                            <div class="skeleton" style="height:12px;width:55%;margin-bottom:7px"></div>
+                            <div class="skeleton" style="height:10px;width:30%"></div>
+                        </div>
+                        <div>
+                            <div class="skeleton" style="height:10px;width:40px;margin-left:auto"></div>
+                        </div>
+                    </div>
+                    <div class="notif-item" style="cursor:default">
+                        <div class="skeleton" style="width:34px;height:34px;border-radius:9px;flex-shrink:0"></div>
+                        <div style="flex:1">
+                            <div class="skeleton" style="height:12px;width:55%;margin-bottom:7px"></div>
+                            <div class="skeleton" style="height:10px;width:30%"></div>
+                        </div>
+                        <div>
+                            <div class="skeleton" style="height:10px;width:40px;margin-left:auto"></div>
+                        </div>
+                    </div>
+                    <div class="notif-item" style="cursor:default">
+                        <div class="skeleton" style="width:34px;height:34px;border-radius:9px;flex-shrink:0"></div>
+                        <div style="flex:1">
+                            <div class="skeleton" style="height:12px;width:55%;margin-bottom:7px"></div>
+                            <div class="skeleton" style="height:10px;width:30%"></div>
+                        </div>
+                        <div>
+                            <div class="skeleton" style="height:10px;width:40px;margin-left:auto"></div>
+                        </div>
+                    </div>`;
+
+                try {
+                    let endpoint = '/api/notifications';
+                    const params = new URLSearchParams();
+                    if (filterType) params.append('type', filterType);
+                    if (filterStatus) params.append('status', filterStatus);
+                    if (filterFrom) params.append('from_date', filterFrom);
+                    if (filterTo) params.append('to_date', filterTo);
+                    if (params.toString()) endpoint += `?${params.toString()}`;
+
+                    const res = await Api.get(endpoint, true);
+
+                    if (!res || !res.ok) {
+                        throw new Error('Failed to load notifications');
+                    }
+
+                    const data = res.data;
+                    const notifications = data.notifications || [];
+
+                    if (!notifications || notifications.length === 0) {
+                        body.innerHTML = `
+                            <div class="empty-state">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+                                    <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+                                </svg>
+                                <p>No notifications at the moment.</p>
+                            </div>`;
+                        return;
+                    }
+
+                    body.innerHTML = notifications.map(notif => {
+                        const isUnread = notif.status === 'unread';
+                        const unreadClass = isUnread ? 'unread' : '';
+
+                        // Format time: Today at HH:MM, Yesterday at HH:MM, or date
+                        const date = new Date(notif.created_at);
+                        const now = new Date();
+                        const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+                        const yesterday = new Date(today);
+                        yesterday.setDate(yesterday.getDate() - 1);
+
+                        const notifDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+                        let timeDisplay = '';
+
+                        if (notifDate.getTime() === today.getTime()) {
+                            timeDisplay = `Today at ${date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true })}`;
+                        } else if (notifDate.getTime() === yesterday.getTime()) {
+                            timeDisplay = `Yesterday at ${date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true })}`;
+                        } else {
+                            timeDisplay = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) +
+                                ` at ${date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true })}`;
+                        }
+
+                        return `
+                            <div class="notif-item ${unreadClass}" onclick="markNotificationAsRead('${notif.id}'); openReceiptModal('${notif.id}')">
+                                <div class="notif-icon company-logo">
+                                    <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <circle cx="20" cy="20" r="18" stroke="currentColor" stroke-width="1.5" opacity="0.3" />
+                                        <path d="M20 8 L30 28 H24 L20 20 L16 28 H10 Z" fill="currentColor" opacity="0.9" />
+                                        <path d="M14 23 H26" stroke="currentColor" stroke-width="1.5" opacity="0.6" />
+                                        <circle cx="20" cy="6" r="2" fill="currentColor" opacity="0.5" />
+                                    </svg>
+                                    ${isUnread ? '<div class="notif-unread-dot"></div>' : ''}
+                                </div>
+                                <div class="notif-info">
+                                    <div class="notif-title">${notif.title}</div>
+                                    <div class="notif-date">${timeDisplay}</div>
+                                </div>
+                                <div class="notif-right">
+                                    <div class="notif-status">${isUnread ? 'New' : ''}</div>
+                                </div>
+                            </div>`;
+                    }).join('');
+                } catch (err) {
+                    console.error('Error loading notifications:', err);
+                    body.innerHTML = `
+                        <div class="empty-state">
+                            <p>Failed to load notifications. Please try again.</p>
+                        </div>`;
+                    Utils.showToast('Failed to load notifications');
+                }
+            }
+
+            // Update notification dot
+            async function updateNotificationDot() {
+                try {
+                    const res = await Api.get('/api/notifications/unread-count', true);
+
+                    if (res && res.ok) {
+                        const data = res.data;
+                        const notifDot = document.getElementById('notifDot');
+                        if (data.count > 0) {
+                            notifDot.style.display = 'flex';
+                            notifDot.textContent = data.count > 99 ? '99+' : data.count;
+                        } else {
+                            notifDot.style.display = 'none';
+                        }
+                    }
+                } catch (err) {
+                    console.error('Error updating notification dot:', err);
+                }
+            }
+
+            // Logout function
+            function logout() {
+                if (confirm('Are you sure you want to sign out?')) {
+                    Auth.logout();
+                }
+            }
+
+            // Initialize
+            async function init() {
+                // Always refresh user data from the server to ensure fresh data
+                const meRes = await Api.get('/api/auth/me', true);
+                let user;
+                if (meRes && meRes.ok) {
+                    user = meRes.data;
+                    Api.setUser(user);
+                } else {
+                    user = Api.getUser();
+                }
+                if (!user) { Auth.logout(); return; }
+                const initials = Auth.getInitials(user.first_name, user.last_name);
+                document.getElementById('sidebarAvatar').textContent = initials;
+                document.getElementById('topbarAvatar').textContent = initials;
+                document.getElementById('sidebarName').textContent = `${user.first_name} ${user.last_name}`;
+
+                // Load notifications
+                await loadNotifications();
+                await updateNotificationDot();
+
+                // Initialize receipt modal component
+                ReceiptModal.init();
+            }
+
+            // Close modals on Escape key
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    closeFilterModal();
+                    ReceiptModal.close();
+                }
+            });
+
+            // Expose functions globally
+            window.openSidebar = openSidebar;
+            window.closeSidebar = closeSidebar;
+            window.openFilterModal = openFilterModal;
+            window.closeFilterModal = closeFilterModal;
+            window.applyFiltersFromModal = applyFiltersFromModal;
+            window.toggleMobileFilters = toggleMobileFilters;
+            window.nav = nav;
+            window.logout = logout;
+            window.openReceiptModal = openReceiptModal;
+            window.markNotificationAsRead = markNotificationAsRead;
+            window.markAllAsRead = markAllAsRead;
+
+            await init();
+        })();
+    </script>
+</body>
+
+</html>
