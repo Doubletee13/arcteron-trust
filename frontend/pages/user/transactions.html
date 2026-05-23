@@ -23,10 +23,10 @@
             min-height: 100vh;
         }
 
-        /* Fix: Use CSS Variables for Sidebar consistency */
+        /* Fix: Use hardcoded dark background for Sidebar consistency */
         .sidebar {
             width: 260px;
-            background: var(--bg-secondary);
+            background: #171A20;
             display: flex;
             flex-direction: column;
             position: fixed;
@@ -35,18 +35,13 @@
             height: 100vh;
             z-index: 300;
             transition: transform 0.3s ease;
-            border-right: 1px solid var(--border-color);
-        }
-
-        [data-theme="dark"] .sidebar {
-            background: var(--bg-secondary);
             border-right: none;
         }
 
         .sidebar-logo {
             padding: 0 20px;
             height: 60px;
-            border-bottom: 1px solid var(--border-color);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
             display: flex;
             align-items: center;
             gap: 10px;
@@ -126,7 +121,7 @@
 
         .sidebar-footer {
             padding: 12px 10px;
-            border-top: 1px solid var(--border-color);
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
         }
 
         .user-card {
@@ -491,7 +486,7 @@
             margin-top: 2px;
         }
 
-        /* Transactions table */
+        /* Transactions card */
         .transactions-wrap {
             background: var(--bg-secondary);
             border: 1px solid var(--border-color);
@@ -499,69 +494,33 @@
             overflow: hidden;
         }
 
-        /* Fix: Add Time column and Action column */
-        .tx-table-header {
-            display: grid;
-            grid-template-columns: 100px 90px 1fr 120px 100px 90px 90px 48px;
-            gap: 8px;
-            padding: 11px 18px;
-            background: var(--bg-primary);
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .tx-table-header span {
-            font-size: 10px;
-            font-weight: 600;
-            letter-spacing: 0.8px;
-            text-transform: uppercase;
-            color: var(--text-muted);
-        }
-
-        .tx-row {
-            display: grid;
-            grid-template-columns: 100px 90px 1fr 120px 100px 90px 90px 48px;
-            gap: 8px;
-            padding: 13px 18px;
+        .tx-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
             border-bottom: 1px solid var(--border-color);
             transition: background 0.15s;
-            align-items: center;
-            cursor: pointer;
         }
 
-        .tx-row:last-child {
+        .tx-item:last-child {
             border-bottom: none;
         }
 
-        .tx-row:hover {
+        .tx-item:hover {
             background: var(--bg-primary);
-        }
-
-        .tx-row-date {
-            font-size: 12px;
-            color: var(--text-muted);
-        }
-
-        .tx-row-time {
-            font-size: 11px;
-            color: var(--text-muted);
-        }
-
-        .tx-row-desc {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            min-width: 0;
+            cursor: pointer;
         }
 
         .tx-icon {
-            width: 28px;
-            height: 28px;
-            border-radius: 7px;
+            width: 34px;
+            height: 34px;
+            border-radius: 9px;
             display: flex;
             align-items: center;
             justify-content: center;
             flex-shrink: 0;
-            font-size: 12px;
+            font-size: 14px;
         }
 
         .tx-icon.credit {
@@ -574,11 +533,12 @@
             color: #EF4444;
         }
 
-        .tx-desc-text {
+        .tx-info {
+            flex: 1;
             min-width: 0;
         }
 
-        .tx-desc-main {
+        .tx-name {
             font-size: 13px;
             font-weight: 500;
             color: var(--text-primary);
@@ -587,26 +547,39 @@
             text-overflow: ellipsis;
         }
 
-        .tx-desc-sub {
+        .tx-date {
             font-size: 11px;
             color: var(--text-muted);
-            margin-top: 1px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            margin-top: 2px;
         }
 
-        .tx-row-ref {
-            font-size: 11px;
+        .tx-right {
+            text-align: right;
+            flex-shrink: 0;
+        }
+
+        .tx-amount {
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .tx-amount.credit {
+            color: #10B981;
+        }
+
+        .tx-amount.debit {
+            color: #EF4444;
+        }
+
+        .tx-status {
+            font-size: 10px;
             color: var(--text-muted);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            margin-top: 2px;
         }
 
-        .tx-row-type {
-            font-size: 11px;
-            color: var(--text-secondary);
+        /* Hide table header since we're using card layout */
+        .tx-table-header {
+            display: none;
         }
 
         .badge {
@@ -631,44 +604,6 @@
         .badge-danger {
             background: rgba(239, 68, 68, 0.1);
             color: #EF4444;
-        }
-
-        .tx-row-amount {
-            font-size: 13px;
-            font-weight: 600;
-            text-align: right;
-        }
-
-        .tx-row-amount.credit {
-            color: #10B981;
-        }
-
-        .tx-row-amount.debit {
-            color: #EF4444;
-        }
-
-        .dl-btn {
-            width: 32px;
-            height: 32px;
-            border-radius: 6px;
-            background: var(--bg-primary);
-            border: 1px solid var(--border-color);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--text-muted);
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .dl-btn:hover {
-            color: var(--text-primary);
-            border-color: var(--text-primary);
-        }
-
-        .dl-btn svg {
-            width: 14px;
-            height: 14px;
         }
 
         /* Pagination */
@@ -943,23 +878,6 @@
             }
         }
 
-        @media (max-width: 1024px) {
-
-            .tx-table-header,
-            .tx-row {
-                grid-template-columns: 90px 1fr 90px 90px 40px;
-            }
-
-            .tx-table-header span:nth-child(2),
-            .tx-table-header span:nth-child(4),
-            .tx-table-header span:nth-child(5),
-            .tx-row>*:nth-child(2),
-            .tx-row>*:nth-child(4),
-            .tx-row>*:nth-child(5) {
-                display: none;
-            }
-        }
-
         @media (max-width: 900px) {
             .sidebar {
                 transform: translateX(-260px);
@@ -986,12 +904,17 @@
                 padding: 0 16px;
             }
 
+            /* Show filter button only on mobile */
+            #filterToggleBtn {
+                display: flex !important;
+            }
+
             .stats-mini {
                 grid-template-columns: 1fr 1fr;
             }
         }
 
-        /* Filter bar: always visible on desktop, collapsible on mobile */
+        /* Filter bar: always visible on desktop, modal on mobile */
         .filter-bar {
             display: flex;
         }
@@ -999,39 +922,92 @@
         @media (max-width: 900px) {
             .filter-bar {
                 display: none;
-                flex-direction: column;
-                align-items: stretch;
-                gap: 12px;
-            }
-
-            .filter-bar.show {
-                display: flex;
-            }
-
-            .filter-search,
-            .filter-group,
-            .filter-input,
-            .filter-select,
-            .filter-btn,
-            .filter-clear {
-                width: 100% !important;
-                box-sizing: border-box;
             }
         }
 
+        /* Filter Modal (mobile) */
+        .filter-modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            backdrop-filter: blur(4px);
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .filter-modal-overlay.show {
+            display: flex;
+        }
+
+        .filter-modal {
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            max-width: 400px;
+            width: 100%;
+            border: 1px solid var(--border-color);
+            animation: modalIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .filter-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .filter-modal-header h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 0;
+        }
+
+        .filter-close-btn {
+            width: 32px;
+            height: 32px;
+            border: none;
+            background: transparent;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .filter-close-btn:hover {
+            background: rgba(0, 0, 0, 0.05);
+            color: var(--text-primary);
+        }
+
+        .filter-modal-body {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .filter-modal-footer {
+            padding: 16px 20px;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            gap: 10px;
+        }
+
         @media (max-width: 480px) {
-
-            .tx-table-header,
-            .tx-row {
-                grid-template-columns: 1fr 90px 40px;
-            }
-
-            .tx-row-date {
-                display: none;
-            }
-
-            .tx-table-header span:first-child {
-                display: none;
+            /* Card layout works on mobile - no special changes needed */
+            .transactions-wrap {
+                border: none;
+                background: transparent;
             }
         }
     </style>
@@ -1189,7 +1165,7 @@
 
                 <!-- Action bar: Filter + Download Statement -->
                 <div style="display:flex; gap:10px; align-items:center; margin-bottom:16px; flex-wrap:wrap;">
-                    <button class="statement-btn" id="filterToggleBtn" onclick="toggleMobileFilters()" style="gap:8px;">
+                    <button class="statement-btn" id="filterToggleBtn" onclick="toggleMobileFilters()" style="gap:8px; display:none;">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                             stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
@@ -1205,6 +1181,58 @@
                         </svg>
                         Download Statement
                     </button>
+                </div>
+
+                <!-- Filter Modal (mobile) -->
+                <div class="filter-modal-overlay" id="filterModalOverlay" onclick="closeFilterModal()">
+                    <div class="filter-modal" onclick="event.stopPropagation()">
+                        <div class="filter-modal-header">
+                            <h3>Filter Transactions</h3>
+                            <button class="filter-close-btn" onclick="closeFilterModal()">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="18" y1="6" x2="6" y2="18" />
+                                    <line x1="6" y1="6" x2="18" y2="18" />
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="filter-modal-body">
+                            <div class="filter-group">
+                                <label>Search</label>
+                                <input type="text" class="filter-input" id="modalFilterSearch"
+                                    placeholder="Reference, description...">
+                            </div>
+                            <div class="filter-group">
+                                <label>Type</label>
+                                <select class="filter-select" id="modalFilterType">
+                                    <option value="">All Types</option>
+                                    <option value="credit">Credit (In)</option>
+                                    <option value="debit">Debit (Out)</option>
+                                </select>
+                            </div>
+                            <div class="filter-group">
+                                <label>Status</label>
+                                <select class="filter-select" id="modalFilterStatus">
+                                    <option value="">All Statuses</option>
+                                    <option value="completed">Completed</option>
+                                    <option value="pending">Pending</option>
+                                    <option value="failed">Failed</option>
+                                    <option value="reversed">Reversed</option>
+                                </select>
+                            </div>
+                            <div class="filter-group">
+                                <label>From Date</label>
+                                <input type="date" class="filter-input" id="modalFilterFrom">
+                            </div>
+                            <div class="filter-group">
+                                <label>To Date</label>
+                                <input type="date" class="filter-input" id="modalFilterTo">
+                            </div>
+                        </div>
+                        <div class="filter-modal-footer">
+                            <button class="filter-clear" onclick="clearFilters(); closeFilterModal();" style="flex:1">Clear</button>
+                            <button class="filter-btn" onclick="applyFiltersFromModal();" style="flex:1">Apply</button>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Filters -->
@@ -1244,36 +1272,31 @@
                     <button class="filter-clear" onclick="clearFilters()">Clear</button>
                 </div>
 
-                <!-- Table -->
+                <!-- Transactions Card -->
                 <div class="transactions-wrap">
-                    <div class="tx-table-header">
-                        <span>Date</span>
-                        <span>Time</span>
-                        <span>Description</span>
-                        <span>Reference</span>
-                        <span>Type</span>
-                        <span>Status</span>
-                        <span style="text-align:right">Amount</span>
-                        <span>DL</span>
-                    </div>
-
                     <div id="txBody">
                         <!-- Skeletons... -->
-                        <div class="tx-row" style="cursor:default">
-                            <div class="skeleton" style="height:12px;width:80px"></div>
-                            <div class="skeleton" style="height:12px;width:60px"></div>
-                            <div style="display:flex;gap:10px;align-items:center">
-                                <div class="skeleton" style="width:28px;height:28px;border-radius:7px;flex-shrink:0">
-                                </div>
-                                <div>
-                                    <div class="skeleton" style="height:12px;width:140px;margin-bottom:5px"></div>
-                                </div>
+                        <div class="tx-item" style="cursor:default">
+                            <div class="skeleton" style="width:34px;height:34px;border-radius:9px;flex-shrink:0"></div>
+                            <div style="flex:1">
+                                <div class="skeleton" style="height:12px;width:55%;margin-bottom:7px"></div>
+                                <div class="skeleton" style="height:10px;width:30%"></div>
                             </div>
-                            <div class="skeleton" style="height:10px;width:80px"></div>
-                            <div class="skeleton" style="height:10px;width:70px"></div>
-                            <div class="skeleton" style="height:18px;width:60px;border-radius:20px"></div>
-                            <div class="skeleton" style="height:12px;width:60px;margin-left:auto"></div>
-                            <div class="skeleton" style="height:32px;width:32px;border-radius:6px"></div>
+                            <div>
+                                <div class="skeleton" style="height:12px;width:60px;margin-bottom:7px;margin-left:auto"></div>
+                                <div class="skeleton" style="height:10px;width:40px;margin-left:auto"></div>
+                            </div>
+                        </div>
+                        <div class="tx-item" style="cursor:default">
+                            <div class="skeleton" style="width:34px;height:34px;border-radius:9px;flex-shrink:0"></div>
+                            <div style="flex:1">
+                                <div class="skeleton" style="height:12px;width:45%;margin-bottom:7px"></div>
+                                <div class="skeleton" style="height:10px;width:25%"></div>
+                            </div>
+                            <div>
+                                <div class="skeleton" style="height:12px;width:55px;margin-bottom:7px;margin-left:auto"></div>
+                                <div class="skeleton" style="height:10px;width:40px;margin-left:auto"></div>
+                            </div>
                         </div>
                     </div>
 
@@ -1307,14 +1330,6 @@
                 <h2
                     style="font-size: 16px; opacity: 0.7; font-weight: 500; letter-spacing: 1px; text-transform: uppercase;">
                     Transaction Receipt</h2>
-                <button class="icon-btn" onclick="closeReceiptModal()"
-                    style="position: absolute; top: 16px; right: 16px; background:transparent; border:none; color:#fff; opacity: 0.5;">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                        stroke-linecap="round" stroke-linejoin="round">
-                        <line x1="18" y1="6" x2="6" y2="18" />
-                        <line x1="6" y1="6" x2="18" y2="18" />
-                    </svg>
-                </button>
             </div>
             <div class="receipt-modal-body">
                 <div class="receipt-amount-box">
@@ -1550,27 +1565,17 @@
 
                     const partyLabel = tx.is_credit ? 'Transfer from' : 'Transfer to';
                     const partyName = tx.recipient_name || (tx.is_credit ? 'External Sender' : '—');
-                    const subDesc = tx.description || typeLabel;
 
                     return `
-        <div class="tx-row" onclick="openReceiptModal('${tx.id}')">
-          <div class="tx-row-date">${date}</div>
-          <div class="tx-row-time" style="opacity: 0.6;">${time}</div>
-          <div class="tx-row-desc">
-            <div class="tx-icon ${cls}">${icon}</div>
-            <div class="tx-desc-text">
-              <div class="tx-desc-main">${partyLabel} ${partyName}</div>
-              <div class="tx-desc-sub">${subDesc}</div>
-            </div>
+        <div class="tx-item" onclick="openReceiptModal('${tx.id}')">
+          <div class="tx-icon ${cls}">${icon}</div>
+          <div class="tx-info">
+            <div class="tx-name">${partyLabel} ${partyName}</div>
+            <div class="tx-date">${date} <span style="margin-left: 8px; opacity: 0.6;">${time}</span></div>
           </div>
-          <div class="tx-row-ref">${tx.reference || '—'}</div>
-          <div class="tx-row-type" style="text-transform:capitalize">${typeLabel}</div>
-          <div><span class="badge ${statusMap[tx.status] || 'badge-neutral'}">${tx.status || '—'}</span></div>
-          <div class="tx-row-amount ${cls}">${sign}${fmt(tx.amount)}</div>
-          <div style="display:flex;justify-content:flex-end">
-            <button class="dl-btn" title="Download Receipt" onclick="event.stopPropagation(); downloadReceipt('${tx.id}', '${tx.reference}')">
-               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-            </button>
+          <div class="tx-right">
+            <div class="tx-amount ${cls}">${sign}${fmt(tx.amount)}</div>
+            <div class="tx-status"><span class="badge ${statusMap[tx.status] || 'badge-warning'}">${tx.status}</span></div>
           </div>
         </div>`;
                 }).join('');
@@ -1615,12 +1620,45 @@
                 document.getElementById('filterStatus').value = '';
                 document.getElementById('filterFrom').value = '';
                 document.getElementById('filterTo').value = '';
+                document.getElementById('modalFilterSearch').value = '';
+                document.getElementById('modalFilterType').value = '';
+                document.getElementById('modalFilterStatus').value = '';
+                document.getElementById('modalFilterFrom').value = '';
+                document.getElementById('modalFilterTo').value = '';
                 loadTransactions(1);
             }
 
+            function openFilterModal() {
+                // Sync modal inputs with main filter inputs
+                document.getElementById('modalFilterSearch').value = document.getElementById('filterSearch').value;
+                document.getElementById('modalFilterType').value = document.getElementById('filterType').value;
+                document.getElementById('modalFilterStatus').value = document.getElementById('filterStatus').value;
+                document.getElementById('modalFilterFrom').value = document.getElementById('filterFrom').value;
+                document.getElementById('modalFilterTo').value = document.getElementById('filterTo').value;
+                
+                document.getElementById('filterModalOverlay').classList.add('show');
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeFilterModal() {
+                document.getElementById('filterModalOverlay').classList.remove('show');
+                document.body.style.overflow = '';
+            }
+
+            function applyFiltersFromModal() {
+                // Sync main filter inputs with modal inputs
+                document.getElementById('filterSearch').value = document.getElementById('modalFilterSearch').value;
+                document.getElementById('filterType').value = document.getElementById('modalFilterType').value;
+                document.getElementById('filterStatus').value = document.getElementById('modalFilterStatus').value;
+                document.getElementById('filterFrom').value = document.getElementById('modalFilterFrom').value;
+                document.getElementById('filterTo').value = document.getElementById('modalFilterTo').value;
+                
+                closeFilterModal();
+                applyFilters();
+            }
+
             function toggleMobileFilters() {
-                const bar = document.getElementById('filterBar');
-                bar.classList.toggle('show');
+                openFilterModal();
             }
 
             window.openReceiptModal = function (txId) {
@@ -1764,6 +1802,23 @@
                     Utils.showToast('Download failed. Please check your connection.');
                 }
             }
+
+            // Expose functions to global scope
+            window.openSidebar = openSidebar;
+            window.closeSidebar = closeSidebar;
+            window.openFilterModal = openFilterModal;
+            window.closeFilterModal = closeFilterModal;
+            window.applyFiltersFromModal = applyFiltersFromModal;
+            window.toggleMobileFilters = toggleMobileFilters;
+
+            const API_BASE = window.location.origin;
+
+            // Close filter modal on Escape key
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    closeFilterModal();
+                }
+            });
 
             init();
         })();
