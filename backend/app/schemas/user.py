@@ -129,6 +129,72 @@ class PinResetConfirm(BaseModel):
         return self
 
 
+# --- Email Verification Schemas ---
+
+class EmailVerificationRequest(BaseModel):
+    email: EmailStr
+
+
+class EmailVerificationConfirm(BaseModel):
+    token: str
+
+
+# --- Profile Update Schemas ---
+
+class ProfileUpdateRequest(BaseModel):
+    first_name: Optional[str] = None
+    last_name: Optional[str] = None
+    middle_name: Optional[str] = None
+    phone: Optional[str] = None
+    address: Optional[str] = None
+    city: Optional[str] = None
+    state: Optional[str] = None
+    zip_code: Optional[str] = None
+    country: Optional[str] = None
+
+
+class PhotoUploadRequest(BaseModel):
+    photo_data: str  # Base64 encoded image
+
+
+class ChangePasswordRequest(BaseModel):
+    current_password: str
+    new_password: str
+    confirm_password: str
+
+    @field_validator("new_password")
+    @classmethod
+    def password_strength(cls, v):
+        if len(v) < 8:
+            raise ValueError("Password must be at least 8 characters")
+        return v
+
+    @model_validator(mode="after")
+    def passwords_match(self):
+        if self.new_password != self.confirm_password:
+            raise ValueError("Passwords do not match")
+        return self
+
+
+class ChangePinRequest(BaseModel):
+    current_pin: str
+    new_pin: str
+    confirm_pin: str
+
+    @field_validator("new_pin")
+    @classmethod
+    def pin_format(cls, v):
+        if not v.isdigit() or len(v) != 4:
+            raise ValueError("PIN must be exactly 4 digits")
+        return v
+
+    @model_validator(mode="after")
+    def pins_match(self):
+        if self.new_pin != self.confirm_pin:
+            raise ValueError("PINs do not match")
+        return self
+
+
 # --- Response Schemas ---
 
 class AccountResponse(BaseModel):

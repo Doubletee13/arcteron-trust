@@ -26,12 +26,12 @@ def seed():
         if not users:
             print("No users found. Creating two test users...")
             user1 = User(
-                first_name="John", last_name="Doe", email="john@example.com",
+                first_name="Des", last_name="Ny", email="desnyguy@gmail.com",
                 hashed_password=hash_password("password123"),
                 is_kyc_complete=True, is_id_verified=True
             )
             user2 = User(
-                first_name="Jane", last_name="Smith", email="jane@example.com",
+                first_name="Anita", last_name="Bechemi", email="anitabechemi@gmail.com",
                 hashed_password=hash_password("password123"),
                 is_kyc_complete=True, is_id_verified=True
             )

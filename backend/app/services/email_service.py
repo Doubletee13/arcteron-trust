@@ -74,6 +74,18 @@ def send_pin_reset_email(to: str, first_name: str, token: str):
     send_email(to, f"{settings.APP_NAME} — PIN Reset Request", html)
 
 
+def send_verification_email(to: str, first_name: str, token: str):
+    verification_url = f"{settings.FRONTEND_URL}/pages/verify-email.html?token={token}"
+    template = get_template("email_verification.html")
+    html = template.render(
+        first_name=first_name,
+        verification_url=verification_url,
+        frontend_url=settings.FRONTEND_URL,
+        year=datetime.utcnow().year
+    )
+    send_email(to, f"{settings.APP_NAME} — Verify Your Email Address", html)
+
+
 def send_transfer_sent_email(
     to: str,
     first_name: str,

@@ -9,6 +9,7 @@ from app.models.transaction import Transaction, TransactionType, TransactionStat
 from app.models.notification import Notification, NotificationType
 from app.utils.hashing import verify_pin
 from app.utils.account_number import generate_transaction_reference
+from app.services.email_service import send_transfer_sent_email, send_transfer_received_email
 from pydantic import BaseModel
 from typing import Optional
 from decimal import Decimal
@@ -63,7 +64,7 @@ def local_transfer(
     if not current_user.transaction_pin:
         raise HTTPException(status_code=400, detail="Please set a transaction PIN before making transfers.")
     if not verify_pin(data.pin, current_user.transaction_pin):
-        raise HTTPException(status_code=401, detail="Incorrect PIN. Transfer declined.")
+        raise HTTPException(status_code=400, detail="Incorrect PIN. Transfer declined.")
 
     # Get sender account
     sender_account = db.query(Account).filter(
@@ -128,6 +129,8 @@ def local_transfer(
         description=data.description or f"Transfer to {recipient_user.first_name} {recipient_user.last_name}",
         sender_account_number=sender_account.account_number,
         receiver_account_number=recipient_account.account_number,
+        sender_name=f"{current_user.first_name} {current_user.last_name}",
+        recipient_name=f"{recipient_user.first_name} {recipient_user.last_name}",
         sender_balance_before=sender_before,
         sender_balance_after=sender_after,
         receiver_balance_before=receiver_before,
@@ -167,6 +170,33 @@ def local_transfer(
         }
     )
 
+    # Email alerts
+    try:
+        send_transfer_sent_email(
+            to=current_user.email,
+            first_name=current_user.first_name,
+            amount=fmt_amount(amount),
+            reference=reference,
+            recipient_name=f"{recipient_user.first_name} {recipient_user.last_name}",
+            recipient_account_last_four=recipient_account.account_number[-4:],
+            transaction_date=datetime.utcnow().strftime("%B %d, %Y at %I:%M %p UTC"),
+            description=data.description or "Transfer",
+            new_balance=fmt_amount(sender_after)
+        )
+        send_transfer_received_email(
+            to=recipient_account.user.email,
+            first_name=recipient_account.user.first_name,
+            amount=fmt_amount(amount),
+            reference=reference,
+            sender_name=f"{current_user.first_name} {current_user.last_name}",
+            account_last_four=current_user.account.account_number[-4:] if current_user.account else "0000",
+            transaction_date=datetime.utcnow().strftime("%B %d, %Y at %I:%M %p UTC"),
+            description=data.description or "Transfer",
+            new_balance=fmt_amount(receiver_after)
+        )
+    except Exception:
+        pass  # Never block transfer due to email failure
+
     db.commit()
     db.refresh(transaction)
 
@@ -192,7 +222,7 @@ def international_transfer(
     if not current_user.transaction_pin:
         raise HTTPException(status_code=400, detail="Please set a transaction PIN before making transfers.")
     if not verify_pin(data.pin, current_user.transaction_pin):
-        raise HTTPException(status_code=401, detail="Incorrect PIN. Transfer declined.")
+        raise HTTPException(status_code=400, detail="Incorrect PIN. Transfer declined.")
 
     # Get sender account
     sender_account = db.query(Account).filter(
@@ -240,6 +270,7 @@ def international_transfer(
         transaction_type=TransactionType.international_transfer,
         status=TransactionStatus.pending,
         description=data.description or f"International wire to {data.recipient_name}",
+        sender_name=f"{current_user.first_name} {current_user.last_name}",
         recipient_name=data.recipient_name,
         recipient_bank=data.recipient_bank,
         recipient_bank_address=data.recipient_bank_address,

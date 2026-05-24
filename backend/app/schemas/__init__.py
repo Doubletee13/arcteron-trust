@@ -10,5 +10,9 @@ from app.schemas.user import (
     PinResetConfirm,
     UserResponse,
     TokenResponse,
-    AccountResponse
+    AccountResponse,
+    ProfileUpdateRequest,
+    PhotoUploadRequest,
+    EmailVerificationRequest,
+    EmailVerificationConfirm
 )

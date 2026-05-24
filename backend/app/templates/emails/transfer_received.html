@@ -34,7 +34,7 @@
 
       <div class="amount-box">
         <p class="label">Amount Received</p>
-        <p class="amount">+${{ amount }}</p>
+        <p class="amount">+{{ amount }}</p>
       </div>
 
       <table class="detail-table">
@@ -43,7 +43,7 @@
         <tr><td>To Account</td><td>****{{ account_last_four }}</td></tr>
         <tr><td>Date</td><td>{{ transaction_date }}</td></tr>
         <tr><td>Description</td><td>{{ description }}</td></tr>
-        <tr><td>New Balance</td><td>${{ new_balance }}</td></tr>
+        <tr><td>New Balance</td><td>{{ new_balance }}</td></tr>
       </table>
     </div>
     <div class="footer">

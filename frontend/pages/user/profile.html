@@ -1,0 +1,2164 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profile — Arcteron Trust</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=DM+Sans:wght@300;400;500;600&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="../../assets/css/theme.css">
+  <link rel="stylesheet" href="../../assets/css/style.css">
+  <script src="../../assets/js/theme.js"></script>
+  <style>
+    body {
+      font-family: 'DM Sans', sans-serif;
+      margin: 0;
+    }
+
+    .layout {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* ── Sidebar ── */
+    .sidebar {
+      width: 260px;
+      background: #171A20;
+      border-right: none;
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100vh;
+      z-index: 300;
+      transition: transform 0.3s ease;
+    }
+
+    .sidebar-logo {
+      padding: 0 20px;
+      height: 60px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+
+    .sidebar-logo-icon {
+      width: 28px;
+      height: 28px;
+      flex-shrink: 0;
+      opacity: 0.8;
+    }
+
+    .sidebar-logo-text h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 16px;
+      font-weight: 600;
+      color: #ffffff;
+      line-height: 1.2;
+    }
+
+    .sidebar-logo-text p {
+      font-size: 9px;
+      color: rgba(255, 255, 255, 0.3);
+      margin-top: 1px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    .sidebar-nav {
+      padding: 10px 10px;
+      flex: 1;
+      overflow-y: auto;
+    }
+
+    .nav-section-label {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.25);
+      padding: 10px 10px 4px;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.5);
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-bottom: 1px;
+      text-decoration: none;
+    }
+
+    .nav-item:hover {
+      background: rgba(255, 255, 255, 0.07);
+      color: rgba(255, 255, 255, 0.85);
+    }
+
+    .nav-item.active {
+      background: rgba(255, 255, 255, 0.1);
+      color: #ffffff;
+      font-weight: 600;
+    }
+
+    .nav-item svg {
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+    }
+
+    .nav-item.danger {
+      color: rgba(239, 68, 68, 0.7);
+    }
+
+    .nav-item.danger:hover {
+      background: rgba(239, 68, 68, 0.1);
+      color: #EF4444;
+    }
+
+    .sidebar-footer {
+      padding: 12px 10px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .user-card {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.2s;
+      margin-bottom: 4px;
+    }
+
+    .user-card:hover {
+      background: rgba(255, 255, 255, 0.07);
+    }
+
+    .sidebar-avatar {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.12);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+      flex-shrink: 0;
+      font-family: 'Cormorant Garamond', serif;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+
+    .user-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.85);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .user-role {
+      font-size: 11px;
+      color: rgba(255, 255, 255, 0.3);
+    }
+
+    /* ── Main ── */
+    .main-content {
+      margin-left: 260px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      background: var(--bg-primary);
+    }
+
+    /* ── Topbar ── */
+    .topbar {
+      background: var(--bg-secondary);
+      border-bottom: 1px solid var(--border-color);
+      padding: 0 28px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 200;
+      flex-shrink: 0;
+    }
+
+    .topbar-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .menu-btn {
+      display: none;
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      background: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--text-secondary);
+      flex-shrink: 0;
+    }
+
+    .topbar-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .icon-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      background: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--text-secondary);
+      transition: all 0.2s;
+      position: relative;
+      text-decoration: none;
+    }
+
+    .icon-btn:hover {
+      color: var(--text-primary);
+    }
+
+    .notif-dot {
+      min-width: 16px;
+      height: 16px;
+      background: #EF4444;
+      border-radius: 50%;
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      border: 2px solid var(--bg-secondary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 600;
+      color: white;
+      padding: 0 4px;
+    }
+
+    .topbar-avatar {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: #111827;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      flex-shrink: 0;
+      font-family: 'Cormorant Garamond', serif;
+    }
+
+    [data-theme="dark"] .main-content .topbar-avatar {
+      background: #E5E7EB;
+      color: #111827;
+    }
+
+    /* ── Page content ── */
+    .page-content {
+      padding: 28px;
+      flex: 1;
+    }
+
+    /* ── Profile Page Styles ── */
+    .profile-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 24px;
+      margin-bottom: 32px;
+      padding: 32px;
+      background: var(--bg-secondary);
+      border-radius: 16px;
+      border: 1px solid var(--border-color);
+    }
+
+    .profile-photo-container {
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .profile-photo {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background: var(--bg-primary);
+      border: 3px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      font-weight: 700;
+      font-family: 'Cormorant Garamond', serif;
+      color: var(--text-primary);
+      overflow: hidden;
+    }
+
+    .profile-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .photo-upload-btn {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--text-primary);
+      border: 2px solid var(--bg-secondary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--bg-secondary);
+      transition: all 0.2s;
+    }
+
+    .photo-upload-btn:hover {
+      transform: scale(1.1);
+    }
+
+    .profile-photo-wrapper {
+      position: relative;
+      display: inline-block;
+    }
+
+    .photo-upload-badge {
+      position: absolute;
+      bottom: 4px;
+      right: 4px;
+      width: 32px;
+      height: 32px;
+      background: #0F1115;
+      border: 2px solid var(--bg-secondary);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      z-index: 10;
+    }
+
+    .photo-upload-badge:hover {
+      transform: scale(1.1);
+      background: #1A1D23;
+    }
+
+    .photo-upload-badge svg {
+      color: #fff;
+    }
+
+    .profile-info {
+      flex: 1;
+    }
+
+    .profile-name {
+      font-size: 24px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin: 0 0 8px 0;
+      font-family: 'Cormorant Garamond', serif;
+    }
+
+    .profile-email {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin: 0 0 16px 0;
+    }
+
+    .verification-badges {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .verification-badge {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .verification-badge.verified {
+      background: rgba(16, 185, 129, 0.1);
+      color: #10B981;
+      border: 1px solid rgba(16, 185, 129, 0.2);
+    }
+
+    .verification-badge.pending {
+      background: rgba(245, 158, 11, 0.1);
+      color: #F59E0B;
+      border: 1px solid rgba(245, 158, 11, 0.2);
+    }
+
+    .verification-badge.unverified {
+      background: rgba(239, 68, 68, 0.1);
+      color: #EF4444;
+      border: 1px solid rgba(239, 68, 68, 0.2);
+    }
+
+    .edit-profile-btn {
+      padding: 10px 20px;
+      background: var(--text-primary);
+      color: var(--bg-secondary);
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .edit-profile-btn:hover {
+      opacity: 0.9;
+    }
+
+    /* ── Card Styles ── */
+    .profile-section {
+      margin-bottom: 24px;
+    }
+
+    .section-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin: 0 0 16px 0;
+      font-family: 'Cormorant Garamond', serif;
+    }
+
+    .card {
+      background: var(--bg-secondary);
+      border-radius: 16px;
+      border: 1px solid var(--border-color);
+      padding: 24px;
+    }
+
+    .card-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 0;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .card-row:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .card-row:first-child {
+      padding-top: 0;
+    }
+
+    .card-label {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-bottom: 4px;
+    }
+
+    .card-value {
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--text-primary);
+    }
+
+    .card-value.masked {
+      font-family: monospace;
+      letter-spacing: 2px;
+    }
+
+    .card-action {
+      padding: 8px 16px;
+      background: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-primary);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .card-action:hover {
+      border-color: var(--text-primary);
+    }
+
+    .card-action.danger {
+      color: #EF4444;
+      border-color: rgba(239, 68, 68, 0.3);
+    }
+
+    .card-action.danger:hover {
+      border-color: #EF4444;
+      background: rgba(239, 68, 68, 0.1);
+    }
+
+    /* ── Account Card Specific ── */
+    .account-number-display {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .eye-icon {
+      cursor: pointer;
+      color: var(--text-secondary);
+      transition: color 0.2s;
+    }
+
+    .eye-icon:hover {
+      color: var(--text-primary);
+    }
+
+    /* ── Security Section ── */
+    .security-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 0;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .security-item:last-child {
+      border-bottom: none;
+    }
+
+    .security-info h4 {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin: 0 0 4px 0;
+    }
+
+    .security-info p {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin: 0;
+    }
+
+    .security-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .security-status.set {
+      background: rgba(16, 185, 129, 0.1);
+      color: #10B981;
+    }
+
+    .security-status.not-set {
+      background: rgba(239, 68, 68, 0.1);
+      color: #EF4444;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 1024px) {
+      .profile-header {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+
+      .verification-badges {
+        justify-content: center;
+      }
+
+      .card-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+      }
+
+      .card-action {
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .sidebar {
+        transform: translateX(-100%);
+      }
+
+      .sidebar.show {
+        transform: translateX(0);
+      }
+
+      .main-content {
+        margin-left: 0;
+      }
+
+      .menu-btn {
+        display: flex;
+      }
+
+      .page-content {
+        padding: 16px;
+      }
+
+      .profile-header {
+        padding: 20px;
+      }
+
+      .card {
+        padding: 16px;
+      }
+    }
+
+    /* ── Sidebar Overlay ── */
+    .sidebar-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 299;
+    }
+
+    .sidebar-overlay.show {
+      display: block;
+    }
+
+    /* ── Modal Styles ── */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(4px);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-overlay.show {
+      display: flex;
+    }
+
+    .modal {
+      background: var(--bg-secondary);
+      border-radius: 16px;
+      border: 1px solid var(--border-color);
+      width: 90%;
+      max-width: 500px;
+      max-height: 90vh;
+      overflow-y: auto;
+      animation: modalSlideIn 0.3s ease;
+    }
+
+    @keyframes modalSlideIn {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .modal-header {
+      padding: 24px;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .modal-header h3 {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin: 0;
+      font-family: 'Cormorant Garamond', serif;
+    }
+
+    .modal-close {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--text-secondary);
+      transition: all 0.2s;
+    }
+
+    .modal-close:hover {
+      color: var(--text-primary);
+      border-color: var(--text-primary);
+    }
+
+    .modal-body {
+      padding: 24px;
+    }
+
+    .modal-footer {
+      padding: 16px 24px;
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      gap: 12px;
+      justify-content: flex-end;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 12px 16px;
+      background: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      font-size: 14px;
+      color: var(--text-primary);
+      transition: all 0.2s;
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: var(--text-primary);
+    }
+
+    .form-group input::placeholder {
+      color: var(--text-muted);
+    }
+
+    .btn {
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: none;
+    }
+
+    .btn-primary {
+      background: var(--text-primary);
+      color: var(--bg-secondary);
+    }
+
+    .btn-primary:hover {
+      opacity: 0.9;
+    }
+
+    .btn-secondary {
+      background: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--text-primary);
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .error-message {
+      color: #EF4444;
+      font-size: 12px;
+      margin-top: 4px;
+      display: none;
+    }
+
+    .form-group.error input {
+      border-color: #EF4444;
+    }
+
+    .form-group.error .error-message {
+      display: block;
+    }
+
+    /* ── Photo Upload Styles ── */
+    .photo-upload-modal .modal {
+      max-width: 400px;
+    }
+
+    .upload-area {
+      border: 2px dashed var(--border-color);
+      border-radius: 12px;
+      padding: 40px 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .upload-area:hover {
+      border-color: var(--text-primary);
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .upload-area svg {
+      width: 48px;
+      height: 48px;
+      color: var(--text-secondary);
+      margin-bottom: 12px;
+    }
+
+    .upload-area p {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin: 0 0 4px 0;
+    }
+
+    .upload-area span {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .preview-container {
+      display: none;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .preview-container.show {
+      display: block;
+    }
+
+    .preview-image {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-bottom: 16px;
+      border: 3px solid var(--border-color);
+    }
+  </style>
+</head>
+
+<body>
+  <div class="layout">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-logo">
+        <svg class="sidebar-logo-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="20" cy="20" r="18" stroke="white" stroke-width="1.5" opacity="0.3" />
+          <path d="M20 8 L30 28 H24 L20 20 L16 28 H10 Z" fill="white" opacity="0.9" />
+          <path d="M14 23 H26" stroke="white" stroke-width="1.5" opacity="0.6" />
+          <circle cx="20" cy="6" r="2" fill="white" opacity="0.5" />
+        </svg>
+        <div class="sidebar-logo-text">
+          <h1>Arcteron Trust</h1>
+          <p>Private Banking</p>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-section-label">Main</div>
+        <a class="nav-item" href="dashboard.html" onclick="nav(event,'dashboard.html')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round">
+            <rect x="3" y="3" width="7" height="7" />
+            <rect x="14" y="3" width="7" height="7" />
+            <rect x="14" y="14" width="7" height="7" />
+            <rect x="3" y="14" width="7" height="7" />
+          </svg>
+          Dashboard
+        </a>
+        <a class="nav-item" href="transfer.html" onclick="nav(event,'transfer.html')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round">
+            <line x1="22" y1="2" x2="11" y2="13" />
+            <polygon points="22 2 15 22 11 13 2 9 22 2" />
+          </svg>
+          Transfer
+        </a>
+        <a class="nav-item" href="transactions.html" onclick="nav(event,'transactions.html')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round">
+            <line x1="8" y1="6" x2="21" y2="6" />
+            <line x1="8" y1="12" x2="21" y2="12" />
+            <line x1="8" y1="18" x2="21" y2="18" />
+            <line x1="3" y1="6" x2="3.01" y2="6" />
+            <line x1="3" y1="12" x2="3.01" y2="12" />
+            <line x1="3" y1="18" x2="3.01" y2="18" />
+          </svg>
+          Transactions
+        </a>
+        <a class="nav-item" href="notifications.html" onclick="nav(event,'notifications.html')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+            <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+          </svg>
+          Notifications
+        </a>
+
+        <div class="nav-section-label">Account</div>
+        <a class="nav-item active" href="profile.html" onclick="nav(event,'profile.html')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+            <circle cx="12" cy="7" r="4" />
+          </svg>
+          Profile
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="user-card" onclick="nav(event,'profile.html')">
+          <div class="sidebar-avatar" id="sidebarAvatar">—</div>
+          <div style="flex:1;min-width:0;">
+            <div class="user-name" id="sidebarName">Loading...</div>
+            <div class="user-role">Personal Account</div>
+          </div>
+        </div>
+        <a class="nav-item danger" onclick="Auth.logout()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+            <polyline points="16 17 21 12 16 7" />
+            <line x1="21" y1="12" x2="9" y2="12" />
+          </svg>
+          Sign Out
+        </a>
+      </div>
+    </aside>
+
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+
+    <!-- Main -->
+    <div class="main-content">
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="menu-btn" id="menuBtn" onclick="openSidebar()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="3" y1="12" x2="21" y2="12"></line>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+          </button>
+          <div class="topbar-title">Profile</div>
+        </div>
+        <div class="topbar-right">
+          <button class="icon-btn" onclick="Theme.toggle()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+            </svg>
+          </button>
+          <div class="icon-btn-wrapper" style="position:relative">
+            <button class="icon-btn" id="notifBtn" onclick="nav(event,'notifications.html')">
+              <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+                <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+              </svg>
+              <div class="notif-dot" id="notifDot" style="display:none">0</div>
+            </button>
+          </div>
+          <div class="topbar-avatar" id="topbarAvatar" onclick="nav(event,'profile.html')">—</div>
+        </div>
+      </header>
+
+      <main class="page-content">
+        <!-- Profile Header -->
+        <div class="profile-header">
+          <div class="profile-photo-container">
+            <div class="profile-photo-wrapper">
+              <div class="profile-photo" id="profilePhoto">—</div>
+              <div class="photo-upload-badge" onclick="openPhotoModal()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round" width="14" height="14">
+                  <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
+                  <circle cx="12" cy="13" r="4" />
+                </svg>
+              </div>
+            </div>
+          </div>
+          <div class="profile-info">
+            <h1 class="profile-name" id="profileName">Loading...</h1>
+            <p class="profile-email" id="profileEmail">Loading...</p>
+            <div class="verification-badges">
+              <div class="verification-badge" id="emailBadge">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                  <polyline points="22 4 12 14.01 9 11.01" />
+                </svg>
+                Email
+              </div>
+              <div class="verification-badge" id="kycBadge">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                  <polyline points="22 4 12 14.01 9 11.01" />
+                </svg>
+                KYC
+              </div>
+              <div class="verification-badge" id="idBadge">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                  <polyline points="22 4 12 14.01 9 11.01" />
+                </svg>
+                ID
+              </div>
+            </div>
+            <div id="emailVerificationAlert" style="display:none; background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.2); border-radius: 8px; padding: 12px; margin-top: 16px;">
+              <p style="margin: 0 0 8px; font-size: 13px; color: #F59E0B;">⚠️ Email Not Verified</p>
+              <p style="margin: 0; font-size: 12px; color: var(--text-secondary);">
+                Please verify your email to activate your account.
+                <button onclick="openResendVerificationModal()" style="background:none; border:none; color: #F59E0B; text-decoration: underline; cursor: pointer; padding: 0; font-size: 12px; font-family: inherit;">Resend verification email</button>
+              </p>
+            </div>
+          </div>
+          <button class="edit-profile-btn" onclick="editProfile()">Edit Profile</button>
+        </div>
+
+        <!-- Account Information -->
+        <div class="profile-section">
+          <h2 class="section-title">Account Information</h2>
+          <div class="card">
+            <div class="card-row">
+              <div>
+                <div class="card-label">Account Number</div>
+                <div class="account-number-display">
+                  <span class="card-value masked" id="accountNumber">**** **** **** ****</span>
+                  <svg class="eye-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18" onclick="toggleAccountNumber()">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                    <circle cx="12" cy="12" r="3" />
+                  </svg>
+                </div>
+              </div>
+            </div>
+            <div class="card-row">
+              <div>
+                <div class="card-label">Routing Number</div>
+                <div class="card-value" id="routingNumber">—</div>
+              </div>
+            </div>
+            <div class="card-row">
+              <div>
+                <div class="card-label">Account Type</div>
+                <div class="card-value" id="accountType">—</div>
+              </div>
+            </div>
+            <div class="card-row">
+              <div>
+                <div class="card-label">Current Balance</div>
+                <div class="card-value" id="accountBalance">—</div>
+              </div>
+            </div>
+            <div class="card-row">
+              <div>
+                <div class="card-label">Bank</div>
+                <div class="card-value" id="bankName">—</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Security Section -->
+        <div class="profile-section">
+          <h2 class="section-title">Security</h2>
+          <div class="card">
+            <div class="security-item">
+              <div class="security-info">
+                <h4>Transaction PIN</h4>
+                <p>Required for transfers and sensitive operations</p>
+              </div>
+              <div>
+                <span class="security-status" id="pinStatus">Checking...</span>
+                <button class="card-action" id="pinActionBtn" onclick="managePin()">Set PIN</button>
+              </div>
+            </div>
+            <div class="security-item">
+              <div class="security-info">
+                <h4>Password</h4>
+                <p>Last changed recently</p>
+              </div>
+              <button class="card-action" onclick="changePassword()">Change Password</button>
+            </div>
+            <div class="security-item">
+              <div class="security-info">
+                <h4>Last Login</h4>
+                <p id="lastLogin">Loading...</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Personal Information -->
+        <div class="profile-section">
+          <h2 class="section-title">Personal Information</h2>
+          <div class="card">
+            <div class="card-row">
+              <div>
+                <div class="card-label">Full Name</div>
+                <div class="card-value" id="fullName">—</div>
+              </div>
+              <button class="card-action" onclick="editPersonalInfo()">Edit</button>
+            </div>
+            <div class="card-row">
+              <div>
+                <div class="card-label">Email Address</div>
+                <div class="card-value" id="emailDisplay">—</div>
+              </div>
+              <button class="card-action" onclick="changeEmail()">Change</button>
+            </div>
+            <div class="card-row">
+              <div>
+                <div class="card-label">Phone Number</div>
+                <div class="card-value" id="phoneDisplay">—</div>
+              </div>
+              <button class="card-action" onclick="changePhone()">Change</button>
+            </div>
+            <div class="card-row">
+              <div>
+                <div class="card-label">Date of Birth</div>
+                <div class="card-value" id="dobDisplay">—</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Address Information -->
+        <div class="profile-section">
+          <h2 class="section-title">Address</h2>
+          <div class="card">
+            <div class="card-row">
+              <div>
+                <div class="card-label">Street Address</div>
+                <div class="card-value" id="addressDisplay">—</div>
+              </div>
+              <button class="card-action" onclick="editAddress()">Edit</button>
+            </div>
+            <div class="card-row">
+              <div>
+                <div class="card-label">City</div>
+                <div class="card-value" id="cityDisplay">—</div>
+              </div>
+            </div>
+            <div class="card-row">
+              <div>
+                <div class="card-label">State</div>
+                <div class="card-value" id="stateDisplay">—</div>
+              </div>
+            </div>
+            <div class="card-row">
+              <div>
+                <div class="card-label">ZIP Code</div>
+                <div class="card-value" id="zipDisplay">—</div>
+              </div>
+            </div>
+            <div class="card-row">
+              <div>
+                <div class="card-label">Country</div>
+                <div class="card-value" id="countryDisplay">—</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Personal Info Edit Modal -->
+  <div class="modal-overlay" id="personalInfoModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>Edit Personal Information</h3>
+        <button class="modal-close" onclick="closeModal('personalInfoModal')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="personalInfoForm">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="editFirstName">First Name</label>
+              <input type="text" id="editFirstName" name="firstName" required>
+              <div class="error-message">First name is required</div>
+            </div>
+            <div class="form-group">
+              <label for="editLastName">Last Name</label>
+              <input type="text" id="editLastName" name="lastName" required>
+              <div class="error-message">Last name is required</div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="editMiddleName">Middle Name (Optional)</label>
+            <input type="text" id="editMiddleName" name="middleName">
+          </div>
+          <div class="form-group">
+            <label for="editPhone">Phone Number</label>
+            <input type="tel" id="editPhone" name="phone" placeholder="+1 (555) 000-0000">
+            <div class="error-message">Please enter a valid phone number</div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('personalInfoModal')">Cancel</button>
+        <button class="btn btn-primary" onclick="savePersonalInfo()">Save Changes</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Address Edit Modal -->
+  <div class="modal-overlay" id="addressModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>Edit Address</h3>
+        <button class="modal-close" onclick="closeModal('addressModal')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="addressForm">
+          <div class="form-group">
+            <label for="editAddress">Street Address</label>
+            <input type="text" id="editAddress" name="address" required>
+            <div class="error-message">Street address is required</div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="editCity">City</label>
+              <input type="text" id="editCity" name="city" required>
+              <div class="error-message">City is required</div>
+            </div>
+            <div class="form-group">
+              <label for="editState">State</label>
+              <input type="text" id="editState" name="state" required>
+              <div class="error-message">State is required</div>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="editZip">ZIP Code</label>
+              <input type="text" id="editZip" name="zipCode" required>
+              <div class="error-message">ZIP code is required</div>
+            </div>
+            <div class="form-group">
+              <label for="editCountry">Country</label>
+              <input type="text" id="editCountry" name="country" required>
+              <div class="error-message">Country is required</div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('addressModal')">Cancel</button>
+        <button class="btn btn-primary" onclick="saveAddress()">Save Changes</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Photo Upload Modal -->
+  <div class="modal-overlay photo-upload-modal" id="photoModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>Upload Profile Photo</h3>
+        <button class="modal-close" onclick="closeModal('photoModal')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <input type="file" id="photoInput" accept="image/*" style="display: none" onchange="handlePhotoSelect(event)">
+        <div class="upload-area" id="uploadArea" onclick="document.getElementById('photoInput').click()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
+            <circle cx="12" cy="13" r="4" />
+          </svg>
+          <p>Click to upload photo</p>
+          <span>JPG, PNG up to 5MB</span>
+        </div>
+        <div class="preview-container" id="previewContainer">
+          <img id="photoPreview" class="preview-image" src="" alt="Preview">
+          <button class="btn btn-secondary" onclick="removePhoto()">Remove</button>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('photoModal')">Cancel</button>
+        <button class="btn btn-primary" id="uploadPhotoBtn" onclick="uploadPhoto()" disabled>Upload</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Email Verification Resend Modal -->
+  <div class="modal-overlay" id="resendVerificationModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>Resend Verification Email</h3>
+        <button class="modal-close" onclick="closeModal('resendVerificationModal')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p style="margin-bottom: 16px; color: var(--text-secondary);">We'll send a verification link to your email address.</p>
+        <div class="form-group">
+          <label for="resendEmail">Email Address</label>
+          <input type="email" id="resendEmail" readonly style="background: var(--bg-secondary); cursor: not-allowed;">
+        </div>
+        <div id="resendAlertSuccess" class="alert alert-success" style="display: none;">
+          Verification email sent successfully. Please check your inbox and spam folder.
+        </div>
+        <div id="resendAlertError" class="alert alert-error" style="display: none;">
+          Failed to send verification email. Please try again.
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('resendVerificationModal')">Cancel</button>
+        <button class="btn btn-primary" id="resendBtn" onclick="handleResendVerification()">Send Email</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Change Password Modal -->
+  <div class="modal-overlay" id="changePasswordModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>Change Password</h3>
+        <button class="modal-close" onclick="closeModal('changePasswordModal')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="currentPassword">Current Password</label>
+          <div style="position: relative;">
+            <input type="password" id="currentPassword" placeholder="Enter current password" style="padding-right: 40px;">
+            <button type="button" onclick="togglePasswordVisibility('currentPassword')" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: var(--text-secondary);">
+              <svg id="currentPasswordEye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                <circle cx="12" cy="12" r="3" />
+              </svg>
+            </button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="newPassword">New Password</label>
+          <div style="position: relative;">
+            <input type="password" id="newPassword" placeholder="Enter new password (min 8 characters)" style="padding-right: 40px;">
+            <button type="button" onclick="togglePasswordVisibility('newPassword')" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: var(--text-secondary);">
+              <svg id="newPasswordEye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                <circle cx="12" cy="12" r="3" />
+              </svg>
+            </button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="confirmPassword">Confirm New Password</label>
+          <div style="position: relative;">
+            <input type="password" id="confirmPassword" placeholder="Confirm new password" style="padding-right: 40px;">
+            <button type="button" onclick="togglePasswordVisibility('confirmPassword')" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: var(--text-secondary);">
+              <svg id="confirmPasswordEye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                <circle cx="12" cy="12" r="3" />
+              </svg>
+            </button>
+          </div>
+        </div>
+        <div id="changePasswordAlertSuccess" class="alert alert-success" style="display: none;">
+          Password changed successfully.
+        </div>
+        <div id="changePasswordAlertError" class="alert alert-error" style="display: none;">
+          Failed to change password. Please check your inputs and try again.
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('changePasswordModal')">Cancel</button>
+        <button class="btn btn-primary" id="changePasswordBtn" onclick="handleChangePassword()">Change Password</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Change PIN Modal -->
+  <div class="modal-overlay" id="changePinModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>Change PIN</h3>
+        <button class="modal-close" onclick="closeModal('changePinModal')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p style="margin-bottom: 16px; color: var(--text-secondary);">Enter your current PIN and choose a new 4-digit PIN.</p>
+        <div class="form-group">
+          <label for="currentPin">Current PIN</label>
+          <div style="position: relative;">
+            <input type="password" id="currentPin" placeholder="Enter current PIN" maxlength="4" style="letter-spacing: 4px; text-align: center; padding-right: 40px;">
+            <button type="button" onclick="togglePasswordVisibility('currentPin')" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: var(--text-secondary);">
+              <svg id="currentPinEye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                <circle cx="12" cy="12" r="3" />
+              </svg>
+            </button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="newPin">New PIN</label>
+          <div style="position: relative;">
+            <input type="password" id="newPin" placeholder="Enter new 4-digit PIN" maxlength="4" style="letter-spacing: 4px; text-align: center; padding-right: 40px;">
+            <button type="button" onclick="togglePasswordVisibility('newPin')" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: var(--text-secondary);">
+              <svg id="newPinEye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                <circle cx="12" cy="12" r="3" />
+              </svg>
+            </button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="confirmPin">Confirm New PIN</label>
+          <div style="position: relative;">
+            <input type="password" id="confirmPin" placeholder="Confirm new PIN" maxlength="4" style="letter-spacing: 4px; text-align: center; padding-right: 40px;">
+            <button type="button" onclick="togglePasswordVisibility('confirmPin')" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: var(--text-secondary);">
+              <svg id="confirmPinEye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                <circle cx="12" cy="12" r="3" />
+              </svg>
+            </button>
+          </div>
+        </div>
+        <div id="changePinAlertSuccess" class="alert alert-success" style="display: none;">
+          PIN changed successfully.
+        </div>
+        <div id="changePinAlertError" class="alert alert-error" style="display: none;">
+          Failed to change PIN. Please check your inputs and try again.
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('changePinModal')">Cancel</button>
+        <button class="btn btn-primary" id="changePinBtn" onclick="handleChangePin()">Change PIN</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="../../assets/js/api.js"></script>
+  <script src="../../assets/js/auth.js"></script>
+  <script src="../../assets/js/utils.js"></script>
+  <script>
+    // Navigation function
+    function nav(e, url) {
+      e.preventDefault();
+      window.location.href = url;
+    }
+
+    // Sidebar functions
+    function openSidebar() {
+      document.getElementById('sidebar').classList.add('show');
+      document.getElementById('sidebarOverlay').classList.add('show');
+    }
+
+    function closeSidebar() {
+      document.getElementById('sidebar').classList.remove('show');
+      document.getElementById('sidebarOverlay').classList.remove('show');
+    }
+
+    // Account number toggle
+    let accountNumberVisible = false;
+    let fullAccountNumber = '';
+
+    function toggleAccountNumber() {
+      const display = document.getElementById('accountNumber');
+      if (accountNumberVisible) {
+        display.textContent = '**** **** **** ****';
+        accountNumberVisible = false;
+      } else {
+        // Format account number with spaces
+        const formatted = fullAccountNumber.replace(/(\d{4})/g, '$1 ').trim();
+        display.textContent = formatted;
+        accountNumberVisible = true;
+      }
+    }
+
+    // Modal functions
+    function openModal(modalId) {
+      document.getElementById(modalId).classList.add('show');
+    }
+
+    function closeModal(modalId) {
+      document.getElementById(modalId).classList.remove('show');
+      // Reset forms when closing
+      if (modalId === 'personalInfoModal') {
+        document.getElementById('personalInfoForm').reset();
+        clearFormErrors('personalInfoForm');
+      } else if (modalId === 'addressModal') {
+        document.getElementById('addressForm').reset();
+        clearFormErrors('addressForm');
+      } else if (modalId === 'photoModal') {
+        document.getElementById('photoInput').value = '';
+        document.getElementById('uploadArea').style.display = 'block';
+        document.getElementById('previewContainer').classList.remove('show');
+        document.getElementById('uploadPhotoBtn').disabled = true;
+      } else if (modalId === 'resendVerificationModal') {
+        document.getElementById('resendAlertSuccess').style.display = 'none';
+        document.getElementById('resendAlertError').style.display = 'none';
+      } else if (modalId === 'changePasswordModal') {
+        document.getElementById('currentPassword').value = '';
+        document.getElementById('newPassword').value = '';
+        document.getElementById('confirmPassword').value = '';
+        document.getElementById('changePasswordAlertSuccess').style.display = 'none';
+        document.getElementById('changePasswordAlertError').style.display = 'none';
+      } else if (modalId === 'changePinModal') {
+        document.getElementById('currentPin').value = '';
+        document.getElementById('newPin').value = '';
+        document.getElementById('confirmPin').value = '';
+        document.getElementById('changePinAlertSuccess').style.display = 'none';
+        document.getElementById('changePinAlertError').style.display = 'none';
+      }
+    }
+
+    function clearFormErrors(formId) {
+      const form = document.getElementById(formId);
+      form.querySelectorAll('.form-group').forEach(group => {
+        group.classList.remove('error');
+      });
+    }
+
+    // Personal Info Edit
+    let currentUserData = null;
+
+    function editPersonalInfo() {
+      if (!currentUserData) {
+        Utils.showToast('Profile data not loaded');
+        return;
+      }
+      
+      // Populate form with current data
+      document.getElementById('editFirstName').value = currentUserData.first_name || '';
+      document.getElementById('editLastName').value = currentUserData.last_name || '';
+      document.getElementById('editMiddleName').value = currentUserData.middle_name || '';
+      document.getElementById('editPhone').value = currentUserData.phone || '';
+      
+      openModal('personalInfoModal');
+    }
+
+    async function savePersonalInfo() {
+      const firstName = document.getElementById('editFirstName').value.trim();
+      const lastName = document.getElementById('editLastName').value.trim();
+      const middleName = document.getElementById('editMiddleName').value.trim();
+      const phone = document.getElementById('editPhone').value.trim();
+
+      // Validation
+      let hasError = false;
+      if (!firstName) {
+        showFieldError('editFirstName');
+        hasError = true;
+      }
+      if (!lastName) {
+        showFieldError('editLastName');
+        hasError = true;
+      }
+
+      if (hasError) return;
+
+      try {
+        Utils.showToast('Saving changes...');
+        
+        const updateData = {
+          first_name: firstName,
+          last_name: lastName,
+          middle_name: middleName || null,
+          phone: phone || null
+        };
+
+        const res = await Api.put('/api/auth/me', updateData, true);
+        
+        if (res && res.ok) {
+          Utils.showToast('Personal information updated successfully');
+          closeModal('personalInfoModal');
+          loadProfile(); // Reload profile data
+        } else {
+          Utils.showToast(res?.data?.detail || 'Failed to update personal information');
+        }
+      } catch (err) {
+        console.error('Error updating personal info:', err);
+        Utils.showToast('Failed to update personal information');
+      }
+    }
+
+    // Address Edit
+    function editAddress() {
+      if (!currentUserData) {
+        Utils.showToast('Profile data not loaded');
+        return;
+      }
+      
+      // Populate form with current data
+      document.getElementById('editAddress').value = currentUserData.address || '';
+      document.getElementById('editCity').value = currentUserData.city || '';
+      document.getElementById('editState').value = currentUserData.state || '';
+      document.getElementById('editZip').value = currentUserData.zip_code || '';
+      document.getElementById('editCountry').value = currentUserData.country || '';
+      
+      openModal('addressModal');
+    }
+
+    async function saveAddress() {
+      const address = document.getElementById('editAddress').value.trim();
+      const city = document.getElementById('editCity').value.trim();
+      const state = document.getElementById('editState').value.trim();
+      const zipCode = document.getElementById('editZip').value.trim();
+      const country = document.getElementById('editCountry').value.trim();
+
+      // Validation
+      let hasError = false;
+      if (!address) {
+        showFieldError('editAddress');
+        hasError = true;
+      }
+      if (!city) {
+        showFieldError('editCity');
+        hasError = true;
+      }
+      if (!state) {
+        showFieldError('editState');
+        hasError = true;
+      }
+      if (!zipCode) {
+        showFieldError('editZip');
+        hasError = true;
+      }
+      if (!country) {
+        showFieldError('editCountry');
+        hasError = true;
+      }
+
+      if (hasError) return;
+
+      try {
+        Utils.showToast('Saving changes...');
+        
+        const updateData = {
+          address: address,
+          city: city,
+          state: state,
+          zip_code: zipCode,
+          country: country
+        };
+
+        const res = await Api.put('/api/auth/me', updateData, true);
+        
+        if (res && res.ok) {
+          Utils.showToast('Address updated successfully');
+          closeModal('addressModal');
+          loadProfile(); // Reload profile data
+        } else {
+          Utils.showToast(res?.data?.detail || 'Failed to update address');
+        }
+      } catch (err) {
+        console.error('Error updating address:', err);
+        Utils.showToast('Failed to update address');
+      }
+    }
+
+    // Photo Upload
+    let selectedPhotoFile = null;
+
+    function openPhotoModal() {
+      openModal('photoModal');
+    }
+
+    function handlePhotoSelect(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      // Validate file type
+      if (!file.type.startsWith('image/')) {
+        Utils.showToast('Please select an image file');
+        return;
+      }
+
+      // Validate file size (5MB max)
+      if (file.size > 5 * 1024 * 1024) {
+        Utils.showToast('File size must be less than 5MB');
+        return;
+      }
+
+      selectedPhotoFile = file;
+
+      // Show preview
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        document.getElementById('photoPreview').src = e.target.result;
+        document.getElementById('uploadArea').style.display = 'none';
+        document.getElementById('previewContainer').classList.add('show');
+        document.getElementById('uploadPhotoBtn').disabled = false;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function removePhoto() {
+      selectedPhotoFile = null;
+      document.getElementById('photoInput').value = '';
+      document.getElementById('uploadArea').style.display = 'block';
+      document.getElementById('previewContainer').classList.remove('show');
+      document.getElementById('uploadPhotoBtn').disabled = true;
+    }
+
+    async function uploadPhoto() {
+      if (!selectedPhotoFile) {
+        Utils.showToast('Please select a photo');
+        return;
+      }
+
+      try {
+        Utils.showToast('Uploading photo...');
+
+        // Convert file to base64
+        const reader = new FileReader();
+        reader.onload = async function(e) {
+          const base64Data = e.target.result;
+
+          const res = await Api.put('/api/auth/profile-photo', { photo_data: base64Data }, true);
+          
+          if (res && res.ok) {
+            Utils.showToast('Photo uploaded successfully');
+            closeModal('photoModal');
+            loadProfile(); // Reload profile data
+          } else {
+            Utils.showToast(res?.data?.detail || 'Failed to upload photo');
+          }
+        };
+        reader.readAsDataURL(selectedPhotoFile);
+      } catch (err) {
+        console.error('Error uploading photo:', err);
+        Utils.showToast('Failed to upload photo');
+      }
+    }
+
+    function showFieldError(fieldId) {
+      const field = document.getElementById(fieldId);
+      field.closest('.form-group').classList.add('error');
+    }
+
+    // Toggle password visibility
+    function togglePasswordVisibility(fieldId) {
+      const input = document.getElementById(fieldId);
+      const eyeIcon = document.getElementById(fieldId + 'Eye');
+      
+      if (input.type === 'password') {
+        input.type = 'text';
+        eyeIcon.innerHTML = `<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.12 18.12 0 0 1 5.94-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line>`;
+      } else {
+        input.type = 'password';
+        eyeIcon.innerHTML = `<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle>`;
+      }
+    }
+
+    // Placeholder functions for features not yet implemented
+    function editProfile() {
+      editPersonalInfo();
+    }
+
+    function managePin() {
+      if (!currentUserData || !currentUserData.has_pin) {
+        Utils.showToast('Please set your PIN first');
+        return;
+      }
+      openModal('changePinModal');
+    }
+
+    function changePassword() {
+      openModal('changePasswordModal');
+    }
+
+    // Email verification resend modal
+    function openResendVerificationModal() {
+      if (!currentUserData) {
+        Utils.showToast('Profile data not loaded');
+        return;
+      }
+      document.getElementById('resendEmail').value = currentUserData.email;
+      openModal('resendVerificationModal');
+    }
+
+    async function handleResendVerification() {
+      const email = document.getElementById('resendEmail').value;
+      const resendBtn = document.getElementById('resendBtn');
+      const alertSuccess = document.getElementById('resendAlertSuccess');
+      const alertError = document.getElementById('resendAlertError');
+
+      // Hide alerts
+      alertSuccess.style.display = 'none';
+      alertError.style.display = 'none';
+
+      // Disable button
+      resendBtn.disabled = true;
+      resendBtn.textContent = 'Sending...';
+
+      try {
+        const res = await Api.post('/api/auth/email-verification/request', { email: email }, false);
+
+        if (res && res.ok) {
+          alertSuccess.style.display = 'block';
+          setTimeout(() => {
+            closeModal('resendVerificationModal');
+          }, 2000);
+        } else {
+          alertError.textContent = res?.data?.detail || 'Failed to send verification email';
+          alertError.style.display = 'block';
+        }
+      } catch (err) {
+        console.error('Error resending verification:', err);
+        alertError.textContent = 'Network error. Please check your connection and try again.';
+        alertError.style.display = 'block';
+      } finally {
+        // Re-enable button
+        resendBtn.disabled = false;
+        resendBtn.textContent = 'Send Email';
+      }
+    }
+
+    // Change password
+    async function handleChangePassword() {
+      const currentPassword = document.getElementById('currentPassword').value;
+      const newPassword = document.getElementById('newPassword').value;
+      const confirmPassword = document.getElementById('confirmPassword').value;
+      const changePasswordBtn = document.getElementById('changePasswordBtn');
+      const alertSuccess = document.getElementById('changePasswordAlertSuccess');
+      const alertError = document.getElementById('changePasswordAlertError');
+
+      // Hide alerts
+      alertSuccess.style.display = 'none';
+      alertError.style.display = 'none';
+
+      // Validation
+      if (!currentPassword || !newPassword || !confirmPassword) {
+        alertError.textContent = 'Please fill in all fields';
+        alertError.style.display = 'block';
+        return;
+      }
+
+      if (newPassword.length < 8) {
+        alertError.textContent = 'New password must be at least 8 characters';
+        alertError.style.display = 'block';
+        return;
+      }
+
+      if (newPassword !== confirmPassword) {
+        alertError.textContent = 'Passwords do not match';
+        alertError.style.display = 'block';
+        return;
+      }
+
+      // Disable button
+      changePasswordBtn.disabled = true;
+      changePasswordBtn.textContent = 'Changing...';
+
+      try {
+        const res = await Api.post('/api/auth/change-password', {
+          current_password: currentPassword,
+          new_password: newPassword,
+          confirm_password: confirmPassword
+        }, true);
+
+        if (res && res.ok) {
+          alertSuccess.style.display = 'block';
+          setTimeout(() => {
+            closeModal('changePasswordModal');
+            loadProfile(); // Reload profile data
+          }, 2000);
+        } else {
+          alertError.textContent = res?.data?.detail || 'Failed to change password';
+          alertError.style.display = 'block';
+        }
+      } catch (err) {
+        console.error('Error changing password:', err);
+        alertError.textContent = 'Network error. Please check your connection and try again.';
+        alertError.style.display = 'block';
+      } finally {
+        // Re-enable button
+        changePasswordBtn.disabled = false;
+        changePasswordBtn.textContent = 'Change Password';
+      }
+    }
+
+    // Change PIN
+    async function handleChangePin() {
+      const currentPin = document.getElementById('currentPin').value;
+      const newPin = document.getElementById('newPin').value;
+      const confirmPin = document.getElementById('confirmPin').value;
+      const changePinBtn = document.getElementById('changePinBtn');
+      const alertSuccess = document.getElementById('changePinAlertSuccess');
+      const alertError = document.getElementById('changePinAlertError');
+
+      // Hide alerts
+      alertSuccess.style.display = 'none';
+      alertError.style.display = 'none';
+
+      // Validation
+      if (!currentPin || !newPin || !confirmPin) {
+        alertError.textContent = 'Please fill in all fields';
+        alertError.style.display = 'block';
+        return;
+      }
+
+      if (!/^\d{4}$/.test(newPin)) {
+        alertError.textContent = 'PIN must be exactly 4 digits';
+        alertError.style.display = 'block';
+        return;
+      }
+
+      if (newPin !== confirmPin) {
+        alertError.textContent = 'PINs do not match';
+        alertError.style.display = 'block';
+        return;
+      }
+
+      // Disable button
+      changePinBtn.disabled = true;
+      changePinBtn.textContent = 'Changing...';
+
+      try {
+        const res = await Api.post('/api/auth/change-pin', {
+          current_pin: currentPin,
+          new_pin: newPin,
+          confirm_pin: confirmPin
+        }, true);
+
+        if (res && res.ok) {
+          alertSuccess.style.display = 'block';
+          setTimeout(() => {
+            closeModal('changePinModal');
+            loadProfile(); // Reload profile data
+          }, 2000);
+        } else {
+          alertError.textContent = res?.data?.detail || 'Failed to change PIN';
+          alertError.style.display = 'block';
+        }
+      } catch (err) {
+        console.error('Error changing PIN:', err);
+        alertError.textContent = 'Network error. Please check your connection and try again.';
+        alertError.style.display = 'block';
+      } finally {
+        // Re-enable button
+        changePinBtn.disabled = false;
+        changePinBtn.textContent = 'Change PIN';
+      }
+    }
+
+    function changeEmail() {
+      Utils.showToast('Email change coming soon');
+    }
+
+    function changePhone() {
+      editPersonalInfo(); // Redirect to personal info edit
+    }
+
+    // Load profile data
+    async function loadProfile() {
+      try {
+        const res = await Api.get('/api/auth/me', true);
+        if (res && res.ok) {
+          const user = res.data;
+          currentUserData = user; // Store for edit functions
+          
+          // Update sidebar
+          const initials = (user.first_name[0] + user.last_name[0]).toUpperCase();
+          document.getElementById('sidebarAvatar').textContent = initials;
+          document.getElementById('sidebarName').textContent = `${user.first_name} ${user.last_name}`;
+          document.getElementById('topbarAvatar').textContent = initials;
+          
+          // Update profile header
+          const profilePhoto = document.getElementById('profilePhoto');
+          if (user.profile_photo) {
+            profilePhoto.innerHTML = `<img src="${user.profile_photo}" alt="Profile">`;
+          } else {
+            profilePhoto.textContent = initials;
+          }
+          document.getElementById('profileName').textContent = `${user.first_name} ${user.middle_name ? user.middle_name + ' ' : ''}${user.last_name}`;
+          document.getElementById('profileEmail').textContent = user.email;
+          
+          // Update verification badges
+          updateVerificationBadge('emailBadge', user.is_email_verified);
+          updateVerificationBadge('kycBadge', user.is_kyc_complete);
+          updateVerificationBadge('idBadge', user.is_id_verified);
+
+          // Show email verification alert if not verified
+          if (!user.is_email_verified) {
+            document.getElementById('emailVerificationAlert').style.display = 'block';
+            document.getElementById('resendEmailLink').href = `../resend-verification.html?email=${encodeURIComponent(user.email)}`;
+          }
+          
+          // Update account information
+          if (user.account) {
+            fullAccountNumber = user.account.account_number;
+            document.getElementById('routingNumber').textContent = user.account.routing_number;
+            document.getElementById('accountType').textContent = user.account.account_type;
+            const balance = new Intl.NumberFormat('en-US', { style: 'currency', currency: user.account.currency }).format(user.account.balance);
+            document.getElementById('accountBalance').textContent = balance;
+            document.getElementById('bankName').textContent = user.account.bank_name;
+          }
+          
+          // Update security section
+          document.getElementById('pinStatus').textContent = user.has_pin ? 'Set' : 'Not Set';
+          document.getElementById('pinStatus').className = `security-status ${user.has_pin ? 'set' : 'not-set'}`;
+          document.getElementById('pinActionBtn').textContent = user.has_pin ? 'Change PIN' : 'Set PIN';
+          
+          if (user.last_login) {
+            const lastLogin = new Date(user.last_login).toLocaleString();
+            document.getElementById('lastLogin').textContent = lastLogin;
+          } else {
+            document.getElementById('lastLogin').textContent = 'First login';
+          }
+          
+          // Update personal information
+          document.getElementById('fullName').textContent = `${user.first_name} ${user.middle_name ? user.middle_name + ' ' : ''}${user.last_name}`;
+          document.getElementById('emailDisplay').textContent = user.email;
+          document.getElementById('phoneDisplay').textContent = user.phone || 'Not provided';
+          document.getElementById('dobDisplay').textContent = user.date_of_birth ? new Date(user.date_of_birth).toLocaleDateString() : 'Not provided';
+          
+          // Update address
+          document.getElementById('addressDisplay').textContent = user.address || 'Not provided';
+          document.getElementById('cityDisplay').textContent = user.city || 'Not provided';
+          document.getElementById('stateDisplay').textContent = user.state || 'Not provided';
+          document.getElementById('zipDisplay').textContent = user.zip_code || 'Not provided';
+          document.getElementById('countryDisplay').textContent = user.country || 'Not provided';
+        }
+      } catch (err) {
+        console.error('Error loading profile:', err);
+        Utils.showToast('Failed to load profile data');
+      }
+    }
+
+    function updateVerificationBadge(elementId, isVerified) {
+      const badge = document.getElementById(elementId);
+      if (isVerified) {
+        badge.className = 'verification-badge verified';
+      } else {
+        badge.className = 'verification-badge unverified';
+      }
+    }
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+      loadProfile();
+      updateNotificationDot();
+
+      // Close modals when clicking outside
+      document.querySelectorAll('.modal-overlay').forEach(overlay => {
+        overlay.addEventListener('click', (e) => {
+          if (e.target === overlay) {
+            overlay.classList.remove('show');
+          }
+        });
+      });
+    });
+
+    // Update notification dot
+    async function updateNotificationDot() {
+      try {
+        const res = await Api.get('/api/notifications/unread-count', true);
+        if (res && res.ok) {
+          const data = res.data;
+          const notifDot = document.getElementById('notifDot');
+          if (notifDot) {
+            if (data.count > 0) {
+              notifDot.textContent = data.count > 9 ? '9+' : data.count;
+              notifDot.style.display = 'flex';
+            } else {
+              notifDot.style.display = 'none';
+            }
+          }
+        }
+      } catch (err) {
+        console.error('Error updating notification dot:', err);
+      }
+    }
+
+    // Escape key handler
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeSidebar();
+        // Close all modals
+        document.querySelectorAll('.modal-overlay.show').forEach(modal => {
+          modal.classList.remove('show');
+        });
+      }
+    });
+  </script>
+</body>
+
+</html>

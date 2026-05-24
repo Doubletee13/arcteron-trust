@@ -27,3 +27,15 @@ def verify_pin_reset_token(token: str, max_age: int = 3600) -> Optional[str]:
         return email
     except Exception:
         return None
+
+
+def generate_verification_token(email: str) -> str:
+    return serializer.dumps(email, salt="email-verification")
+
+
+def verify_verification_token(token: str, max_age: int = 172800) -> Optional[str]:
+    try:
+        email = serializer.loads(token, salt="email-verification", max_age=max_age)
+        return email
+    except Exception:
+        return None

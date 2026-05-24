@@ -13,7 +13,8 @@ from app.schemas.user import (
 from app.utils.hashing import hash_password, verify_password
 from app.utils.jwt import create_access_token
 from app.utils.account_number import generate_account_number
-from app.services.email_service import send_login_alert
+from app.services.email_service import send_login_alert, send_verification_email
+from app.utils.tokens import generate_verification_token
 import re
 
 
@@ -47,6 +48,15 @@ def register_step1(data: RegisterStep1, db: Session) -> User:
     db.add(user)
     db.commit()
     db.refresh(user)
+
+    # Send verification email
+    try:
+        token = generate_verification_token(user.email)
+        send_verification_email(user.email, user.first_name, token)
+    except Exception:
+        # Never block registration because email failed
+        pass
+
     return user
 
 
@@ -131,6 +141,13 @@ def login_user(data: LoginRequest, db: Session) -> dict:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Your account has been blocked. Contact support."
+        )
+
+    # Check email verification
+    if not user.is_email_verified:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Please verify your email address before logging in. Check your inbox or request a new verification link."
         )
 
     # Update last login
