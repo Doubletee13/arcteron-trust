@@ -835,10 +835,20 @@
             <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
           </div>
           <h2>Account Created!</h2>
-          <p>Welcome to Arcteron Trust. Your account has been opened. Redirecting to your dashboard...</p>
-          <button class="submit-btn" style="max-width:220px;margin:0 auto;" onclick="Utils.navigateTo('/frontend/pages/user/dashboard.html')">
-            Go to Dashboard
-          </button>
+          <p style="margin-bottom: 16px;">Welcome to Arcteron Trust. Your account has been opened.</p>
+          <div style="background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.2); border-radius: 8px; padding: 16px; margin-bottom: 24px; text-align: left;">
+            <p style="margin: 0 0 8px; font-weight: 600; color: #10B981; font-size: 13px;">✅ Verification Email Sent</p>
+            <p style="margin: 0 0 8px; font-size: 13px; color: var(--text-secondary);">We've sent a verification email to <strong id="successEmail"></strong>. Please verify your email to activate your account.</p>
+            <p style="margin: 0; font-size: 12px; color: var(--text-muted);">Check your inbox and spam folder. The link expires in 48 hours.</p>
+          </div>
+          <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+            <button class="submit-btn" style="max-width:220px;margin:0;" onclick="Utils.navigateTo('/frontend/pages/set-pin.html')">
+              Continue to Setup PIN
+            </button>
+            <button class="prev-btn" style="max-width:220px;margin:0;" onclick="window.location.href='resend-verification.html'">
+              Resend Email
+            </button>
+          </div>
         </div>
       </div>
 
@@ -1047,7 +1057,8 @@
       document.getElementById('progressText').textContent = 'Complete';
       document.getElementById('progressPct').textContent = '100%';
       updateIndicators(4);
-      setTimeout(() => Utils.navigateTo('/frontend/pages/set-pin.html'), 2000);
+      // Populate email in success message
+      document.getElementById('successEmail').textContent = res.data.user.email;
     } else {
       showAlert(res.data.detail || 'Something went wrong. Please try again.');
     }

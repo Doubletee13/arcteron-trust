@@ -14,6 +14,12 @@ from app.schemas.user import (
     SetPinRequest,
     PinResetRequest,
     PinResetConfirm,
+    ProfileUpdateRequest,
+    PhotoUploadRequest,
+    EmailVerificationRequest,
+    EmailVerificationConfirm,
+    ChangePasswordRequest,
+    ChangePinRequest,
 )
 from app.services.auth_service import (
     register_step1,
@@ -29,9 +35,13 @@ from app.utils.tokens import (
     verify_reset_token,
     generate_pin_reset_token,
     verify_pin_reset_token,
+    generate_verification_token,
+    verify_verification_token,
 )
-from app.services.email_service import send_password_reset_email, send_pin_reset_email
-from app.utils.hashing import hash_password, hash_pin, verify_pin
+from app.services.email_service import send_password_reset_email, send_pin_reset_email, send_verification_email
+from app.services.notification_service import NotificationService
+from app.models.notification import NotificationType
+from app.utils.hashing import hash_password, hash_pin, verify_pin, verify_password
 
 router = APIRouter(prefix="/api/auth", tags=["Authentication"])
 
@@ -143,3 +153,165 @@ def verify_pin_login(
     if not verify_pin(pin, current_user.transaction_pin):
         raise HTTPException(status_code=401, detail="Incorrect PIN.")
     return {"message": "PIN verified", "verified": True}
+
+
+@router.post("/email-verification/request")
+def request_email_verification(data: EmailVerificationRequest, db: Session = Depends(get_db)):
+    user = db.query(User).filter(User.email == data.email).first()
+    if user and not user.is_email_verified:
+        token = generate_verification_token(user.email)
+        send_verification_email(user.email, user.first_name, token)
+    # Always return success to avoid email enumeration
+    return {"message": "If that email exists and is not verified, a verification link has been sent."}
+
+
+@router.post("/email-verification/confirm")
+def confirm_email_verification(data: EmailVerificationConfirm, db: Session = Depends(get_db)):
+    email = verify_verification_token(data.token)
+    if not email:
+        raise HTTPException(status_code=400, detail="Invalid or expired verification link")
+
+    user = db.query(User).filter(User.email == email).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    if user.is_email_verified:
+        return {"message": "Email already verified"}
+
+    user.is_email_verified = True
+    db.commit()
+    db.refresh(user)
+
+    # Create notification for email verification
+    NotificationService.create_notification(
+        db,
+        user.id,
+        "Email Verified",
+        "Your email has been successfully verified. You can now access all account features.",
+        NotificationType.email
+    )
+    db.commit()
+
+    return {"message": "Email verified successfully"}
+
+
+@router.put("/me", response_model=UserResponse)
+def update_profile(
+    data: ProfileUpdateRequest,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """Update user profile information."""
+    # Update only provided fields
+    if data.first_name is not None:
+        current_user.first_name = data.first_name
+    if data.last_name is not None:
+        current_user.last_name = data.last_name
+    if data.middle_name is not None:
+        current_user.middle_name = data.middle_name
+    if data.phone is not None:
+        current_user.phone = data.phone
+    if data.address is not None:
+        current_user.address = data.address
+    if data.city is not None:
+        current_user.city = data.city
+    if data.state is not None:
+        current_user.state = data.state
+    if data.zip_code is not None:
+        current_user.zip_code = data.zip_code
+    if data.country is not None:
+        current_user.country = data.country
+    
+    db.commit()
+    db.refresh(current_user)
+    return user_to_response(current_user)
+
+
+@router.put("/profile-photo", response_model=UserResponse)
+def update_profile_photo(
+    data: PhotoUploadRequest,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """Update user profile photo."""
+    # Validate base64 data
+    if not data.photo_data:
+        raise HTTPException(status_code=400, detail="No photo data provided")
+
+    # Basic validation for base64 image
+    if not data.photo_data.startswith('data:image/'):
+        raise HTTPException(status_code=400, detail="Invalid image format")
+
+    # In a production environment, you would:
+    # 1. Decode the base64 data
+    # 2. Validate the image
+    # 3. Upload to cloud storage (S3, etc.)
+    # 4. Store the URL in the database
+    # For now, we'll store the base64 data directly (not recommended for production)
+    current_user.profile_photo = data.photo_data
+
+    db.commit()
+    db.refresh(current_user)
+    return user_to_response(current_user)
+
+
+@router.post("/change-password")
+def change_password(
+    data: ChangePasswordRequest,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """Change user password (requires current password)."""
+    # Verify current password
+    if not verify_password(data.current_password, current_user.hashed_password):
+        raise HTTPException(status_code=400, detail="Current password is incorrect")
+
+    # Update password
+    current_user.hashed_password = hash_password(data.new_password)
+    db.commit()
+    db.refresh(current_user)
+
+    # Create notification
+    NotificationService.create_notification(
+        db,
+        current_user.id,
+        "Password Changed",
+        "Your account password has been successfully changed.",
+        NotificationType.security
+    )
+    db.commit()
+
+    return {"message": "Password changed successfully"}
+
+
+@router.post("/change-pin")
+def change_pin(
+    data: ChangePinRequest,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """Change user PIN (requires current PIN)."""
+    # Check if user has a PIN set
+    if not current_user.transaction_pin:
+        raise HTTPException(status_code=400, detail="No PIN set. Please set a PIN first.")
+
+    # Verify current PIN
+    if not verify_pin(data.current_pin, current_user.transaction_pin):
+        raise HTTPException(status_code=400, detail="Current PIN is incorrect")
+
+    # Update PIN
+    current_user.transaction_pin = hash_pin(data.new_pin)
+    db.commit()
+    db.refresh(current_user)
+
+    # Create notification
+    NotificationService.create_notification(
+        db,
+        current_user.id,
+        "PIN Changed",
+        "Your transaction PIN has been successfully changed.",
+        NotificationType.security
+    )
+    db.commit()
+
+    return {"message": "PIN changed successfully"}

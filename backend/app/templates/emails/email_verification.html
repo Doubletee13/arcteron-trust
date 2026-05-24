@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Email Verification</title>
+  <style>
+    body { margin: 0; padding: 0; background-color: #F5F7FA; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+    .wrapper { max-width: 600px; margin: 40px auto; background: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 24px rgba(0,0,0,0.06); }
+    .header { background-color: #0F1115; padding: 32px 40px; text-align: center; }
+    .logo-container { display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 16px; }
+    .logo-svg { width: 40px; height: 40px; }
+    .header h1 { color: #ffffff; font-size: 22px; font-weight: 600; margin: 0; letter-spacing: 0.5px; }
+    .header p { color: #9CA3AF; font-size: 13px; margin: 6px 0 0; }
+    .body { padding: 40px; }
+    .greeting { font-size: 16px; color: #111827; margin-bottom: 16px; }
+    .btn-wrapper { text-align: center; margin: 32px 0; }
+    .btn { display: inline-block; background-color: #0F1115; color: #ffffff; text-decoration: none; padding: 14px 36px; border-radius: 8px; font-size: 15px; font-weight: 600; letter-spacing: 0.3px; }
+    .expire-note { font-size: 13px; color: #6B7280; text-align: center; margin-top: 8px; }
+    .warning { font-size: 13px; color: #6B7280; margin-top: 24px; line-height: 1.6; }
+    .footer { background: #F9FAFB; padding: 24px 40px; text-align: center; border-top: 1px solid #E5E7EB; }
+    .footer p { font-size: 12px; color: #9CA3AF; margin: 0; }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <div class="header">
+      <div class="logo-container">
+        <svg class="logo-svg" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="20" cy="20" r="18" stroke="white" stroke-width="1.5" opacity="0.3" />
+          <path d="M20 8 L30 28 H24 L20 20 L16 28 H10 Z" fill="white" opacity="0.9" />
+          <path d="M14 23 H26" stroke="white" stroke-width="1.5" opacity="0.6" />
+          <circle cx="20" cy="6" r="2" fill="white" opacity="0.5" />
+        </svg>
+        <h1>Arcteron Trust</h1>
+      </div>
+      <p>Private Banking &amp; Wealth Management</p>
+    </div>
+    <div class="body">
+      <p class="greeting">Dear <strong>{{ first_name }}</strong>,</p>
+      <p style="color:#374151; font-size:15px;">Welcome to Arcteron Trust! Please verify your email address to complete your registration and unlock full access to your account.</p>
+
+      <div class="btn-wrapper">
+        <a href="{{ verification_url }}" class="btn">Verify My Email</a>
+      </div>
+      <p class="expire-note">This link expires in <strong>48 hours</strong>.</p>
+
+      <p class="warning">
+        If you did not create an Arcteron Trust account, please ignore this email. Your account will not be activated without verification.
+        Never share this link with anyone — Arcteron Trust staff will never ask for it.
+      </p>
+
+      <p style="color:#6B7280; font-size:13px; margin-top:24px; text-align:center;">
+        Didn't receive this email or link expired? <a href="{{ frontend_url }}/pages/resend-verification.html" style="color:#0F1115; text-decoration:underline;">Request a new verification email</a>
+      </p>
+    </div>
+    <div class="footer">
+      <p>&copy; {{ year }} Arcteron Trust. All rights reserved.</p>
+    </div>
+  </div>
+</body>
+</html>

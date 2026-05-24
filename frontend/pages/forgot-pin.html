@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Forgot PIN — Arcteron Trust</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=DM+Sans:wght@300;400;500;600&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/theme.css">
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <script src="../assets/js/theme.js"></script>
+  <style>
+    body {
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    .login-wrap {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: 100vh;
+    }
+
+    .brand-panel {
+      background: #0D0F12;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 48px;
+    }
+
+    .brand-panel::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 60% 50% at 80% 20%, rgba(255, 255, 255, 0.03) 0%, transparent 70%),
+        radial-gradient(ellipse 50% 60% at 10% 80%, rgba(255, 255, 255, 0.02) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .brand-panel::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+      background-size: 48px 48px;
+      pointer-events: none;
+    }
+
+    .brand-top {
+      position: relative;
+      z-index: 1;
+    }
+
+    .brand-wordmark {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 28px;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    .brand-tagline {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: #4B5563;
+      margin-top: 4px;
+    }
+
+    .brand-mid {
+      position: relative;
+      z-index: 1;
+    }
+
+    .brand-quote {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 26px;
+      font-weight: 400;
+      color: #E5E7EB;
+      line-height: 1.5;
+      max-width: 360px;
+      font-style: italic;
+    }
+
+    .brand-quote span {
+      color: #6B7280;
+    }
+
+    .brand-bottom {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .brand-legal {
+      font-size: 11px;
+      color: #374151;
+    }
+
+    .fdic-badge {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 6px;
+      padding: 6px 12px;
+    }
+
+    .fdic-badge span {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      color: #6B7280;
+    }
+
+    .fdic-dot {
+      width: 6px;
+      height: 6px;
+      background: #10B981;
+      border-radius: 50%;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.85); }
+    }
+
+    .form-panel {
+      background: var(--bg-secondary);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 48px;
+      position: relative;
+    }
+
+    .form-panel-top {
+      position: absolute;
+      top: 24px;
+      right: 24px;
+    }
+
+    .theme-btn {
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      background: var(--bg-primary);
+      border: 1.5px solid var(--border-color);
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .theme-btn:hover {
+      color: var(--text-primary);
+    }
+
+    .form-container {
+      width: 100%;
+      max-width: 400px;
+    }
+
+    .form-header {
+      margin-bottom: 32px;
+    }
+
+    .form-header h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 32px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+    }
+
+    .form-header p {
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1.5px solid var(--border-color);
+      border-radius: 8px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      color: var(--text-primary);
+      background: var(--bg-primary);
+      transition: all 0.2s;
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: var(--text-primary);
+    }
+
+    .submit-button {
+      width: 100%;
+      padding: 14px;
+      background: #0F1115;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .submit-button:hover {
+      background: #1A1D23;
+    }
+
+    .submit-button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .back-link {
+      text-align: center;
+      margin-top: 24px;
+    }
+
+    .back-link a {
+      font-size: 13px;
+      color: var(--text-secondary);
+      text-decoration: none;
+    }
+
+    .back-link a:hover {
+      color: var(--text-primary);
+    }
+
+    .alert {
+      padding: 12px 16px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      font-size: 13px;
+      display: none;
+    }
+
+    .alert.show {
+      display: block;
+    }
+
+    .alert-success {
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.2);
+      color: #10B981;
+    }
+
+    .alert-error {
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.2);
+      color: #EF4444;
+    }
+
+    [data-theme="dark"] .form-panel { background: #171A20; }
+    [data-theme="dark"] .form-group input { background: #0F1115; border-color: #2B2F36; color: #E5E7EB; }
+    [data-theme="dark"] .theme-btn { background: #1E2128; border-color: #2B2F36; color: #6B7280; }
+    [data-theme="dark"] .back-link a { color: #6B7280; }
+    [data-theme="dark"] .back-link a:hover { color: #E5E7EB; }
+
+    @media (max-width: 900px) {
+      .login-wrap { grid-template-columns: 1fr; }
+      .brand-panel { display: none; }
+      .form-panel { padding: 32px 24px; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="login-wrap">
+    <!-- Brand Panel -->
+    <div class="brand-panel">
+      <div class="brand-top">
+        <div class="brand-wordmark">Arcteron Trust</div>
+        <div class="brand-tagline">Private Banking &amp; Wealth Management</div>
+      </div>
+
+      <div class="brand-mid">
+        <div class="brand-quote">
+          "Your PIN protects your transactions."
+          <span>— Security Best Practice</span>
+        </div>
+      </div>
+
+      <div class="brand-bottom">
+        <div class="brand-legal">© 2026 Arcteron Trust. All rights reserved.</div>
+        <div class="fdic-badge">
+          <div class="fdic-dot"></div>
+          <span>FDIC INSURED</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Form Panel -->
+    <div class="form-panel">
+      <div class="form-panel-top">
+        <button class="theme-btn" onclick="toggleTheme()">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="5"/>
+            <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="form-container">
+        <div class="form-header">
+          <h1>Forgot PIN?</h1>
+          <p>Enter your email address to receive a PIN reset link.</p>
+        </div>
+
+        <div id="alertSuccess" class="alert alert-success">
+          PIN reset link sent successfully. Please check your inbox and spam folder.
+        </div>
+
+        <div id="alertError" class="alert alert-error">
+          Failed to send reset link. Please try again.
+        </div>
+
+        <form id="resetForm" onsubmit="handleReset(event)">
+          <div class="form-group">
+            <label for="email">Email Address</label>
+            <input type="email" id="email" name="email" required placeholder="your@email.com">
+          </div>
+
+          <button type="submit" id="submitBtn" class="submit-button">Send Reset Link</button>
+        </form>
+
+        <div class="back-link">
+          <a href="login.html">← Back to Login</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API_BASE = 'http://127.0.0.1:8000';
+
+    async function handleReset(event) {
+      event.preventDefault();
+
+      const email = document.getElementById('email').value;
+      const submitBtn = document.getElementById('submitBtn');
+      const alertSuccess = document.getElementById('alertSuccess');
+      const alertError = document.getElementById('alertError');
+
+      // Hide alerts
+      alertSuccess.classList.remove('show');
+      alertError.classList.remove('show');
+
+      // Disable button
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Sending...';
+
+      try {
+        const response = await fetch(`${API_BASE}/api/auth/pin-reset/request`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ email: email })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          alertSuccess.textContent = data.message || 'PIN reset link sent successfully. Please check your inbox and spam folder.';
+          alertSuccess.classList.add('show');
+          document.getElementById('resetForm').reset();
+        } else {
+          const errorMessage = typeof data.detail === 'string' ? data.detail : (typeof data === 'string' ? data : 'Failed to send reset link. Please try again.');
+          alertError.textContent = errorMessage;
+          alertError.classList.add('show');
+        }
+      } catch (error) {
+        alertError.textContent = 'Network error. Please check your connection and try again.';
+        alertError.classList.add('show');
+      } finally {
+        // Re-enable button
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Send Reset Link';
+      }
+    }
+
+    function toggleTheme() {
+      const html = document.documentElement;
+      const current = html.getAttribute('data-theme');
+      const next = current === 'dark' ? 'light' : 'dark';
+      html.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
+    }
+
+    // Load saved theme
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+  </script>
+</body>
+
+</html>

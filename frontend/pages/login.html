@@ -834,7 +834,7 @@
           </button>
 
           <div style="text-align:center;margin-top:16px;">
-            <a href="/frontend/pages/forgot-pin.html" style="font-size:12px;color:var(--text-muted);">Forgot PIN? Reset
+            <a href="/frontend/pages/forgot-pin.html" style="font-size:12px;color:var(--text-secondary);font-weight:500;transition:color 0.2s;text-decoration:none;" onmouseover="this.style.color='var(--text-primary)'" onmouseout="this.style.color='var(--text-secondary)'">Forgot PIN? Reset
               it</a>
           </div>
 
@@ -954,7 +954,17 @@
         setTimeout(() => document.getElementById('pin1').focus(), 100);
 
       } else {
-        showAlert(res.data.detail || 'Login failed. Please try again.');
+        const errorMsg = res.data.detail || 'Login failed. Please try again.';
+        // Check if error is due to unverified email
+        if (errorMsg.includes('verify your email')) {
+          const email = document.getElementById('email').value.trim();
+          const alertEl = document.getElementById('formAlert');
+          const alertText = document.getElementById('alertText');
+          alertText.innerHTML = `${errorMsg}<br><br><a href="resend-verification.html?email=${encodeURIComponent(email)}" style="color:inherit;text-decoration:underline;">Resend verification email</a>`;
+          alertEl.classList.add('show');
+        } else {
+          showAlert(errorMsg);
+        }
       }
     }
 

@@ -908,6 +908,7 @@
 
             .main-content {
                 margin-left: 0;
+                overflow-x: hidden;
             }
 
             .menu-btn {
@@ -916,6 +917,7 @@
 
             .page-content {
                 padding: 16px;
+                overflow-x: hidden;
             }
 
             .topbar {
@@ -1526,7 +1528,7 @@
                     const time = fmtTime(tx.transaction_date || tx.created_at);
 
                     const partyLabel = tx.is_credit ? 'Transfer from' : 'Transfer to';
-                    const partyName = tx.recipient_name || (tx.is_credit ? 'External Sender' : '—');
+                    const partyName = tx.is_credit ? (tx.sender_name || 'External Sender') : (tx.recipient_name || '—');
 
                     return `
         <div class="tx-item" onclick="openReceiptModal('${tx.id}')">
