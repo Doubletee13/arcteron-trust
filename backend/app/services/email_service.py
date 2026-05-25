@@ -31,6 +31,9 @@ def send_email(to: str, subject: str, html_content: str):
             "password": settings.MAIL_PASSWORD,
         }
     )
+    print(f"EMAIL TO: {to} | STATUS: {response.status_code} | ERROR: {response.error}")
+    if response.status_code not in (250, None):
+        raise Exception(f"Email failed with status {response.status_code}: {response.error}")
     return response
 
 

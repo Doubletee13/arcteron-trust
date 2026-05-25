@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, BackgroundTasks
 import base64
 import os
 import httpx
@@ -70,8 +70,14 @@ def register_step_two(user_id: str, data: RegisterStep2, db: Session = Depends(g
 
 
 @router.post("/register/step3/{user_id}", response_model=TokenResponse)
-def register_step_three(user_id: str, data: RegisterStep3, db: Session = Depends(get_db)):
+def register_step_three(user_id: str, data: RegisterStep3, background_tasks: BackgroundTasks, db: Session = Depends(get_db)):
     result = register_step3(user_id, data, db)
+    background_tasks.add_task(
+        send_verification_email,
+        result["user"]["email"],
+        result["user"]["first_name"],
+        generate_verification_token(result["user"]["email"])
+    )
     return result
 
 

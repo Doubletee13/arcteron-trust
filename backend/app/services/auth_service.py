@@ -50,15 +50,6 @@ def register_step1(data: RegisterStep1, db: Session) -> User:
     db.commit()
     db.refresh(user)
 
-    # Send verification email
-    try:
-        token = generate_verification_token(user.email)
-        send_verification_email(user.email, user.first_name, token)
-    except Exception as e:
-        print(f"EMAIL ERROR: {e}")
-        print(traceback.format_exc())
-        pass
-
     return user
 
 
