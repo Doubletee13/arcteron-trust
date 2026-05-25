@@ -1,3 +1,5 @@
+# /frontend/pages/admin/users.html
+```html
 <!DOCTYPE html>
 <html lang="en">
 
@@ -449,17 +451,17 @@
         .actions-dropdown {
             position: absolute;
             right: 0;
-            top: calc(100% + 4px);
+            top: 0;
             background: var(--bg-secondary);
             border: 1px solid var(--border-color);
             border-radius: 8px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
             z-index: 1000;
             display: none;
-            flex-direction: column;
+            flex-direction: row;
             padding: 4px;
-            min-width: 180px;
-            animation: dropdownFade 0.15s ease;
+            gap: 4px;
+            animation: dropdownFade 0.2s ease;
         }
 
         @keyframes dropdownFade {
@@ -969,89 +971,34 @@
             .sidebar {
                 transform: translateX(-260px);
             }
+
             .sidebar.open {
                 transform: translateX(0);
-                box-shadow: 4px 0 24px rgba(0,0,0,0.4);
+                box-shadow: 4px 0 24px rgba(0, 0, 0, 0.4);
             }
+
             .main-content {
                 margin-left: 0;
             }
+
             .menu-btn {
                 display: flex;
             }
+
             .page-content {
-                padding: 12px;
+                padding: 16px;
             }
+
             .topbar {
-                padding: 0 12px;
+                padding: 0 16px;
                 height: 56px;
             }
-            .stats-row {
-                grid-template-columns: 1fr 1fr;
-                gap: 8px;
-                margin-bottom: 16px;
-            }
-            .stat-card {
-                padding: 12px;
-            }
-            .stat-card-value {
-                font-size: 18px;
-            }
-            /* Hide desktop table, show card layout */
-            .table-header {
-                display: none !important;
-            }
-            .users-table,
-            .transactions-table,
-            .codes-table {
-                background: transparent;
-                border: none;
-                border-radius: 0;
-            }
-            .table-row {
-                display: flex !important;
-                flex-direction: column;
-                background: var(--bg-secondary);
-                border: 1px solid var(--border-color);
-                border-radius: 12px;
-                padding: 16px;
-                margin-bottom: 10px;
-                gap: 10px;
-                grid-template-columns: unset !important;
-            }
-            .table-row:hover {
-                background: var(--bg-secondary);
-            }
-            .search-bar input {
-                max-width: 100%;
-            }
-            .modal-content {
-                margin: 12px;
-                max-width: calc(100% - 24px);
-                padding: 20px;
-            }
-            .btn-secondary {
-                display: none;
-            }
+
             .topbar-right {
                 gap: 6px;
             }
-            .icon-btn {
-                width: 32px;
-                height: 32px;
-            }
-        }
 
-        @media (max-width: 480px) {
-            .stats-row {
-                grid-template-columns: 1fr;
-            }
-            .page-content {
-                padding: 10px;
-            }
-        }
-
-        .btn {
+            .btn {
                 padding: 8px 10px;
                 font-size: 12px;
             }
@@ -1139,12 +1086,6 @@
         @media (max-width: 480px) {
             .stats-row {
                 grid-template-columns: 1fr;
-            }
-        }
-        @media (max-width: 900px) {
-            .actions-dropdown {
-                right: 0;
-                left: auto;
             }
         }
     </style>
@@ -1598,17 +1539,6 @@
                 window.location.href = '../admin-login.html';
                 return false;
             }
-            // Display admin name
-            const userJson = localStorage.getItem('admin_user');
-            if (userJson) {
-                try {
-                    const user = JSON.parse(userJson);
-                    const nameEl = document.querySelector('.user-name');
-                    const avatarEl = document.querySelector('.sidebar-avatar');
-                    if (nameEl) nameEl.textContent = `${user.first_name} ${user.last_name}`;
-                    if (avatarEl) avatarEl.textContent = user.first_name ? user.first_name[0].toUpperCase() : 'A';
-                } catch(e) {}
-            }
             return true;
         }
 
@@ -1734,7 +1664,7 @@
                                 </svg>
                                 Block
                            </button>`
-                        : `<button onclick="unblockUser('${user.id}', this)">
+                        : `<button onclick="unblockUser('${user.id}')">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
                                     <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
@@ -1743,14 +1673,14 @@
                            </button>`
                     }
                             ${user.role === 'user'
-                        ? `<button onclick="promoteUser('${user.id}', this)">
+                        ? `<button onclick="promoteUser('${user.id}')">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <line x1="12" y1="5" x2="12" y2="19"></line>
                                     <polyline points="19 12 12 5 5 12"></polyline>
                                 </svg>
                                 Promote to Admin
                            </button>`
-                        : `<button onclick="demoteUser('${user.id}', this)">
+                        : `<button onclick="demoteUser('${user.id}')">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <line x1="12" y1="19" x2="12" y2="5"></line>
                                     <polyline points="5 12 12 19 19 12"></polyline>
@@ -1758,7 +1688,7 @@
                                 Demote to User
                            </button>`
                     }
-                            <button class="danger" onclick="deleteUser('${user.id}', this)">
+                            <button class="danger" onclick="deleteUser('${user.id}')">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <polyline points="3 6 5 6 21 6"></polyline>
                                     <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
@@ -1907,8 +1837,7 @@
         });
 
         // Promote user to admin
-        async function promoteUser(userId, btn) {
-            if (btn) { btn.disabled = true; btn.textContent = 'Promoting...'; }
+        async function promoteUser(userId) {
             const token = localStorage.getItem('admin_token');
             try {
                 const response = await fetch(`${API_BASE}/api/admin/users/${userId}/promote`, {
@@ -1933,8 +1862,7 @@
         }
 
         // Demote user to regular user
-        async function demoteUser(userId, btn) {
-            if (btn) { btn.disabled = true; btn.textContent = 'Demoting...'; }
+        async function demoteUser(userId) {
             const token = localStorage.getItem('admin_token');
             try {
                 const response = await fetch(`${API_BASE}/api/admin/users/${userId}/demote`, {
@@ -1959,9 +1887,7 @@
         }
 
         // Delete user
-        async function deleteUser(userId, btn) {
-            if (!confirm('Are you sure you want to delete this user? This cannot be undone.')) return;
-            if (btn) { btn.disabled = true; btn.textContent = 'Deleting...'; }
+        async function deleteUser(userId) {
             const token = localStorage.getItem('admin_token');
             try {
                 const response = await fetch(`${API_BASE}/api/admin/users/${userId}`, {
@@ -2212,8 +2138,7 @@
         }
 
         // Unblock user
-        async function unblockUser(userId, btn) {
-            if (btn) { btn.disabled = true; btn.textContent = 'Unblocking...'; }
+        async function unblockUser(userId) {
             const token = localStorage.getItem('admin_token');
 
             try {
@@ -2313,3 +2238,2143 @@
 </body>
 
 </html>
+```
+
+# /frontend/pages/admin/transactions.html
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transactions — Arcteron Trust Admin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../assets/css/theme.css">
+    <link rel="stylesheet" href="../../assets/css/style.css">
+    <script src="../../assets/js/theme.js"></script>
+    <style>
+        body {
+            font-family: 'DM Sans', sans-serif;
+            margin: 0;
+        }
+
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* ── Sidebar ── */
+        .sidebar {
+            width: 260px;
+            background: #171A20;
+            border-right: none;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            z-index: 300;
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar-logo {
+            padding: 0 20px;
+            height: 60px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-shrink: 0;
+        }
+
+        .sidebar-logo-icon {
+            width: 28px;
+            height: 28px;
+            flex-shrink: 0;
+            opacity: 0.8;
+            color: currentColor;
+        }
+
+        [data-theme="light"] .sidebar-logo-icon {
+            opacity: 1;
+            color: #ffffff;
+        }
+
+        .sidebar-logo-text h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 16px;
+            font-weight: 600;
+            color: #ffffff;
+            line-height: 1.2;
+            margin: 0;
+        }
+
+        .sidebar-logo-text p {
+            font-size: 9px;
+            color: rgba(255, 255, 255, 0.3);
+            margin-top: 1px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .sidebar-nav {
+            padding: 10px 10px;
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .nav-section-label {
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.25);
+            padding: 10px 10px 4px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-bottom: 1px;
+            text-decoration: none;
+        }
+
+        .nav-item:hover {
+            background: rgba(255, 255, 255, 0.07);
+            color: rgba(255, 255, 255, 0.85);
+        }
+
+        .nav-item.active {
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            font-weight: 600;
+        }
+
+        .nav-item svg {
+            width: 16px;
+            height: 16px;
+            flex-shrink: 0;
+        }
+
+        .nav-item.danger {
+            color: rgba(239, 68, 68, 0.7);
+        }
+
+        .nav-item.danger:hover {
+            background: rgba(239, 68, 68, 0.1);
+            color: #EF4444;
+        }
+
+        .sidebar-footer {
+            padding: 12px 10px;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .user-card {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-bottom: 4px;
+        }
+
+        .user-card:hover {
+            background: rgba(255, 255, 255, 0.07);
+        }
+
+        .sidebar-avatar {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.12);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 700;
+            flex-shrink: 0;
+            font-family: 'Cormorant Garamond', serif;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .user-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.85);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .user-role {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        /* ── Main ── */
+        .main-content {
+            margin-left: 260px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            background: var(--bg-primary);
+        }
+
+        /* ── Topbar ── */
+        .topbar {
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-color);
+            padding: 0 28px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 200;
+            flex-shrink: 0;
+        }
+
+        .topbar-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .menu-btn {
+            display: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--text-secondary);
+            flex-shrink: 0;
+        }
+
+        .topbar-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .icon-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--text-secondary);
+            transition: all 0.2s;
+            position: relative;
+            text-decoration: none;
+        }
+
+        .icon-btn:hover {
+            color: var(--text-primary);
+        }
+
+        /* ── Page content ── */
+        .page-content {
+            padding: 28px;
+            flex: 1;
+        }
+
+        /* ── Stats ── */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 16px;
+        }
+
+        .stat-card-label {
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .stat-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .stat-card-value {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 22px;
+            font-weight: 600;
+            color: var(--text-primary);
+            line-height: 1;
+            margin-bottom: 3px;
+        }
+
+        .stat-card-sub {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        /* ── Transactions Table ── */
+        .transactions-table {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .table-header {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr 1fr 1fr 1fr 1fr;
+            padding: 16px 24px;
+            background: rgba(15, 17, 21, 0.05);
+            border-bottom: 1px solid var(--border-color);
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .table-row {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr 1fr 1fr 1fr 1fr;
+            padding: 16px 24px;
+            border-bottom: 1px solid var(--border-color);
+            align-items: center;
+            font-size: 14px;
+        }
+
+        .table-row:last-child {
+            border-bottom: none;
+        }
+
+        .table-row:hover {
+            background: rgba(15, 17, 21, 0.02);
+        }
+
+        .type-badge {
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .type-badge.credit {
+            background: rgba(16, 185, 129, 0.1);
+            color: #10B981;
+        }
+
+        .type-badge.debit {
+            background: rgba(239, 68, 68, 0.1);
+            color: #EF4444;
+        }
+
+        /* ── Search Bar ── */
+        .search-bar {
+            margin-bottom: 24px;
+        }
+
+        .search-bar input {
+            width: 100%;
+            max-width: 400px;
+            padding: 12px 16px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 14px;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            outline: none;
+        }
+
+        .search-bar input:focus {
+            border-color: var(--text-primary);
+        }
+
+        .empty-state {
+            padding: 60px 24px;
+            text-align: center;
+            color: var(--text-secondary);
+        }
+
+        .empty-state svg {
+            width: 48px;
+            height: 48px;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+
+        /* ── Toast Notifications ── */
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 10000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .toast {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 16px 20px;
+            min-width: 300px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .toast.success {
+            border-left: 4px solid #10B981;
+        }
+
+        .toast.error {
+            border-left: 4px solid #EF4444;
+        }
+
+        .toast-icon {
+            flex-shrink: 0;
+        }
+
+        .toast.success .toast-icon {
+            color: #10B981;
+        }
+
+        .toast.error .toast-icon {
+            color: #EF4444;
+        }
+
+        .toast-message {
+            flex: 1;
+            font-size: 14px;
+            color: var(--text-primary);
+        }
+
+        .toast-close {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            padding: 4px;
+            font-size: 18px;
+            line-height: 1;
+        }
+
+        .toast-close:hover {
+            color: var(--text-primary);
+        }
+
+        /* Initiator cell styles */
+        .initiator-cell {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .initiator-name {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .initiator-account {
+            font-size: 11px;
+            color: var(--text-secondary);
+            font-family: 'DM Sans', monospace;
+        }
+
+        /* Overlay */
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 299;
+            backdrop-filter: blur(2px);
+        }
+
+        .sidebar-overlay.show {
+            display: block;
+        }
+
+        /* ── Responsive ── */
+        @media (max-width: 900px) {
+            .sidebar {
+                transform: translateX(-260px);
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+                box-shadow: 4px 0 24px rgba(0, 0, 0, 0.4);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .menu-btn {
+                display: flex;
+            }
+
+            .page-content {
+                padding: 16px;
+            }
+
+            .topbar {
+                padding: 0 16px;
+                height: 56px;
+            }
+
+            .topbar-right {
+                gap: 6px;
+            }
+
+            .btn {
+                padding: 8px 10px;
+                font-size: 12px;
+            }
+
+            .btn-secondary {
+                display: none;
+            }
+
+            .icon-btn {
+                width: 32px;
+                height: 32px;
+            }
+
+            .stats-row {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .table-header,
+            .table-row {
+                grid-template-columns: 1fr;
+                gap: 8px;
+            }
+
+            .table-header {
+                display: none;
+            }
+
+            .table-row {
+                flex-direction: column;
+                display: flex;
+                padding: 16px;
+                gap: 12px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .stats-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            transition: opacity 0.2s;
+        }
+
+        .btn:hover {
+            opacity: 0.85;
+        }
+
+        .btn-primary {
+            background: #0F1115;
+            color: #fff;
+        }
+
+        .btn-secondary {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+    </style>
+</head>
+<body>
+    <div class="layout">
+        <aside class="sidebar">
+            <div class="sidebar-logo">
+                <svg class="sidebar-logo-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="20" cy="20" r="18" stroke="currentColor" stroke-width="2" opacity="0.4" />
+                    <path d="M20 8 L30 28 H24 L20 20 L16 28 H10 Z" fill="currentColor" opacity="0.9" />
+                    <path d="M14 23 H26" stroke="currentColor" stroke-width="2" opacity="0.8" />
+                    <circle cx="20" cy="6" r="2" fill="currentColor" opacity="0.6" />
+                </svg>
+                <div class="sidebar-logo-text">
+                    <h1>Arcteron Trust</h1>
+                    <p>Admin Portal</p>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <div class="nav-section-label">Main</div>
+                <a class="nav-item" href="admin-dashboard.html">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="7" height="7"></rect>
+                        <rect x="14" y="3" width="7" height="7"></rect>
+                        <rect x="14" y="14" width="7" height="7"></rect>
+                        <rect x="3" y="14" width="7" height="7"></rect>
+                    </svg>
+                    Dashboard
+                </a>
+                <a class="nav-item" href="users.html">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="9" cy="7" r="4"></circle>
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                    </svg>
+                    Users
+                </a>
+                <a class="nav-item active" href="transactions.html">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="12" y1="1" x2="12" y2="23"></line>
+                        <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                    </svg>
+                    Transactions
+                </a>
+                <a class="nav-item" href="codes.html">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                    </svg>
+                    COT/BOP Codes
+                </a>
+                <div class="nav-section-label">Account</div>
+                <a class="nav-item danger" onclick="logout()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                        <polyline points="16 17 21 12 16 7"></polyline>
+                        <line x1="21" y1="12" x2="9" y2="12"></line>
+                    </svg>
+                    Logout
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="user-card">
+                    <div class="sidebar-avatar">A</div>
+                    <div>
+                        <div class="user-name">Admin</div>
+                        <div class="user-role">Administrator</div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+        <main class="main-content">
+            <div class="topbar">
+                <div class="topbar-left">
+                    <button class="menu-btn" onclick="toggleSidebar()">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="3" y1="12" x2="21" y2="12"></line>
+                            <line x1="3" y1="6" x2="21" y2="6"></line>
+                            <line x1="3" y1="18" x2="21" y2="18"></line>
+                        </svg>
+                    </button>
+                    <div class="topbar-title">Transactions</div>
+                </div>
+                <div class="topbar-right">
+                    <a class="icon-btn" id="themeToggle" onclick="Theme.toggle()" title="Toggle Theme">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+                        </svg>
+                    </a>
+                    <button class="btn btn-secondary" onclick="loadTransactions()">Refresh</button>
+                </div>
+            </div>
+
+            <div class="page-content">
+                <div class="stats-row">
+                    <div class="stat-card">
+                        <div class="stat-card-label">
+                            <div class="stat-dot" style="background: #10B981;"></div>
+                            Total Transactions
+                        </div>
+                        <div class="stat-card-value" id="statTotalTx">0</div>
+                        <div class="stat-card-sub">All transactions</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-card-label">
+                            <div class="stat-dot" style="background: #10B981;"></div>
+                            Total Credits
+                        </div>
+                        <div class="stat-card-value" id="statTotalCredits">$0</div>
+                        <div class="stat-card-sub">Credit transactions</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-card-label">
+                            <div class="stat-dot" style="background: #EF4444;"></div>
+                            Total Debits
+                        </div>
+                        <div class="stat-card-value" id="statTotalDebits">$0</div>
+                        <div class="stat-card-sub">Debit transactions</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-card-label">
+                            <div class="stat-dot" style="background: #F59E0B;"></div>
+                            Today's Volume
+                        </div>
+                        <div class="stat-card-value" id="statTodayVolume">$0</div>
+                        <div class="stat-card-sub">Transactions today</div>
+                    </div>
+                </div>
+
+                <div class="search-bar">
+                    <input type="text" id="searchInput" placeholder="Search transactions by reference, user, or type..." onkeyup="handleSearch(event)">
+                </div>
+
+                <div class="transactions-table">
+                    <div class="table-header">
+                        <div>Reference</div>
+                        <div>User</div>
+                        <div>Type</div>
+                        <div>Amount</div>
+                        <div>Date</div>
+                        <div>Initiated By</div>
+                    </div>
+                    <div id="transactionsList">
+                        <!-- Transactions will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const API_BASE = 'https://arcteron-trust.onrender.com';
+        let allTransactions = [];
+
+                function openSidebar() {
+            document.getElementById('sidebar').classList.add('open');
+            document.getElementById('sidebarOverlay').classList.add('show');
+        }
+
+        function closeSidebar() {
+            document.getElementById('sidebar').classList.remove('open');
+            document.getElementById('sidebarOverlay').classList.remove('show');
+        }
+
+        // Check authentication
+        function checkAuth() {
+            const token = localStorage.getItem('admin_token');
+            if (!token) {
+                window.location.href = '../admin-login.html';
+                return false;
+            }
+            return true;
+        }
+
+        // Load transactions
+        async function loadTransactions() {
+            try {
+                const token = localStorage.getItem('admin_token');
+                const response = await fetch(`${API_BASE}/api/admin/transactions?page=1&per_page=100`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    allTransactions = data.transactions || [];
+                    renderTransactions(allTransactions);
+                    updateStats(allTransactions);
+                } else if (response.status === 401) {
+                    const error = await response.json().catch(() => ({}));
+                    if (error.detail && error.detail.includes('expired')) {
+                        showToast('Session expired. Please log in again.', 'error');
+                    } else {
+                        showToast('Unauthorized. Please log in again.', 'error');
+                    }
+                    window.location.href = '../admin-login.html';
+                } else {
+                    document.getElementById('transactionsList').innerHTML = `
+                        <div class="empty-state">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <line x1="12" y1="8" x2="12" y2="12"></line>
+                                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                            </svg>
+                            <p>Failed to load transactions</p>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error('Error loading transactions:', error);
+                document.getElementById('transactionsList').innerHTML = `
+                    <div class="empty-state">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="8" x2="12" y2="12"></line>
+                            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                        </svg>
+                        <p>Error loading transactions</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Update stats
+        function updateStats(transactions) {
+            const totalTx = transactions.length;
+            const totalCredits = transactions
+                .filter(t => t.transaction_type === 'credit')
+                .reduce((sum, t) => sum + (t.amount || 0), 0);
+            const totalDebits = transactions
+                .filter(t => t.transaction_type === 'debit')
+                .reduce((sum, t) => sum + (t.amount || 0), 0);
+            
+            const today = new Date().toDateString();
+            const todayVolume = transactions
+                .filter(t => new Date(t.transaction_date).toDateString() === today)
+                .reduce((sum, t) => sum + (t.amount || 0), 0);
+
+            document.getElementById('statTotalTx').textContent = totalTx;
+            document.getElementById('statTotalCredits').textContent = `$${totalCredits.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+            document.getElementById('statTotalDebits').textContent = `$${totalDebits.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+            document.getElementById('statTodayVolume').textContent = `$${todayVolume.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+        }
+
+        // Toggle sidebar
+        function toggleSidebar() {
+            const sidebar = document.querySelector('.sidebar');
+            const overlay = document.querySelector('.sidebar-overlay');
+            sidebar.classList.toggle('open');
+            overlay.classList.toggle('show');
+        }
+
+        // Logout
+        function logout() {
+            localStorage.removeItem('admin_token');
+            window.location.href = '../admin-login.html';
+        }
+
+        // Toast notification function
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toastContainer');
+            if (!container) {
+                const toastContainer = document.createElement('div');
+                toastContainer.id = 'toastContainer';
+                toastContainer.className = 'toast-container';
+                document.body.appendChild(toastContainer);
+            }
+            
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+
+            const icon = type === 'success' ? '✓' : '✕';
+
+            toast.innerHTML = `
+                <span class="toast-icon">${icon}</span>
+                <span class="toast-message">${message}</span>
+                <button class="toast-close" onclick="this.parentElement.remove()">&times;</button>
+            `;
+
+            container.appendChild(toast);
+
+            // Auto remove after 3 seconds
+            setTimeout(() => {
+                toast.remove();
+            }, 3000);
+        }
+
+        // Render transactions
+        function renderTransactions(transactions) {
+            const container = document.getElementById('transactionsList');
+            
+            if (!transactions || transactions.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="8" x2="12" y2="12"></line>
+                            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                        </svg>
+                        <p>No transactions found</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = '';
+
+            transactions.forEach(tx => {
+                const typeClass = tx.transaction_type === 'credit' ? 'credit' : 'debit';
+                const typeLabel = tx.transaction_type === 'credit' ? 'Credit' : 'Debit';
+                const amountPrefix = tx.transaction_type === 'credit' ? '+' : '-';
+                const date = new Date(tx.transaction_date).toLocaleString();
+
+                const initiatorName = tx.admin_name || tx.initiator_name || 'System';
+                const initiatorAccount = tx.admin_account_number || tx.initiator_account_number || tx.account_number || '';
+
+                const row = document.createElement('div');
+                row.className = 'table-row';
+                row.innerHTML = `
+                    <div>${tx.reference}</div>
+                    <div>${tx.user_name || 'N/A'}</div>
+                    <div><span class="type-badge ${typeClass}">${typeLabel}</span></div>
+                    <div>${amountPrefix}$${tx.amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
+                    <div>${date}</div>
+                    <div class="initiator-cell">
+                        <div class="initiator-name">${initiatorName}</div>
+                        ${initiatorAccount ? `<div class="initiator-account">${initiatorAccount}</div>` : ''}
+                    </div>
+                `;
+                container.appendChild(row);
+            });
+        }
+
+        // Search
+        function handleSearch(event) {
+            const query = event.target.value.toLowerCase();
+            const filtered = allTransactions.filter(tx => 
+                tx.reference.toLowerCase().includes(query) ||
+                (tx.user_name && tx.user_name.toLowerCase().includes(query)) ||
+                tx.transaction_type.toLowerCase().includes(query) ||
+                (tx.admin_name && tx.admin_name.toLowerCase().includes(query))
+            );
+            renderTransactions(filtered);
+        }
+
+        // Navigate to different pages
+        function navigate(page) {
+            switch(page) {
+                case 'dashboard':
+                    window.location.href = 'admin-dashboard.html';
+                    break;
+                case 'users':
+                    window.location.href = 'users.html';
+                    break;
+                case 'transactions':
+                    window.location.href = 'transactions.html';
+                    break;
+                case 'codes':
+                    window.location.href = 'codes.html';
+                    break;
+                case 'settings':
+                    window.location.href = 'settings.html';
+                    break;
+            }
+        }
+
+        // Logout
+        function logout() {
+            localStorage.removeItem('admin_token');
+            localStorage.removeItem('admin_user');
+            window.location.href = '../admin-login.html';
+        }
+
+        // Toggle sidebar
+        function toggleSidebar() {
+            const sidebar = document.querySelector('.sidebar');
+            const overlay = document.querySelector('.sidebar-overlay');
+            sidebar.classList.toggle('open');
+            overlay.classList.toggle('show');
+        }
+
+        // Close sidebar
+        function closeSidebar() {
+            const sidebar = document.querySelector('.sidebar');
+            const overlay = document.querySelector('.sidebar-overlay');
+            sidebar.classList.remove('open');
+            overlay.classList.remove('show');
+        }
+
+        // Initialize
+        if (checkAuth()) {
+            loadTransactions();
+        }
+    </script>
+</body>
+</html>
+```
+
+# /frontend/pages/admin/codes.html
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>COT/BOP Codes — Arcteron Trust Admin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../assets/css/theme.css">
+    <link rel="stylesheet" href="../../assets/css/style.css">
+    <script src="../../assets/js/theme.js"></script>
+    <style>
+        body {
+            font-family: 'DM Sans', sans-serif;
+            margin: 0;
+        }
+
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* ── Sidebar ── */
+        .sidebar {
+            width: 260px;
+            background: #171A20;
+            border-right: none;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            z-index: 300;
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar-logo {
+            padding: 0 20px;
+            height: 60px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-shrink: 0;
+        }
+
+        .sidebar-logo-icon {
+            width: 28px;
+            height: 28px;
+            flex-shrink: 0;
+            opacity: 0.8;
+            color: currentColor;
+        }
+
+        [data-theme="light"] .sidebar-logo-icon {
+            opacity: 1;
+            color: #ffffff;
+        }
+
+        .sidebar-logo-text h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 16px;
+            font-weight: 600;
+            color: #ffffff;
+            line-height: 1.2;
+            margin: 0;
+        }
+
+        .sidebar-logo-text p {
+            font-size: 9px;
+            color: rgba(255, 255, 255, 0.3);
+            margin-top: 1px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .sidebar-nav {
+            padding: 10px 10px;
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .nav-section-label {
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.25);
+            padding: 10px 10px 4px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-bottom: 1px;
+            text-decoration: none;
+        }
+
+        .nav-item:hover {
+            background: rgba(255, 255, 255, 0.07);
+            color: rgba(255, 255, 255, 0.85);
+        }
+
+        .nav-item.active {
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            font-weight: 600;
+        }
+
+        .nav-item svg {
+            width: 16px;
+            height: 16px;
+            flex-shrink: 0;
+        }
+
+        .nav-item.danger {
+            color: rgba(239, 68, 68, 0.7);
+        }
+
+        .nav-item.danger:hover {
+            background: rgba(239, 68, 68, 0.1);
+            color: #EF4444;
+        }
+
+        .sidebar-footer {
+            padding: 12px 10px;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .user-card {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-bottom: 4px;
+        }
+
+        .user-card:hover {
+            background: rgba(255, 255, 255, 0.07);
+        }
+
+        .sidebar-avatar {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.12);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 700;
+            flex-shrink: 0;
+            font-family: 'Cormorant Garamond', serif;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .user-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.85);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .user-role {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        /* ── Main ── */
+        .main-content {
+            margin-left: 260px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            background: var(--bg-primary);
+        }
+
+        /* ── Topbar ── */
+        .topbar {
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-color);
+            padding: 0 28px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 200;
+            flex-shrink: 0;
+        }
+
+        .topbar-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .menu-btn {
+            display: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--text-secondary);
+            flex-shrink: 0;
+        }
+
+        .topbar-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .icon-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--text-secondary);
+            transition: all 0.2s;
+            position: relative;
+            text-decoration: none;
+        }
+
+        .icon-btn:hover {
+            color: var(--text-primary);
+        }
+
+        /* ── Page content ── */
+        .page-content {
+            padding: 28px;
+            flex: 1;
+        }
+
+        /* ── Stats ── */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 16px;
+        }
+
+        .stat-card-label {
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .stat-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .stat-card-value {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 22px;
+            font-weight: 600;
+            color: var(--text-primary);
+            line-height: 1;
+            margin-bottom: 3px;
+        }
+
+        .stat-card-sub {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        /* ── Codes Table ── */
+        .codes-table {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .table-header {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr 1fr 1fr 1fr 1fr;
+            padding: 16px 24px;
+            background: rgba(15, 17, 21, 0.05);
+            border-bottom: 1px solid var(--border-color);
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .table-row {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr 1fr 1fr 1fr 1fr;
+            padding: 16px 24px;
+            border-bottom: 1px solid var(--border-color);
+            align-items: center;
+            font-size: 14px;
+        }
+
+        .table-row:last-child {
+            border-bottom: none;
+        }
+
+        .table-row:hover {
+            background: rgba(15, 17, 21, 0.02);
+        }
+
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .status-badge.active {
+            background: rgba(16, 185, 129, 0.1);
+            color: #10B981;
+        }
+
+        .status-badge.used {
+            background: rgba(107, 114, 128, 0.1);
+            color: #6B7280;
+        }
+
+        .status-badge.expired {
+            background: rgba(239, 68, 68, 0.1);
+            color: #EF4444;
+        }
+
+        .type-badge {
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+            background: rgba(59, 130, 246, 0.1);
+            color: #3B82F6;
+        }
+
+        /* ── Search Bar ── */
+        .search-bar {
+            margin-bottom: 24px;
+        }
+
+        .search-bar input {
+            width: 100%;
+            max-width: 400px;
+            padding: 12px 16px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 14px;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            outline: none;
+        }
+
+        .search-bar input:focus {
+            border-color: var(--text-primary);
+        }
+
+        .empty-state {
+            padding: 60px 24px;
+            text-align: center;
+            color: var(--text-secondary);
+        }
+
+        .empty-state svg {
+            width: 48px;
+            height: 48px;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+
+        /* ── Modal ── */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 32px;
+            width: 100%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .modal-header h2 {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--text-secondary);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 14px;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            outline: none;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: var(--text-primary);
+        }
+
+        .modal-footer {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 24px;
+        }
+
+        /* ── Toast Notifications ── */
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 10000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .toast {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 16px 20px;
+            min-width: 300px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .toast.success {
+            border-left: 4px solid #10B981;
+        }
+
+        .toast.error {
+            border-left: 4px solid #EF4444;
+        }
+
+        .toast-icon {
+            flex-shrink: 0;
+        }
+
+        .toast.success .toast-icon {
+            color: #10B981;
+        }
+
+        .toast.error .toast-icon {
+            color: #EF4444;
+        }
+
+        .toast-message {
+            flex: 1;
+            font-size: 14px;
+            color: var(--text-primary);
+        }
+
+        .toast-close {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            padding: 4px;
+            font-size: 18px;
+            line-height: 1;
+        }
+
+        .toast-close:hover {
+            color: var(--text-primary);
+        }
+
+        /* Overlay */
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 299;
+            backdrop-filter: blur(2px);
+        }
+
+        .sidebar-overlay.show {
+            display: block;
+        }
+
+        /* ── Responsive ── */
+        @media (max-width: 900px) {
+            .sidebar {
+                transform: translateX(-260px);
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+                box-shadow: 4px 0 24px rgba(0, 0, 0, 0.4);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .menu-btn {
+                display: flex;
+            }
+
+            .page-content {
+                padding: 16px;
+            }
+
+            .topbar {
+                padding: 0 16px;
+                height: 56px;
+            }
+
+            .topbar-right {
+                gap: 6px;
+            }
+
+            .btn {
+                padding: 8px 10px;
+                font-size: 12px;
+            }
+
+            .btn-secondary {
+                display: none;
+            }
+
+            .btn-primary span {
+                display: none;
+            }
+
+            .icon-btn {
+                width: 32px;
+                height: 32px;
+            }
+
+            .stats-row {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .table-header,
+            .table-row {
+                grid-template-columns: 1fr;
+                gap: 8px;
+            }
+
+            .table-header {
+                display: none;
+            }
+
+            .table-row {
+                flex-direction: column;
+                display: flex;
+                padding: 16px;
+                gap: 12px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .stats-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            transition: opacity 0.2s;
+        }
+
+        .btn:hover {
+            opacity: 0.85;
+        }
+
+        .btn-primary {
+            background: #0F1115;
+            color: #fff;
+        }
+
+        .btn-secondary {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+    </style>
+</head>
+<body>
+    <div class="layout">
+        <aside class="sidebar">
+            <div class="sidebar-logo">
+                <svg class="sidebar-logo-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="20" cy="20" r="18" stroke="currentColor" stroke-width="2" opacity="0.4" />
+                    <path d="M20 8 L30 28 H24 L20 20 L16 28 H10 Z" fill="currentColor" opacity="0.9" />
+                    <path d="M14 23 H26" stroke="currentColor" stroke-width="2" opacity="0.8" />
+                    <circle cx="20" cy="6" r="2" fill="currentColor" opacity="0.6" />
+                </svg>
+                <div class="sidebar-logo-text">
+                    <h1>Arcteron Trust</h1>
+                    <p>Admin Portal</p>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <div class="nav-section-label">Main</div>
+                <a class="nav-item" href="admin-dashboard.html">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="7" height="7"></rect>
+                        <rect x="14" y="3" width="7" height="7"></rect>
+                        <rect x="14" y="14" width="7" height="7"></rect>
+                        <rect x="3" y="14" width="7" height="7"></rect>
+                    </svg>
+                    Dashboard
+                </a>
+                <a class="nav-item" href="users.html">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="9" cy="7" r="4"></circle>
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                    </svg>
+                    Users
+                </a>
+                <a class="nav-item" href="transactions.html">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="12" y1="1" x2="12" y2="23"></line>
+                        <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                    </svg>
+                    Transactions
+                </a>
+                <a class="nav-item active" href="codes.html">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                    </svg>
+                    COT/BOP Codes
+                </a>
+                <div class="nav-section-label">Account</div>
+                <a class="nav-item danger" onclick="logout()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                        <polyline points="16 17 21 12 16 7"></polyline>
+                        <line x1="21" y1="12" x2="9" y2="12"></line>
+                    </svg>
+                    Logout
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="user-card">
+                    <div class="sidebar-avatar">A</div>
+                    <div>
+                        <div class="user-name">Admin</div>
+                        <div class="user-role">Administrator</div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+        <main class="main-content">
+            <div class="topbar">
+                <div class="topbar-left">
+                    <button class="menu-btn" onclick="toggleSidebar()">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="3" y1="12" x2="21" y2="12"></line>
+                            <line x1="3" y1="6" x2="21" y2="6"></line>
+                            <line x1="3" y1="18" x2="21" y2="18"></line>
+                        </svg>
+                    </button>
+                    <div class="topbar-title">COT/BOP Codes</div>
+                </div>
+                <div class="topbar-right">
+                    <a class="icon-btn" id="themeToggle" onclick="Theme.toggle()" title="Toggle Theme">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+                        </svg>
+                    </a>
+                    <button class="btn btn-secondary" onclick="loadCodes()">Refresh</button>
+                    <button class="btn btn-primary" onclick="openGenerateModal()">Generate Code</button>
+                </div>
+            </div>
+
+            <div class="page-content">
+                <div class="stats-row">
+                    <div class="stat-card">
+                        <div class="stat-card-label">
+                            <div class="stat-dot" style="background: #10B981;"></div>
+                            Total Codes
+                        </div>
+                        <div class="stat-card-value" id="statTotalCodes">0</div>
+                        <div class="stat-card-sub">All codes generated</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-card-label">
+                            <div class="stat-dot" style="background: #10B981;"></div>
+                            Active Codes
+                        </div>
+                        <div class="stat-card-value" id="statActiveCodes">0</div>
+                        <div class="stat-card-sub">Available for use</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-card-label">
+                            <div class="stat-dot" style="background: #6B7280;"></div>
+                            Used Codes
+                        </div>
+                        <div class="stat-card-value" id="statUsedCodes">0</div>
+                        <div class="stat-card-sub">Already redeemed</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-card-label">
+                            <div class="stat-dot" style="background: #EF4444;"></div>
+                            Expired Codes
+                        </div>
+                        <div class="stat-card-value" id="statExpiredCodes">0</div>
+                        <div class="stat-card-sub">Past expiration</div>
+                    </div>
+                </div>
+
+                <div class="search-bar">
+                    <input type="text" id="searchInput" placeholder="Search codes by code, user, or type..." onkeyup="handleSearch(event)">
+                </div>
+
+                <div class="codes-table">
+                    <div class="table-header">
+                        <div>Code</div>
+                        <div>User</div>
+                        <div>Type</div>
+                        <div>Status</div>
+                        <div>Expires</div>
+                        <div>Admin</div>
+                    </div>
+                    <div id="codesList">
+                        <!-- Codes will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Generate Code Modal -->
+    <div id="generateModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Generate COT/BOP Code</h2>
+                <button class="close-btn" onclick="closeModal('generateModal')">&times;</button>
+            </div>
+            <form id="generateForm" onsubmit="handleGenerateCode(event)">
+                <div class="form-group">
+                    <label>User Email</label>
+                    <input type="email" id="generateUserEmail" required placeholder="user@example.com">
+                </div>
+                <div class="form-group">
+                    <label>Code Type</label>
+                    <select id="generateCodeType" required>
+                        <option value="cot">COT (Certificate of Transfer)</option>
+                        <option value="bop">BOP (Beneficial Ownership Proof)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Expiration Hours</label>
+                    <input type="number" id="generateExpiration" required value="24" min="1" max="720">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('generateModal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Generate Code</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'https://arcteron-trust.onrender.com';
+        let allCodes = [];
+
+        // Check authentication
+        function checkAuth() {
+            const token = localStorage.getItem('admin_token');
+            if (!token) {
+                window.location.href = '../admin-login.html';
+                return false;
+            }
+            return true;
+        }
+
+        // Load codes
+        async function loadCodes() {
+            try {
+                const token = localStorage.getItem('admin_token');
+                const response = await fetch(`${API_BASE}/api/admin/codes?page=1&per_page=100`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    allCodes = data.codes || [];
+                    renderCodes(allCodes);
+                    updateStats(allCodes);
+                } else if (response.status === 401) {
+                    const error = await response.json().catch(() => ({}));
+                    if (error.detail && error.detail.includes('expired')) {
+                        showToast('Session expired. Please log in again.', 'error');
+                    } else {
+                        showToast('Unauthorized. Please log in again.', 'error');
+                    }
+                    window.location.href = '../admin-login.html';
+                } else {
+                    document.getElementById('codesList').innerHTML = `
+                        <div class="empty-state">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <line x1="12" y1="8" x2="12" y2="12"></line>
+                                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                            </svg>
+                            <p>Failed to load codes</p>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error('Error loading codes:', error);
+                document.getElementById('codesList').innerHTML = `
+                    <div class="empty-state">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="8" x2="12" y2="12"></line>
+                            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                        </svg>
+                        <p>Error loading codes</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Update stats
+        function updateStats(codes) {
+            const totalCodes = codes.length;
+            const now = new Date();
+            const activeCodes = codes.filter(c => !c.is_used && new Date(c.expires_at) > now).length;
+            const usedCodes = codes.filter(c => c.is_used).length;
+            const expiredCodes = codes.filter(c => !c.is_used && new Date(c.expires_at) <= now).length;
+
+            document.getElementById('statTotalCodes').textContent = totalCodes;
+            document.getElementById('statActiveCodes').textContent = activeCodes;
+            document.getElementById('statUsedCodes').textContent = usedCodes;
+            document.getElementById('statExpiredCodes').textContent = expiredCodes;
+        }
+
+        // Toggle sidebar
+        function toggleSidebar() {
+            const sidebar = document.querySelector('.sidebar');
+            const overlay = document.querySelector('.sidebar-overlay');
+            sidebar.classList.toggle('open');
+            overlay.classList.toggle('show');
+        }
+
+        // Logout
+        function logout() {
+            localStorage.removeItem('admin_token');
+            window.location.href = '../admin-login.html';
+        }
+
+        // Toast notification function
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toastContainer');
+            if (!container) {
+                const toastContainer = document.createElement('div');
+                toastContainer.id = 'toastContainer';
+                toastContainer.className = 'toast-container';
+                document.body.appendChild(toastContainer);
+            }
+            
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+
+            const icon = type === 'success' ? '✓' : '✕';
+
+            toast.innerHTML = `
+                <span class="toast-icon">${icon}</span>
+                <span class="toast-message">${message}</span>
+                <button class="toast-close" onclick="this.parentElement.remove()">&times;</button>
+            `;
+
+            container.appendChild(toast);
+
+            // Auto remove after 3 seconds
+            setTimeout(() => {
+                toast.remove();
+            }, 3000);
+        }
+
+        // Render codes
+        function renderCodes(codes) {
+            const container = document.getElementById('codesList');
+            
+            if (!codes || codes.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="8" x2="12" y2="12"></line>
+                            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                        </svg>
+                        <p>No codes found</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = '';
+
+            codes.forEach(code => {
+                const now = new Date();
+                const expires = new Date(code.expires_at);
+                const isExpired = now > expires;
+                const statusClass = code.is_used ? 'used' : (isExpired ? 'expired' : 'active');
+                const statusLabel = code.is_used ? 'Used' : (isExpired ? 'Expired' : 'Active');
+                
+                const row = document.createElement('div');
+                row.className = 'table-row';
+                row.innerHTML = `
+                    <div><code>${code.code}</code></div>
+                    <div>${code.user_name || 'N/A'}</div>
+                    <div><span class="type-badge">${code.code_type.toUpperCase()}</span></div>
+                    <div><span class="status-badge ${statusClass}">${statusLabel}</span></div>
+                    <div>${expires.toLocaleString()}</div>
+                    <div>${code.admin_name || 'N/A'}</div>
+                `;
+                container.appendChild(row);
+            });
+        }
+
+        // Search
+        function handleSearch(event) {
+            const query = event.target.value.toLowerCase();
+            const filtered = allCodes.filter(code => 
+                code.code.toLowerCase().includes(query) ||
+                (code.user_name && code.user_name.toLowerCase().includes(query)) ||
+                code.code_type.toLowerCase().includes(query) ||
+                (code.admin_name && code.admin_name.toLowerCase().includes(query))
+            );
+            renderCodes(filtered);
+        }
+
+        // Modal functions
+        function openGenerateModal() {
+            document.getElementById('generateModal').classList.add('show');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('show');
+        }
+
+        // Generate code
+        async function handleGenerateCode(event) {
+            event.preventDefault();
+            const token = localStorage.getItem('admin_token');
+            
+            const data = {
+                user_email: document.getElementById('generateUserEmail').value,
+                code_type: document.getElementById('generateCodeType').value,
+                expiration_hours: parseInt(document.getElementById('generateExpiration').value)
+            };
+
+            try {
+                const response = await fetch(`${API_BASE}/api/admin/codes/generate`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (response.ok) {
+                    closeModal('generateModal');
+                    document.getElementById('generateForm').reset();
+                    loadCodes();
+                    showToast('Code generated successfully', 'success');
+                } else {
+                    const error = await response.json();
+                    showToast(error.detail || 'Failed to generate code', 'error');
+                }
+            } catch (error) {
+                showToast('Error generating code', 'error');
+            }
+        }
+
+        // Initialize
+        if (checkAuth()) {
+            loadCodes();
+        }
+    </script>
+</body>
+</html>
+```
+
+# /frontend/pages/admin/js/users.js
+```javascript
+
+```
+
+# /frontend/pages/admin/js/transactions.js
+```javascript
+
+```
+
+# /frontend/pages/admin/js/dashboard.js
+```javascript
+
+```
+
+# /frontend/pages/admin/js/codes.js
+```javascript
+
+```
+

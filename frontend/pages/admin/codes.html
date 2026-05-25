@@ -593,34 +593,89 @@
             .sidebar {
                 transform: translateX(-260px);
             }
-
             .sidebar.open {
                 transform: translateX(0);
-                box-shadow: 4px 0 24px rgba(0, 0, 0, 0.4);
+                box-shadow: 4px 0 24px rgba(0,0,0,0.4);
             }
-
             .main-content {
                 margin-left: 0;
             }
-
             .menu-btn {
                 display: flex;
             }
-
             .page-content {
-                padding: 16px;
+                padding: 12px;
             }
-
             .topbar {
-                padding: 0 16px;
+                padding: 0 12px;
                 height: 56px;
             }
-
+            .stats-row {
+                grid-template-columns: 1fr 1fr;
+                gap: 8px;
+                margin-bottom: 16px;
+            }
+            .stat-card {
+                padding: 12px;
+            }
+            .stat-card-value {
+                font-size: 18px;
+            }
+            /* Hide desktop table, show card layout */
+            .table-header {
+                display: none !important;
+            }
+            .users-table,
+            .transactions-table,
+            .codes-table {
+                background: transparent;
+                border: none;
+                border-radius: 0;
+            }
+            .table-row {
+                display: flex !important;
+                flex-direction: column;
+                background: var(--bg-secondary);
+                border: 1px solid var(--border-color);
+                border-radius: 12px;
+                padding: 16px;
+                margin-bottom: 10px;
+                gap: 10px;
+                grid-template-columns: unset !important;
+            }
+            .table-row:hover {
+                background: var(--bg-secondary);
+            }
+            .search-bar input {
+                max-width: 100%;
+            }
+            .modal-content {
+                margin: 12px;
+                max-width: calc(100% - 24px);
+                padding: 20px;
+            }
+            .btn-secondary {
+                display: none;
+            }
             .topbar-right {
                 gap: 6px;
             }
+            .icon-btn {
+                width: 32px;
+                height: 32px;
+            }
+        }
 
-            .btn {
+        @media (max-width: 480px) {
+            .stats-row {
+                grid-template-columns: 1fr;
+            }
+            .page-content {
+                padding: 10px;
+            }
+        }
+
+        .btn {
                 padding: 8px 10px;
                 font-size: 12px;
             }
@@ -885,6 +940,17 @@
             if (!token) {
                 window.location.href = '../admin-login.html';
                 return false;
+            }
+            // Display admin name
+            const userJson = localStorage.getItem('admin_user');
+            if (userJson) {
+                try {
+                    const user = JSON.parse(userJson);
+                    const nameEl = document.querySelector('.user-name');
+                    const avatarEl = document.querySelector('.sidebar-avatar');
+                    if (nameEl) nameEl.textContent = `${user.first_name} ${user.last_name}`;
+                    if (avatarEl) avatarEl.textContent = user.first_name ? user.first_name[0].toUpperCase() : 'A';
+                } catch(e) {}
             }
             return true;
         }
