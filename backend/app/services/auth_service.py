@@ -53,8 +53,8 @@ def register_step1(data: RegisterStep1, db: Session) -> User:
     try:
         token = generate_verification_token(user.email)
         send_verification_email(user.email, user.first_name, token)
-    except Exception:
-        # Never block registration because email failed
+    except Exception as e:
+        print(f"EMAIL ERROR: {e}")
         pass
 
     return user
