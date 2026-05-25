@@ -98,20 +98,21 @@ def register_step3(user_id: str, data: RegisterStep3, db: Session) -> dict:
     user.account_purpose = data.account_purpose
     user.is_kyc_complete = True
 
-    # Create bank account
-    account_number = generate_account_number(db)
-    account = Account(
-        user_id=user.id,
-        account_number=account_number,
-        routing_number="021000021",
-        account_type="checking",
-        balance=0.00,
-        currency="USD",
-        swift_code="ARCTUSD1",
-        bank_name="Arcteron Trust"
-    )
-
-    db.add(account)
+    # Check if account already exists (prevents duplicate on retry)
+    existing_account = db.query(Account).filter(Account.user_id == user.id).first()
+    if not existing_account:
+        account_number = generate_account_number(db)
+        account = Account(
+            user_id=user.id,
+            account_number=account_number,
+            routing_number="021000021",
+            account_type="checking",
+            balance=0.00,
+            currency="USD",
+            swift_code="ARCTUSD1",
+            bank_name="Arcteron Trust"
+        )
+        db.add(account)
     db.commit()
     db.refresh(user)
 
