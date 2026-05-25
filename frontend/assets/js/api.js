@@ -1,8 +1,10 @@
-const API_BASE = 'https://arcteron-trust.onrender.com';
+const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+  ? 'http://localhost:8000'
+  : 'https://arcteron-trust.onrender.com';
 
 const Api = {
   API_BASE: API_BASE,
-  
+
   getToken() {
     return localStorage.getItem('arcteronToken');
   },

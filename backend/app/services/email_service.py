@@ -1,5 +1,3 @@
-from sendgrid import SendGridAPIClient
-from sendgrid.helpers.mail import Mail
 from jinja2 import Environment, FileSystemLoader
 from pathlib import Path
 from datetime import datetime
@@ -15,16 +13,41 @@ def get_template(filename: str) -> str:
 
 
 def send_email(to: str, subject: str, html_content: str):
-    sg = SendGridAPIClient(api_key=settings.MAIL_PASSWORD)
-    message = Mail(
-        from_email=(settings.MAIL_FROM, settings.APP_NAME),
-        to_emails=to,
-        subject=subject,
-        html_content=html_content
-    )
-    response = sg.send(message)
-    print(f"EMAIL TO: {to} | STATUS: {response.status_code} | BODY: {response.body}")
-    return response
+    # Use SMTP if MAIL_SERVER is not SendGrid (i.e. local MailHog)
+    if settings.MAIL_SERVER != "smtp.sendgrid.net":
+        # Local SMTP via MailHog
+        import smtplib
+        from email.mime.multipart import MIMEMultipart
+        from email.mime.text import MIMEText
+
+        msg = MIMEMultipart('alternative')
+        msg['Subject'] = subject
+        msg['From'] = f"{settings.APP_NAME} <{settings.MAIL_FROM}>"
+        msg['To'] = to
+
+        part = MIMEText(html_content, 'html')
+        msg.attach(part)
+
+        with smtplib.SMTP(settings.MAIL_SERVER, settings.MAIL_PORT) as server:
+            server.sendmail(settings.MAIL_FROM, to, msg.as_string())
+
+        print(f"EMAIL (LOCAL SMTP) TO: {to} | SUBJECT: {subject}")
+        return {"status_code": 250}
+    else:
+        # Production: SendGrid HTTP API
+        from sendgrid import SendGridAPIClient
+        from sendgrid.helpers.mail import Mail
+
+        sg = SendGridAPIClient(api_key=settings.MAIL_PASSWORD)
+        message = Mail(
+            from_email=(settings.MAIL_FROM, settings.APP_NAME),
+            to_emails=to,
+            subject=subject,
+            html_content=html_content
+        )
+        response = sg.send(message)
+        print(f"EMAIL TO: {to} | STATUS: {response.status_code} | BODY: {response.body}")
+        return response
 
 
 def send_login_alert(

@@ -49,6 +49,11 @@ services:
     # Override the database URL inside container to use the internal docker network (db)
     environment:
       - DATABASE_URL=postgresql://postgres:arcteronpass123@db:5432/arcterontrust
+      - MAIL_SERVER=mailhog
+      - MAIL_PORT=1025
+      - MAIL_FROM=noreply@arcteron.local
+      - MAIL_USERNAME=test
+      - MAIL_PASSWORD=test
     depends_on:
       - db
 
