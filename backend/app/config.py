@@ -13,7 +13,10 @@ class Settings(BaseSettings):
     MAIL_PORT: int
 
     APP_NAME: str = "Arcteron Trust"
-    FRONTEND_URL: str = "http://127.0.0.1:5500"
+    FRONTEND_URL: str = "https://arcteron-trust.vercel.app"
+
+    SUPABASE_URL: str = ""
+    SUPABASE_KEY: str = ""
 
     class Config:
         env_file = ".env"
