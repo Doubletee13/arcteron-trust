@@ -273,6 +273,24 @@ def international_transfer(
                 status_code=402,
                 detail="Transfers of $10,000 or more require a COT or BOP code. Please contact your account manager."
             )
+        # Validate code against database
+        from app.models.cot_code import COTCode, CodeType
+        from datetime import timezone
+        submitted_code = data.cot_code or data.bop_code
+        submitted_type = CodeType.cot if data.cot_code else CodeType.bop
+        cot_record = db.query(COTCode).filter(
+            COTCode.code == submitted_code,
+            COTCode.user_id == current_user.id,
+            COTCode.code_type == submitted_type,
+            COTCode.is_used == False
+        ).first()
+        if not cot_record:
+            raise HTTPException(status_code=400, detail="Invalid or unrecognized COT/BOP code.")
+        if cot_record.expires_at < datetime.utcnow():
+            raise HTTPException(status_code=400, detail="COT/BOP code has expired. Please request a new one.")
+        # Mark code as used
+        cot_record.is_used = True
+        cot_record.used_at = datetime.utcnow()
 
     reference = generate_transaction_reference()
 

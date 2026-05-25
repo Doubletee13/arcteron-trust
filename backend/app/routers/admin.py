@@ -89,10 +89,11 @@ class BlockUserRequest(BaseModel):
 class GenerateCodeRequest(BaseModel):
     code_type: str  # cot or bop
     expires_in_hours: Optional[int] = 24
+    user_email: Optional[str] = None
 
 
 # Helper functions
-def generate_cot_code():
+def gen_random_code():
     """Generate a random COT/BOP code"""
     alphabet = string.ascii_uppercase + string.digits
     return ''.join(secrets.choice(alphabet) for _ in range(12))
@@ -650,7 +651,7 @@ def generate_cot_code(
     code_type = CodeType.cot if data.code_type.lower() == "cot" else CodeType.bop
     
     # Generate code
-    code = generate_cot_code()
+    code = gen_random_code()
     expires_at = datetime.utcnow() + timedelta(hours=data.expires_in_hours)
     
     # Create code record
@@ -663,7 +664,32 @@ def generate_cot_code(
     )
     db.add(cot_code)
     db.commit()
-    
+
+    # Send email to user with the code
+    try:
+        from app.services.email_service import send_cot_bop_code_email
+        send_cot_bop_code_email(
+            to=user.email,
+            first_name=user.first_name,
+            code_type=data.code_type.upper(),
+            code=code,
+            expires_at=expires_at.strftime("%Y-%m-%d %H:%M UTC")
+        )
+    except Exception:
+        pass  # Never block code generation because email failed
+
+    # Send in-app notification
+    from app.models.notification import NotificationType as NT
+    from app.services.notification_service import NotificationService
+    NotificationService.create_notification(
+        db,
+        user.id,
+        f"{data.code_type.upper()} Code Generated",
+        f"Your {data.code_type.upper()} authorization code is: {code}. It expires at {expires_at.strftime('%Y-%m-%d %H:%M UTC')}. Use it when prompted during your transfer.",
+        NT.system
+    )
+    db.commit()
+
     return {
         "message": f"{data.code_type.upper()} code generated successfully",
         "code": code,
@@ -699,6 +725,59 @@ def delete_user(
     
     return {"message": "User deleted successfully"}
 
+
+@router.post("/codes/generate")
+def generate_code_by_email(
+    data: GenerateCodeRequest,
+    db: Session = Depends(get_db),
+    current_admin: User = Depends(get_current_admin)
+):
+    """Generate COT/BOP code for user by email"""
+    user = db.query(User).filter(User.email == data.user_email).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found with that email")
+
+    code_type = CodeType.cot if data.code_type.lower() == "cot" else CodeType.bop
+    code = gen_random_code()
+    expires_at = datetime.utcnow() + timedelta(hours=data.expires_in_hours)
+
+    cot_code = COTCode(
+        user_id=user.id,
+        generated_by_admin_id=current_admin.id,
+        code_type=code_type,
+        code=code,
+        expires_at=expires_at
+    )
+    db.add(cot_code)
+    db.commit()
+
+    try:
+        from app.services.email_service import send_cot_bop_code_email
+        send_cot_bop_code_email(
+            to=user.email,
+            first_name=user.first_name,
+            code_type=data.code_type.upper(),
+            code=code,
+            expires_at=expires_at.strftime("%Y-%m-%d %H:%M UTC")
+        )
+    except Exception:
+        pass
+
+    from app.models.notification import NotificationType as NT
+    from app.services.notification_service import NotificationService
+    NotificationService.create_notification(
+        db, user.id,
+        f"{data.code_type.upper()} Code Generated",
+        f"Your {data.code_type.upper()} authorization code is: {code}. Expires: {expires_at.strftime('%Y-%m-%d %H:%M UTC')}.",
+        NT.system
+    )
+    db.commit()
+
+    return {
+        "message": f"{data.code_type.upper()} code generated successfully",
+        "code": code,
+        "expires_at": expires_at.isoformat()
+    }
 
 @router.get("/codes")
 def get_all_codes(
