@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Credited</title>
+</head>
+<body style="font-family: Arial, sans-serif; background-color: #f5f5f5; margin: 0; padding: 20px;">
+    <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+        <div style="background-color: #0F1115; padding: 30px; text-align: center;">
+            <h1 style="color: #ffffff; margin: 0; font-size: 24px;">Arcteron Trust</h1>
+            <p style="color: rgba(255,255,255,0.7); margin: 5px 0 0 0; font-size: 14px;">Private Banking & Wealth Management</p>
+        </div>
+        
+        <div style="padding: 40px 30px;">
+            <h2 style="color: #0F1115; margin: 0 0 20px 0; font-size: 20px;">Account Credited</h2>
+            
+            <p style="color: #333333; line-height: 1.6; margin: 0 0 20px 0;">
+                Dear {{ first_name }},
+            </p>
+            
+            <p style="color: #333333; line-height: 1.6; margin: 0 0 20px 0;">
+                Your account has been credited with the following funds:
+            </p>
+            
+            <div style="background-color: #f9f9f9; border-left: 4px solid #10B981; padding: 20px; margin: 20px 0;">
+                <p style="color: #333333; margin: 5px 0;"><strong>Amount:</strong> {{ amount }}</p>
+                <p style="color: #333333; margin: 5px 0;"><strong>Reference:</strong> {{ reference }}</p>
+                <p style="color: #333333; margin: 5px 0;"><strong>From:</strong> {{ sender_name }} ({{ bank_name }})</p>
+                <p style="color: #333333; margin: 5px 0;"><strong>Date:</strong> {{ transaction_date }}</p>
+                {% if description %}
+                <p style="color: #333333; margin: 5px 0;"><strong>Description:</strong> {{ description }}</p>
+                {% endif %}
+            </div>
+            
+            <p style="color: #333333; line-height: 1.6; margin: 0 0 20px 0;">
+                Your new account balance is: <strong>{{ new_balance }}</strong>
+            </p>
+            
+            <p style="color: #333333; line-height: 1.6; margin: 0 0 20px 0;">
+                If you have any questions about this transaction, please contact our support team.
+            </p>
+            
+            <div style="text-align: center; margin: 30px 0;">
+                <a href="{{ frontend_url }}/pages/user/dashboard.html" style="background-color: #0F1115; color: #ffffff; padding: 12px 30px; text-decoration: none; border-radius: 4px; display: inline-block;">View Account</a>
+            </div>
+        </div>
+        
+        <div style="background-color: #f5f5f5; padding: 20px; text-align: center; border-top: 1px solid #e0e0e0;">
+            <p style="color: #666666; margin: 0; font-size: 12px;">&copy; {{ year }} Arcteron Trust. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>

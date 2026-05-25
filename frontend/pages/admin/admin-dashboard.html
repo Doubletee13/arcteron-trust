@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Transactions — Arcteron Trust Admin</title>
+    <title>Dashboard — Arcteron Trust Admin</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../../assets/css/theme.css">
@@ -35,6 +35,11 @@
             transition: transform 0.3s ease;
         }
 
+        [data-theme="light"] .sidebar {
+            background: #171A20;
+            border-right: none;
+        }
+
         .sidebar-logo {
             padding: 0 20px;
             height: 60px;
@@ -43,6 +48,10 @@
             align-items: center;
             gap: 10px;
             flex-shrink: 0;
+        }
+
+        [data-theme="light"] .sidebar-logo {
+            border-bottom-color: rgba(255, 255, 255, 0.08);
         }
 
         .sidebar-logo-icon {
@@ -312,186 +321,126 @@
             color: var(--text-muted);
         }
 
-        /* ── Transactions Table ── */
-        .transactions-table {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            overflow: hidden;
-        }
-
-        .table-header {
+        /* ── Quick Actions ── */
+        .quick-actions {
             display: grid;
-            grid-template-columns: 1.5fr 1fr 1fr 1fr 1fr 1fr;
-            padding: 16px 24px;
-            background: rgba(15, 17, 21, 0.05);
-            border-bottom: 1px solid var(--border-color);
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--text-secondary);
-        }
-
-        .table-row {
-            display: grid;
-            grid-template-columns: 1.5fr 1fr 1fr 1fr 1fr 1fr;
-            padding: 16px 24px;
-            border-bottom: 1px solid var(--border-color);
-            align-items: center;
-            font-size: 14px;
-        }
-
-        .table-row:last-child {
-            border-bottom: none;
-        }
-
-        .table-row:hover {
-            background: rgba(15, 17, 21, 0.02);
-        }
-
-        .type-badge {
-            padding: 4px 12px;
-            border-radius: 12px;
-            font-size: 12px;
-            font-weight: 500;
-        }
-
-        .type-badge.credit {
-            background: rgba(16, 185, 129, 0.1);
-            color: #10B981;
-        }
-
-        .type-badge.debit {
-            background: rgba(239, 68, 68, 0.1);
-            color: #EF4444;
-        }
-
-        /* ── Search Bar ── */
-        .search-bar {
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
             margin-bottom: 24px;
         }
 
-        .search-bar input {
-            width: 100%;
-            max-width: 400px;
-            padding: 12px 16px;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            font-size: 14px;
+        .quick-action-card {
             background: var(--bg-secondary);
-            color: var(--text-primary);
-            outline: none;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.2s;
         }
 
-        .search-bar input:focus {
+        .quick-action-card:hover {
             border-color: var(--text-primary);
         }
 
-        .empty-state {
-            padding: 60px 24px;
-            text-align: center;
+        .quick-action-card h4 {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: var(--text-primary);
+        }
+
+        .quick-action-card p {
+            font-size: 13px;
             color: var(--text-secondary);
         }
 
-        .empty-state svg {
-            width: 48px;
-            height: 48px;
-            margin-bottom: 16px;
-            opacity: 0.5;
-        }
-
-        /* ── Toast Notifications ── */
-        .toast-container {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 10000;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .toast {
+        /* ── Recent Activity ── */
+        .recent-activity {
             background: var(--bg-secondary);
             border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 16px 20px;
-            min-width: 300px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            border-radius: 12px;
+            padding: 24px;
+        }
+
+        .recent-activity h2 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: var(--text-primary);
+        }
+
+        .activity-item {
             display: flex;
             align-items: center;
-            gap: 12px;
-            animation: slideIn 0.3s ease;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border-color);
         }
 
-        @keyframes slideIn {
-            from {
-                transform: translateX(100%);
-                opacity: 0;
-            }
-
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
+        .activity-item:last-child {
+            border-bottom: none;
         }
 
-        .toast.success {
-            border-left: 4px solid #10B981;
-        }
-
-        .toast.error {
-            border-left: 4px solid #EF4444;
-        }
-
-        .toast-icon {
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            background: rgba(15, 17, 21, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 16px;
             flex-shrink: 0;
         }
 
-        .toast.success .toast-icon {
-            color: #10B981;
+        .activity-icon svg {
+            width: 20px;
+            height: 20px;
         }
 
-        .toast.error .toast-icon {
-            color: #EF4444;
-        }
-
-        .toast-message {
+        .activity-details {
             flex: 1;
+        }
+
+        .activity-details h4 {
             font-size: 14px;
-            color: var(--text-primary);
-        }
-
-        .toast-close {
-            background: none;
-            border: none;
-            color: var(--text-secondary);
-            cursor: pointer;
-            padding: 4px;
-            font-size: 18px;
-            line-height: 1;
-        }
-
-        .toast-close:hover {
-            color: var(--text-primary);
-        }
-
-        /* Initiator cell styles */
-        .initiator-cell {
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
-        }
-
-        .initiator-name {
-            font-size: 13px;
             font-weight: 500;
+            margin-bottom: 2px;
             color: var(--text-primary);
         }
 
-        .initiator-account {
-            font-size: 11px;
+        .activity-details p {
+            font-size: 12px;
             color: var(--text-secondary);
-            font-family: 'DM Sans', monospace;
+        }
+
+        .activity-time {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            transition: opacity 0.2s;
+        }
+
+        .btn:hover {
+            opacity: 0.85;
+        }
+
+        .btn-primary {
+            background: #0F1115;
+            color: #fff;
+        }
+
+        .btn-secondary {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
         }
 
         /* Overlay */
@@ -549,6 +498,10 @@
                 display: none;
             }
 
+            .btn-primary span {
+                display: none;
+            }
+
             .icon-btn {
                 width: 32px;
                 height: 32px;
@@ -558,21 +511,8 @@
                 grid-template-columns: 1fr 1fr;
             }
 
-            .table-header,
-            .table-row {
+            .quick-actions {
                 grid-template-columns: 1fr;
-                gap: 8px;
-            }
-
-            .table-header {
-                display: none;
-            }
-
-            .table-row {
-                flex-direction: column;
-                display: flex;
-                padding: 16px;
-                gap: 12px;
             }
         }
 
@@ -581,33 +521,9 @@
                 grid-template-columns: 1fr;
             }
         }
-
-        .btn {
-            padding: 10px 20px;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 500;
-            cursor: pointer;
-            border: none;
-            transition: opacity 0.2s;
-        }
-
-        .btn:hover {
-            opacity: 0.85;
-        }
-
-        .btn-primary {
-            background: #0F1115;
-            color: #fff;
-        }
-
-        .btn-secondary {
-            background: var(--bg-secondary);
-            color: var(--text-primary);
-            border: 1px solid var(--border-color);
-        }
     </style>
 </head>
+
 <body>
     <div class="layout">
         <aside class="sidebar">
@@ -625,7 +541,7 @@
             </div>
             <nav class="sidebar-nav">
                 <div class="nav-section-label">Main</div>
-                <a class="nav-item" href="admin-dashboard.html">
+                <a class="nav-item active" href="admin-dashboard.html">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <rect x="3" y="3" width="7" height="7"></rect>
                         <rect x="14" y="3" width="7" height="7"></rect>
@@ -643,7 +559,7 @@
                     </svg>
                     Users
                 </a>
-                <a class="nav-item active" href="transactions.html">
+                <a class="nav-item" href="transactions.html">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <line x1="12" y1="1" x2="12" y2="23"></line>
                         <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
@@ -690,7 +606,7 @@
                             <line x1="3" y1="18" x2="21" y2="18"></line>
                         </svg>
                     </button>
-                    <div class="topbar-title">Transactions</div>
+                    <div class="topbar-title">Dashboard</div>
                 </div>
                 <div class="topbar-right">
                     <a class="icon-btn" id="themeToggle" onclick="Theme.toggle()" title="Toggle Theme">
@@ -698,7 +614,8 @@
                             <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
                         </svg>
                     </a>
-                    <button class="btn btn-secondary" onclick="loadTransactions()">Refresh</button>
+                    <button class="btn btn-secondary" onclick="refreshData()">Refresh</button>
+                    <button class="btn btn-primary" onclick="navigate('users')">Manage Users</button>
                 </div>
             </div>
 
@@ -707,52 +624,68 @@
                     <div class="stat-card">
                         <div class="stat-card-label">
                             <div class="stat-dot" style="background: #10B981;"></div>
-                            Total Transactions
+                            Total Users
                         </div>
-                        <div class="stat-card-value" id="statTotalTx">0</div>
-                        <div class="stat-card-sub">All transactions</div>
+                        <div class="stat-card-value" id="totalUsers">-</div>
+                        <div class="stat-card-sub">Active accounts</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-card-label">
-                            <div class="stat-dot" style="background: #10B981;"></div>
-                            Total Credits
+                            <div class="stat-dot" style="background: #3B82F6;"></div>
+                            Total Balance
                         </div>
-                        <div class="stat-card-value" id="statTotalCredits">$0</div>
-                        <div class="stat-card-sub">Credit transactions</div>
+                        <div class="stat-card-value" id="totalBalance">-</div>
+                        <div class="stat-card-sub">Across all accounts</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-card-label">
                             <div class="stat-dot" style="background: #EF4444;"></div>
-                            Total Debits
+                            Blocked Users
                         </div>
-                        <div class="stat-card-value" id="statTotalDebits">$0</div>
-                        <div class="stat-card-sub">Debit transactions</div>
+                        <div class="stat-card-value" id="blockedUsers">-</div>
+                        <div class="stat-card-sub">Require attention</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-card-label">
-                            <div class="stat-dot" style="background: #F59E0B;"></div>
-                            Today's Volume
+                            <div class="stat-dot" style="background: #10B981;"></div>
+                            Active Users
                         </div>
-                        <div class="stat-card-value" id="statTodayVolume">$0</div>
-                        <div class="stat-card-sub">Transactions today</div>
+                        <div class="stat-card-value" id="activeUsers">-</div>
+                        <div class="stat-card-sub">Can transact</div>
                     </div>
                 </div>
 
-                <div class="search-bar">
-                    <input type="text" id="searchInput" placeholder="Search transactions by reference, user, or type..." onkeyup="handleSearch(event)">
+                <div class="quick-actions">
+                    <div class="quick-action-card" onclick="navigate('users')">
+                        <h4>Create User</h4>
+                        <p>Add a new user to the system</p>
+                    </div>
+                    <div class="quick-action-card" onclick="navigate('users')">
+                        <h4>Credit Account</h4>
+                        <p>Manual credit to user account</p>
+                    </div>
+                    <div class="quick-action-card" onclick="navigate('users')">
+                        <h4>Block User</h4>
+                        <p>Restrict user account access</p>
+                    </div>
                 </div>
 
-                <div class="transactions-table">
-                    <div class="table-header">
-                        <div>Reference</div>
-                        <div>User</div>
-                        <div>Type</div>
-                        <div>Amount</div>
-                        <div>Date</div>
-                        <div>Initiated By</div>
-                    </div>
-                    <div id="transactionsList">
-                        <!-- Transactions will be loaded here -->
+                <div class="recent-activity">
+                    <h2>Recent Activity</h2>
+                    <div id="activityList">
+                        <div class="activity-item">
+                            <div class="activity-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <polyline points="12 6 12 12 16 14"></polyline>
+                                </svg>
+                            </div>
+                            <div class="activity-details">
+                                <h4>System initialized</h4>
+                                <p>Admin dashboard loaded</p>
+                            </div>
+                            <div class="activity-time" id="systemInitTime">Just now</div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -761,17 +694,6 @@
 
     <script>
         const API_BASE = 'http://127.0.0.1:8000';
-        let allTransactions = [];
-
-                function openSidebar() {
-            document.getElementById('sidebar').classList.add('open');
-            document.getElementById('sidebarOverlay').classList.add('show');
-        }
-
-        function closeSidebar() {
-            document.getElementById('sidebar').classList.remove('open');
-            document.getElementById('sidebarOverlay').classList.remove('show');
-        }
 
         // Check authentication
         function checkAuth() {
@@ -780,78 +702,54 @@
                 window.location.href = '../admin-login.html';
                 return false;
             }
+
+            // Set dynamic admin name
+            const userJson = localStorage.getItem('admin_user');
+            if (userJson) {
+                try {
+                    const user = JSON.parse(userJson);
+                    const userCard = document.querySelector('.user-name');
+                    if (userCard) {
+                        userCard.textContent = `${user.first_name} ${user.last_name}`;
+                    }
+                } catch (e) { }
+            }
+
+            // Set system initialization time
+            setSystemInitTime();
+
             return true;
         }
 
-        // Load transactions
-        async function loadTransactions() {
-            try {
-                const token = localStorage.getItem('admin_token');
-                const response = await fetch(`${API_BASE}/api/admin/transactions?page=1&per_page=100`, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-
-                if (response.ok) {
-                    const data = await response.json();
-                    allTransactions = data.transactions || [];
-                    renderTransactions(allTransactions);
-                    updateStats(allTransactions);
-                } else if (response.status === 401) {
-                    const error = await response.json().catch(() => ({}));
-                    if (error.detail && error.detail.includes('expired')) {
-                        showToast('Session expired. Please log in again.', 'error');
-                    } else {
-                        showToast('Unauthorized. Please log in again.', 'error');
-                    }
-                    window.location.href = '../admin-login.html';
-                } else {
-                    document.getElementById('transactionsList').innerHTML = `
-                        <div class="empty-state">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <circle cx="12" cy="12" r="10"></circle>
-                                <line x1="12" y1="8" x2="12" y2="12"></line>
-                                <line x1="12" y1="16" x2="12.01" y2="16"></line>
-                            </svg>
-                            <p>Failed to load transactions</p>
-                        </div>
-                    `;
-                }
-            } catch (error) {
-                console.error('Error loading transactions:', error);
-                document.getElementById('transactionsList').innerHTML = `
-                    <div class="empty-state">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <circle cx="12" cy="12" r="10"></circle>
-                            <line x1="12" y1="8" x2="12" y2="12"></line>
-                            <line x1="12" y1="16" x2="12.01" y2="16"></line>
-                        </svg>
-                        <p>Error loading transactions</p>
-                    </div>
-                `;
+        // Set system initialization time
+        function setSystemInitTime() {
+            const now = new Date();
+            const timeElement = document.getElementById('systemInitTime');
+            if (timeElement) {
+                timeElement.textContent = formatTimeAgo(now);
             }
         }
 
-        // Update stats
-        function updateStats(transactions) {
-            const totalTx = transactions.length;
-            const totalCredits = transactions
-                .filter(t => t.transaction_type === 'credit')
-                .reduce((sum, t) => sum + (t.amount || 0), 0);
-            const totalDebits = transactions
-                .filter(t => t.transaction_type === 'debit')
-                .reduce((sum, t) => sum + (t.amount || 0), 0);
-            
-            const today = new Date().toDateString();
-            const todayVolume = transactions
-                .filter(t => new Date(t.transaction_date).toDateString() === today)
-                .reduce((sum, t) => sum + (t.amount || 0), 0);
+        // Format time as "X minutes ago" or "Just now"
+        function formatTimeAgo(date) {
+            const now = new Date();
+            const diff = now - date;
+            const minutes = Math.floor(diff / 60000);
 
-            document.getElementById('statTotalTx').textContent = totalTx;
-            document.getElementById('statTotalCredits').textContent = `$${totalCredits.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-            document.getElementById('statTotalDebits').textContent = `$${totalDebits.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-            document.getElementById('statTodayVolume').textContent = `$${todayVolume.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+            if (minutes < 1) {
+                return 'Just now';
+            } else if (minutes === 1) {
+                return '1 minute ago';
+            } else if (minutes < 60) {
+                return `${minutes} minutes ago`;
+            } else {
+                const hours = Math.floor(minutes / 60);
+                if (hours === 1) {
+                    return '1 hour ago';
+                } else {
+                    return `${hours} hours ago`;
+                }
+            }
         }
 
         // Toggle sidebar
@@ -862,102 +760,39 @@
             overlay.classList.toggle('show');
         }
 
-        // Logout
-        function logout() {
-            localStorage.removeItem('admin_token');
-            window.location.href = '../admin-login.html';
-        }
+        // Load dashboard stats
+        async function loadStats() {
+            try {
+                const token = localStorage.getItem('admin_token');
+                const response = await fetch(`${API_BASE}/api/admin/users?page=1&per_page=1000`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
 
-        // Toast notification function
-        function showToast(message, type = 'success') {
-            const container = document.getElementById('toastContainer');
-            if (!container) {
-                const toastContainer = document.createElement('div');
-                toastContainer.id = 'toastContainer';
-                toastContainer.className = 'toast-container';
-                document.body.appendChild(toastContainer);
+                if (response.ok) {
+                    const data = await response.json();
+                    const users = data.users;
+
+                    // Calculate stats
+                    const totalUsers = users.length;
+                    const totalBalance = users.reduce((sum, user) => sum + user.balance, 0);
+                    const blockedUsers = users.filter(u => u.status === 'blocked').length;
+                    const activeUsers = users.filter(u => u.status === 'active').length;
+
+                    document.getElementById('totalUsers').textContent = totalUsers;
+                    document.getElementById('totalBalance').textContent = '$' + totalBalance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                    document.getElementById('blockedUsers').textContent = blockedUsers;
+                    document.getElementById('activeUsers').textContent = activeUsers;
+                }
+            } catch (error) {
+                console.error('Error loading stats:', error);
             }
-            
-            const toast = document.createElement('div');
-            toast.className = `toast ${type}`;
-
-            const icon = type === 'success' ? '✓' : '✕';
-
-            toast.innerHTML = `
-                <span class="toast-icon">${icon}</span>
-                <span class="toast-message">${message}</span>
-                <button class="toast-close" onclick="this.parentElement.remove()">&times;</button>
-            `;
-
-            container.appendChild(toast);
-
-            // Auto remove after 3 seconds
-            setTimeout(() => {
-                toast.remove();
-            }, 3000);
-        }
-
-        // Render transactions
-        function renderTransactions(transactions) {
-            const container = document.getElementById('transactionsList');
-            
-            if (!transactions || transactions.length === 0) {
-                container.innerHTML = `
-                    <div class="empty-state">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <circle cx="12" cy="12" r="10"></circle>
-                            <line x1="12" y1="8" x2="12" y2="12"></line>
-                            <line x1="12" y1="16" x2="12.01" y2="16"></line>
-                        </svg>
-                        <p>No transactions found</p>
-                    </div>
-                `;
-                return;
-            }
-
-            container.innerHTML = '';
-
-            transactions.forEach(tx => {
-                const typeClass = tx.transaction_type === 'credit' ? 'credit' : 'debit';
-                const typeLabel = tx.transaction_type === 'credit' ? 'Credit' : 'Debit';
-                const amountPrefix = tx.transaction_type === 'credit' ? '+' : '-';
-                const date = new Date(tx.transaction_date).toLocaleString();
-
-                const initiatorName = tx.admin_name || tx.initiator_name || 'System';
-                const initiatorAccount = tx.admin_account_number || tx.initiator_account_number || tx.account_number || '';
-
-                const row = document.createElement('div');
-                row.className = 'table-row';
-                row.innerHTML = `
-                    <div>${tx.reference}</div>
-                    <div>${tx.user_name || 'N/A'}</div>
-                    <div><span class="type-badge ${typeClass}">${typeLabel}</span></div>
-                    <div>${amountPrefix}$${tx.amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
-                    <div>${date}</div>
-                    <div class="initiator-cell">
-                        <div class="initiator-name">${initiatorName}</div>
-                        ${initiatorAccount ? `<div class="initiator-account">${initiatorAccount}</div>` : ''}
-                    </div>
-                `;
-                container.appendChild(row);
-            });
-        }
-
-        // Search
-        function handleSearch(event) {
-            const query = event.target.value.toLowerCase();
-            const filtered = allTransactions.filter(tx => 
-                tx.reference.toLowerCase().includes(query) ||
-                (tx.user_name && tx.user_name.toLowerCase().includes(query)) ||
-                tx.transaction_type.toLowerCase().includes(query) ||
-                (tx.admin_name && tx.admin_name.toLowerCase().includes(query))
-            );
-            renderTransactions(filtered);
         }
 
         // Navigate to different pages
         function navigate(page) {
-            switch(page) {
+            switch (page) {
                 case 'dashboard':
                     window.location.href = 'admin-dashboard.html';
                     break;
@@ -983,26 +818,16 @@
             window.location.href = '../admin-login.html';
         }
 
-        // Toggle sidebar
-        function toggleSidebar() {
-            const sidebar = document.querySelector('.sidebar');
-            const overlay = document.querySelector('.sidebar-overlay');
-            sidebar.classList.toggle('open');
-            overlay.classList.toggle('show');
-        }
-
-        // Close sidebar
-        function closeSidebar() {
-            const sidebar = document.querySelector('.sidebar');
-            const overlay = document.querySelector('.sidebar-overlay');
-            sidebar.classList.remove('open');
-            overlay.classList.remove('show');
+        // Refresh data
+        function refreshData() {
+            loadStats();
         }
 
         // Initialize
         if (checkAuth()) {
-            loadTransactions();
+            loadStats();
         }
     </script>
 </body>
+
 </html>

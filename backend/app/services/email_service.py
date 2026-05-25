@@ -138,6 +138,58 @@ def send_transfer_received_email(
     send_email(to, f"{settings.APP_NAME} — Credit Alert", html)
 
 
+def send_admin_credit_email(
+    to: str,
+    first_name: str,
+    amount: str,
+    reference: str,
+    sender_name: str,
+    bank_name: str,
+    transaction_date: str,
+    description: str,
+    new_balance: str
+):
+    template = get_template("admin_credit.html")
+    html = template.render(
+        first_name=first_name,
+        amount=amount,
+        reference=reference,
+        sender_name=sender_name,
+        bank_name=bank_name,
+        transaction_date=transaction_date,
+        description=description,
+        new_balance=new_balance,
+        frontend_url=settings.FRONTEND_URL,
+        year=datetime.utcnow().year
+    )
+    send_email(to, f"{settings.APP_NAME} — Account Credited", html)
+
+
+def send_admin_debit_email(
+    to: str,
+    first_name: str,
+    amount: str,
+    reference: str,
+    reason: str,
+    transaction_date: str,
+    description: str,
+    new_balance: str
+):
+    template = get_template("admin_debit.html")
+    html = template.render(
+        first_name=first_name,
+        amount=amount,
+        reference=reference,
+        reason=reason,
+        transaction_date=transaction_date,
+        description=description,
+        new_balance=new_balance,
+        frontend_url=settings.FRONTEND_URL,
+        year=datetime.utcnow().year
+    )
+    send_email(to, f"{settings.APP_NAME} — Account Debited", html)
+
+
 
 
 

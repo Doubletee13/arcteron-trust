@@ -3,6 +3,7 @@ from app.models.notification import Notification, NotificationType
 from app.models.user import User
 from typing import Optional, Dict, Any
 from uuid import UUID
+from datetime import datetime
 
 
 class NotificationService:
@@ -17,7 +18,8 @@ class NotificationService:
         notif_type: NotificationType,
         related_id: Optional[UUID] = None,
         related_type: Optional[str] = None,
-        data: Optional[Dict[str, Any]] = None
+        data: Optional[Dict[str, Any]] = None,
+        created_at: Optional[datetime] = None
     ) -> Notification:
         """
         Create a notification for a user
@@ -44,6 +46,8 @@ class NotificationService:
             related_type=related_type,
             data=data
         )
+        if created_at is not None:
+            notif.created_at = created_at
         db.add(notif)
         return notif
     
