@@ -398,6 +398,11 @@
             color: #EF4444;
         }
 
+        .status-badge.pending {
+            background: rgba(245, 158, 11, 0.1);
+            color: #F59E0B;
+        }
+
         .role-badge {
             display: inline-block;
             padding: 4px 12px;
@@ -1679,7 +1684,7 @@
 
             users.forEach(user => {
                 const initials = `${user.first_name[0]}${user.last_name[0]}`;
-                const statusClass = user.status === 'active' ? 'active' : 'blocked';
+                const statusClass = user.status === 'active' ? 'active' : user.status === 'pending' ? 'pending' : 'blocked';
                 const roleClass = user.role === 'admin' ? 'admin' : 'user';
 
                 const row = document.createElement('div');
@@ -1726,7 +1731,14 @@
                                 </svg>
                                 Debit
                             </button>
-                            ${user.status === 'active'
+                            ${user.status === 'pending'
+                        ? `<button onclick="activateUser('${user.id}', this)" style="color:#F59E0B">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                                Activate
+                           </button>`
+                        : user.status === 'active'
                         ? `<button onclick="openBlockModal('${user.id}')">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
@@ -2234,6 +2246,31 @@
                 }
             } catch (error) {
                 showToast('Error unblocking user', 'error');
+            }
+        }
+
+        async function activateUser(userId, btn) {
+            if (btn) { btn.disabled = true; btn.textContent = 'Activating...'; }
+            const token = localStorage.getItem('admin_token');
+            try {
+                const response = await fetch(`${API_BASE}/api/admin/users/${userId}/activate`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                if (response.ok) {
+                    loadUsers();
+                    showToast('User activated successfully', 'success');
+                } else {
+                    const error = await response.json();
+                    showToast(error.detail || 'Failed to activate user', 'error');
+                    if (btn) { btn.disabled = false; btn.textContent = 'Activate'; }
+                }
+            } catch (error) {
+                showToast('Error activating user', 'error');
+                if (btn) { btn.disabled = false; btn.textContent = 'Activate'; }
             }
         }
 

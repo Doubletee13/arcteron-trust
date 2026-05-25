@@ -523,6 +523,36 @@ def unblock_user(
     
     return {"message": "User unblocked successfully"}
 
+@router.post("/users/{user_id}/activate")
+def activate_user(
+    user_id: str,
+    db: Session = Depends(get_db),
+    current_admin: User = Depends(get_current_admin)
+):
+    """Activate a pending user account"""
+    user = db.query(User).filter(User.id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    if user.status != UserStatus.pending:
+        raise HTTPException(status_code=400, detail="User is not in pending status")
+
+    user.status = UserStatus.active
+    db.commit()
+
+    from app.models.notification import NotificationType as NT
+    from app.services.notification_service import NotificationService
+    NotificationService.create_notification(
+        db,
+        user.id,
+        "Account Activated",
+        "Your account has been activated by an administrator. You can now log in and access all features.",
+        NT.system
+    )
+    db.commit()
+
+    return {"message": "User activated successfully"}
+
 
 @router.get("/transactions")
 def get_admin_transactions(

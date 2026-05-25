@@ -99,6 +99,11 @@ const Auth = {
   },
 
   redirectByRole(user) {
+    if (user.status === 'pending') {
+      Api.removeToken();
+      Utils.navigateTo('/frontend/pages/pending-activation.html');
+      return;
+    }
     if (user.role === 'superadmin') {
       Utils.navigateTo('/frontend/pages/superadmin/dashboard.html');
     } else if (user.role === 'admin') {

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Account Pending — Arcteron Trust</title>
+  <link rel="stylesheet" href="../assets/css/theme.css">
+  <script src="../assets/js/theme.js"></script>
+  <style>
+    body { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: var(--bg); }
+    .card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px; padding: 48px 40px; max-width: 480px; width: 100%; text-align: center; }
+    .logo { width: 48px; height: 48px; margin: 0 auto 16px; }
+    h1 { font-size: 24px; font-weight: 600; color: var(--text); margin-bottom: 8px; }
+    .subtitle { font-size: 13px; color: var(--text-muted); margin-bottom: 32px; }
+    .icon { width: 64px; height: 64px; background: rgba(245,158,11,0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px; }
+    .message { background: rgba(245,158,11,0.08); border: 1px solid rgba(245,158,11,0.2); border-radius: 12px; padding: 20px; margin-bottom: 32px; color: var(--text); font-size: 14px; line-height: 1.6; }
+    .btn { display: block; width: 100%; padding: 14px; border-radius: 8px; border: 1px solid var(--border); background: transparent; color: var(--text); font-size: 14px; cursor: pointer; }
+    .btn:hover { background: var(--hover); }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <svg class="logo" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="20" cy="20" r="18" stroke="currentColor" stroke-width="1.5" opacity="0.3" />
+      <path d="M20 8 L30 28 H24 L20 20 L16 28 H10 Z" fill="currentColor" opacity="0.9" />
+      <path d="M14 23 H26" stroke="currentColor" stroke-width="1.5" opacity="0.6" />
+      <circle cx="20" cy="6" r="2" fill="currentColor" opacity="0.5" />
+    </svg>
+    <h1>Arcteron Trust</h1>
+    <p class="subtitle">PRIVATE BANKING & WEALTH MANAGEMENT</p>
+    <div class="icon">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="2">
+        <circle cx="12" cy="12" r="10"></circle>
+        <polyline points="12 6 12 12 16 14"></polyline>
+      </svg>
+    </div>
+    <div class="message">
+      <strong style="color:#F59E0B;">Account Pending Activation</strong><br><br>
+      Your account has been created and your email verified. An administrator will review and activate your account shortly.<br><br>
+      You will receive a notification once your account is approved.
+    </div>
+    <button class="btn" onclick="window.location.href='login.html'">← Back to Login</button>
+  </div>
+</body>
+</html>

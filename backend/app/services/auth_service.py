@@ -42,7 +42,7 @@ def register_step1(data: RegisterStep1, db: Session) -> User:
         phone=data.phone,
         hashed_password=hash_password(data.password),
         role=UserRole.user,
-        status=UserStatus.active,
+        status=UserStatus.pending,
         is_kyc_complete=False
     )
 
@@ -136,6 +136,20 @@ def login_user(data: LoginRequest, db: Session) -> dict:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Please verify your email address before logging in. Check your inbox or request a new verification link."
+        )
+
+    # Check if account is pending admin activation
+    if user.status == UserStatus.pending:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Your account is pending admin activation. You will be notified once your account is approved."
+        )
+
+    # Check if account is blocked
+    if user.status == UserStatus.blocked:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Your account has been blocked. Please contact support."
         )
 
     # Update last login

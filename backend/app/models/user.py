@@ -17,6 +17,7 @@ class UserStatus(str, enum.Enum):
     active = "active"
     inactive = "inactive"
     blocked = "blocked"
+    pending = "pending"
 
 
 class IDType(str, enum.Enum):
