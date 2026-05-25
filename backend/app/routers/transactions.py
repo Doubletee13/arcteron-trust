@@ -3,9 +3,10 @@ from sqlalchemy.orm import Session
 from sqlalchemy import or_, and_
 from app.database import get_db
 from app.middleware.auth import get_current_active_user
-from app.models.user import User
+from app.models.user import User, UserStatus
 from app.models.account import Account
 from app.models.transaction import Transaction, TransactionType, TransactionStatus
+from app.models.admin_transaction import AdminTransaction
 from typing import Optional
 from datetime import datetime, date
 import io
@@ -44,6 +45,22 @@ def tx_to_dict(tx: Transaction, current_user_id, db: Session = None) -> dict:
                 sender_acct = db.query(Account).filter(Account.user_id == tx.sender_id).first()
                 if sender_acct:
                     display_account = sender_acct.account_number
+                    
+    # Admin transaction override
+    if getattr(tx, 'created_by_admin', False) and db:
+        admin_tx = db.query(AdminTransaction).filter(AdminTransaction.reference == tx.reference).first()
+        if admin_tx:
+            if is_credit:
+                display_name = admin_tx.sender_name or display_name
+                display_bank = admin_tx.bank_name or "Arcteron Trust"
+                import random
+                fallback_acct = getattr(admin_tx, 'account_number', None)
+                if not fallback_acct:
+                    fallback_acct = f"00{random.randint(10000000, 99999999)}"
+                display_account = fallback_acct
+            else:
+                display_name = "Arcteron Trust Admin"
+                display_bank = "Arcteron Trust"
 
     # Determine the current user's own account number for receipt display
     own_account = None
@@ -69,6 +86,7 @@ def tx_to_dict(tx: Transaction, current_user_id, db: Session = None) -> dict:
         "receiver_account_number": tx.receiver_account_number,
         "own_account_number": own_account,
         "recipient_name": display_name,
+        "sender_name": display_name,
         "recipient_bank": display_bank,
         "recipient_account": display_account,
         "recipient_swift": tx.recipient_swift,
@@ -93,7 +111,7 @@ def get_recent_transactions(
             Transaction.sender_id == current_user.id,
             Transaction.receiver_id == current_user.id
         )
-    ).order_by(Transaction.created_at.desc()).limit(20).all()
+    ).order_by(Transaction.transaction_date.desc()).limit(20).all()
     return [tx_to_dict(tx, current_user.id, db) for tx in transactions]
 
 
@@ -143,7 +161,7 @@ def get_all_transactions(
         )
 
     total = query.count()
-    transactions = query.order_by(Transaction.created_at.desc()).offset((page - 1) * per_page).limit(per_page).all()
+    transactions = query.order_by(Transaction.transaction_date.desc()).offset((page - 1) * per_page).limit(per_page).all()
 
     return {
         "total": total,
@@ -180,6 +198,13 @@ def download_receipt(
     current_user: User = Depends(get_current_active_user),
     db: Session = Depends(get_db)
 ):
+    # Check if user is blocked
+    if current_user.status == UserStatus.blocked:
+        raise HTTPException(
+            status_code=403, 
+            detail="Account blocked. Receipt download not allowed. Contact support@arcteronbank"
+        )
+    
     tx = db.query(Transaction).filter(
         Transaction.id == tx_id,
         or_(
@@ -213,6 +238,13 @@ def download_statement(
     date_to: Optional[date] = Query(None),
     theme: str = Query("light"),
 ):
+    # Check if user is blocked
+    if current_user.status == UserStatus.blocked:
+        raise HTTPException(
+            status_code=403, 
+            detail="Account blocked. Statement download not allowed. Contact support@arcteronbank"
+        )
+    
     query = db.query(Transaction).filter(
         or_(
             Transaction.sender_id == current_user.id,

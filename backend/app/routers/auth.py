@@ -28,7 +28,8 @@ from app.services.auth_service import (
     login_user,
 )
 from app.middleware.auth import get_current_user
-from app.models.user import User
+from app.models.user import User, UserRole, UserStatus
+from datetime import datetime, timedelta
 
 from app.utils.tokens import (
     generate_reset_token,
@@ -38,6 +39,7 @@ from app.utils.tokens import (
     generate_verification_token,
     verify_verification_token,
 )
+from app.utils.jwt import create_access_token
 from app.services.email_service import send_password_reset_email, send_pin_reset_email, send_verification_email
 from app.services.notification_service import NotificationService
 from app.models.notification import NotificationType
@@ -74,6 +76,48 @@ def register_step_three(user_id: str, data: RegisterStep3, db: Session = Depends
 def login(data: LoginRequest, db: Session = Depends(get_db)):
     result = login_user(data, db)
     return result
+
+
+@router.post("/admin/login", response_model=TokenResponse)
+def admin_login(data: LoginRequest, db: Session = Depends(get_db)):
+    """Admin login endpoint - skips email verification check"""
+    # Find user by email
+    user = db.query(User).filter(User.email == data.email).first()
+    
+    if not user:
+        raise HTTPException(status_code=401, detail="Invalid email or password")
+    
+    # Verify password
+    if not verify_password(data.password, user.hashed_password):
+        raise HTTPException(status_code=401, detail="Invalid email or password")
+    
+    # Check if user is admin
+    if user.role != UserRole.admin and user.role != UserRole.superadmin:
+        raise HTTPException(status_code=403, detail="Access denied. Admin privileges required.")
+    
+    # Check if user is blocked
+    if user.status == "blocked":
+        raise HTTPException(status_code=403, detail="Account is blocked. Contact support.")
+    
+    # Update last login
+    user.last_login = datetime.utcnow()
+    db.commit()
+    
+    # Create access token with admin role
+    access_token = create_access_token(data={"sub": str(user.id), "role": user.role.value})
+    
+    return {
+        "access_token": access_token,
+        "token_type": "bearer",
+        "user": user_to_response(user)
+    }
+
+
+def get_current_admin(current_user: User = Depends(get_current_user)):
+    """Dependency to verify user is admin"""
+    if current_user.role != UserRole.admin and current_user.role != UserRole.superadmin:
+        raise HTTPException(status_code=403, detail="Admin privileges required")
+    return current_user
 
 
 @router.get("/me", response_model=UserResponse)
@@ -148,10 +192,44 @@ def verify_pin_login(
 ):
     from app.utils.hashing import verify_pin
     pin = data.get("pin", "")
+    
+    # Check if PIN is locked
+    if current_user.pin_locked_until and current_user.pin_locked_until > datetime.utcnow():
+        remaining_minutes = int((current_user.pin_locked_until - datetime.utcnow()).total_seconds() / 60)
+        raise HTTPException(
+            status_code=403, 
+            detail=f"PIN locked. Try again in {remaining_minutes} minutes."
+        )
+    
     if not current_user.transaction_pin:
         raise HTTPException(status_code=400, detail="No PIN set. Please set your PIN first.")
+    
     if not verify_pin(pin, current_user.transaction_pin):
-        raise HTTPException(status_code=401, detail="Incorrect PIN.")
+        # Increment failed attempts
+        current_user.pin_failed_attempts += 1
+        remaining_attempts = 5 - current_user.pin_failed_attempts
+        
+        if current_user.pin_failed_attempts >= 5:
+            # Lock PIN for 30 minutes
+            current_user.pin_locked_until = datetime.utcnow() + timedelta(minutes=30)
+            current_user.pin_failed_attempts = 0
+            db.commit()
+            raise HTTPException(
+                status_code=403, 
+                detail="Too many incorrect PIN attempts. PIN locked for 30 minutes."
+            )
+        
+        db.commit()
+        raise HTTPException(
+            status_code=400, 
+            detail=f"Incorrect PIN. {remaining_attempts} attempts remaining."
+        )
+    
+    # Reset failed attempts on successful verification
+    current_user.pin_failed_attempts = 0
+    current_user.pin_locked_until = None
+    db.commit()
+    
     return {"message": "PIN verified", "verified": True}
 
 
@@ -202,6 +280,13 @@ def update_profile(
     db: Session = Depends(get_db)
 ):
     """Update user profile information."""
+    # Check if user is blocked
+    if current_user.status == UserStatus.blocked:
+        raise HTTPException(
+            status_code=403, 
+            detail="Account blocked. Contact support@arcteronbank"
+        )
+    
     # Update only provided fields
     if data.first_name is not None:
         current_user.first_name = data.first_name
@@ -234,6 +319,13 @@ def update_profile_photo(
     db: Session = Depends(get_db)
 ):
     """Update user profile photo."""
+    # Check if user is blocked
+    if current_user.status == UserStatus.blocked:
+        raise HTTPException(
+            status_code=403, 
+            detail="Account blocked. Contact support@arcteronbank"
+        )
+    
     # Validate base64 data
     if not data.photo_data:
         raise HTTPException(status_code=400, detail="No photo data provided")
@@ -315,3 +407,16 @@ def change_pin(
     db.commit()
 
     return {"message": "PIN changed successfully"}
+
+
+@router.get("/status")
+def get_user_status(current_user: User = Depends(get_current_user)):
+    """
+    Lightweight endpoint for the frontend to poll and detect if the current
+    user's account has been blocked mid-session.
+    """
+    return {
+        "status": current_user.status.value,
+        "user_id": str(current_user.id),
+        "blocked_reason": current_user.blocked_reason if current_user.status.value == "blocked" else None
+    }

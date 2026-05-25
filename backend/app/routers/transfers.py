@@ -2,8 +2,8 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from sqlalchemy import or_
 from app.database import get_db
-from app.middleware.auth import get_current_active_user
-from app.models.user import User
+from app.middleware.auth import get_current_user, get_current_active_user
+from app.models.user import User, UserStatus
 from app.models.account import Account
 from app.models.transaction import Transaction, TransactionType, TransactionStatus
 from app.models.notification import Notification, NotificationType
@@ -57,7 +57,7 @@ def create_notification(db, user_id, title, message, notif_type, related_id=None
 @router.post("/local")
 def local_transfer(
     data: LocalTransferRequest,
-    current_user: User = Depends(get_current_active_user),
+    current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
     # Verify PIN
@@ -65,6 +65,13 @@ def local_transfer(
         raise HTTPException(status_code=400, detail="Please set a transaction PIN before making transfers.")
     if not verify_pin(data.pin, current_user.transaction_pin):
         raise HTTPException(status_code=400, detail="Incorrect PIN. Transfer declined.")
+
+    # Check if user is blocked (after PIN verification)
+    if current_user.status == UserStatus.blocked:
+        raise HTTPException(
+            status_code=403,
+            detail="Your account has been blocked. You cannot perform a local transfer. Contact support@arcteronbank."
+        )
 
     # Get sender account
     sender_account = db.query(Account).filter(
@@ -76,6 +83,9 @@ def local_transfer(
 
     if sender_account.is_frozen:
         raise HTTPException(status_code=403, detail="Your account is frozen. Contact support.")
+
+    if sender_account.blocked_at:
+        raise HTTPException(status_code=403, detail="Transfer blocked. Contact support@arcteronbank")
 
     # Get recipient account
     recipient_account = db.query(Account).filter(
@@ -215,7 +225,7 @@ def local_transfer(
 @router.post("/international")
 def international_transfer(
     data: InternationalTransferRequest,
-    current_user: User = Depends(get_current_active_user),
+    current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
     # Verify PIN
@@ -223,6 +233,13 @@ def international_transfer(
         raise HTTPException(status_code=400, detail="Please set a transaction PIN before making transfers.")
     if not verify_pin(data.pin, current_user.transaction_pin):
         raise HTTPException(status_code=400, detail="Incorrect PIN. Transfer declined.")
+
+    # Check if user is blocked (after PIN verification)
+    if current_user.status == UserStatus.blocked:
+        raise HTTPException(
+            status_code=403,
+            detail="Your account has been blocked. You cannot perform an international transfer. Contact support@arcteronbank."
+        )
 
     # Get sender account
     sender_account = db.query(Account).filter(
@@ -234,6 +251,9 @@ def international_transfer(
 
     if sender_account.is_frozen:
         raise HTTPException(status_code=403, detail="Your account is frozen. Contact support.")
+
+    if sender_account.blocked_at:
+        raise HTTPException(status_code=403, detail="Transfer blocked. Contact support@arcteronbank")
 
     amount = Decimal(str(data.amount))
 

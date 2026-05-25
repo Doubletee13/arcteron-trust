@@ -19,6 +19,11 @@ class Account(Base):
     is_frozen = Column(Boolean, default=False)
     swift_code = Column(String(20), nullable=True, default="ARCTUSD1")
     bank_name = Column(String(100), default="Arcteron Trust")
+    
+    # --- Blocking Info ---
+    blocked_at = Column(DateTime, nullable=True)
+    blocked_reason = Column(Text, nullable=True)
+    
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 

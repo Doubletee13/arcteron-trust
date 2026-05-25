@@ -1,5 +1,5 @@
 import uuid
-from sqlalchemy import Column, String, Boolean, Enum, DateTime, Text, Date
+from sqlalchemy import Column, String, Boolean, Enum, DateTime, Text, Date, Integer
 from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.postgresql import UUID
 from datetime import datetime
@@ -98,7 +98,15 @@ class User(Base):
     status = Column(Enum(UserStatus), default=UserStatus.active, nullable=False)
     is_email_verified = Column(Boolean, default=False)
     is_kyc_complete = Column(Boolean, default=False)
-    is_id_verified = Column(Boolean, default=False)       # admin manually verifies
+    is_id_verified = Column(Boolean, default=False)
+
+    # --- PIN Security ---
+    pin_failed_attempts = Column(Integer, default=0)
+    pin_locked_until = Column(DateTime, nullable=True)       # admin manually verifies
+
+    # --- Blocking Info ---
+    blocked_at = Column(DateTime, nullable=True)
+    blocked_reason = Column(Text, nullable=True)
 
     # --- Timestamps ---
     created_at = Column(DateTime, default=datetime.utcnow)

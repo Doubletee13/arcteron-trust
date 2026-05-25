@@ -22,20 +22,27 @@ def get_current_user(
     if payload is None:
         raise credentials_exception
 
+    if isinstance(payload, dict) and payload.get("error") == "expired":
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Session expired. Please log in again.",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
     user_id: str = payload.get("sub")
     if user_id is None:
         raise credentials_exception
 
     user = db.query(User).filter(User.id == user_id).first()
     if user is None:
-        raise credentials_exception
-
-    if user.status == UserStatus.blocked:
         raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Your account has been blocked. Contact support."
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="User not found. Please log in again.",
+            headers={"WWW-Authenticate": "Bearer"},
         )
 
+    # Allow blocked users to access their profile, but they'll be blocked from transactions
+    # Transaction endpoints should check user.status separately
     return user
 
 

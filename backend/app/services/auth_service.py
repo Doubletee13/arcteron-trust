@@ -137,12 +137,6 @@ def login_user(data: LoginRequest, db: Session) -> dict:
             detail="Invalid email or password"
         )
 
-    if user.status == UserStatus.blocked:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Your account has been blocked. Contact support."
-        )
-
     # Check email verification
     if not user.is_email_verified:
         raise HTTPException(

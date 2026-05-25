@@ -4,7 +4,7 @@
  * Updated layout: OPay-style card, unified data source, Image/PDF share options
  */
 
-const ReceiptModal = (function() {
+const ReceiptModal = (function () {
     let modalElement = null;
     let isInitialized = false;
     let currentTransactionId = null;
@@ -15,7 +15,7 @@ const ReceiptModal = (function() {
      */
     function maskAccountNumber(accountNumber) {
         if (!accountNumber || accountNumber === '—') return '—';
-        const str = String(accountNumber).replace(/\D/g, ''); 
+        const str = String(accountNumber).replace(/\D/g, '');
         if (str.length <= 4) return (str.length > 0) ? '**** ' + str.padStart(4, '0') : '—';
         return '**** ' + str.slice(-4);
     }
@@ -25,7 +25,7 @@ const ReceiptModal = (function() {
      */
     function formatFullAccountNumber(accountNumber) {
         if (!accountNumber || accountNumber === '—') return '—';
-        const str = String(accountNumber).replace(/\D/g, ''); 
+        const str = String(accountNumber).replace(/\D/g, '');
         if (str.length <= 4) return str.padEnd(4, '0');
         const groups = [];
         for (let i = 0; i < str.length; i += 4) {
@@ -86,6 +86,10 @@ const ReceiptModal = (function() {
                                 <div class="rcp-row">
                                     <div class="rcp-label">Type</div>
                                     <div class="rcp-value" id="rcpType">Transfer</div>
+                                </div>
+                                <div class="rcp-row">
+                                    <div class="rcp-label">Description</div>
+                                    <div class="rcp-value" id="rcpDescription">—</div>
                                 </div>
                                 <div class="rcp-row">
                                     <div class="rcp-label">Your Account</div>
@@ -363,6 +367,10 @@ const ReceiptModal = (function() {
                 border: 1px solid var(--border-color);
                 font-weight: 500; /* Consistent with .btn-secondary */
             }
+            [data-theme="light"] .rcp-btn-secondary {
+                background: #FFFFFF;
+                color: var(--text-primary);
+            }
             .rcp-btn-secondary:hover {
                 background: var(--bg-primary); /* Consistent with .btn-secondary */
                 filter: none;
@@ -408,24 +416,25 @@ const ReceiptModal = (function() {
 
         const isCredit = data.isCredit || data.is_credit;
         const fmt = (n) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(n || 0);
-        
+
         let amt = Number(data.amount) || 0;
         const amountEl = document.getElementById('rcpAmount');
         amountEl.textContent = (isCredit ? '+' : '-') + fmt(amt);
         amountEl.className = 'rcp-amount ' + (isCredit ? 'credit' : 'debit');
-        
+
         const statusEl = document.getElementById('rcpStatus');
         const st = (data.status || 'Completed').toLowerCase();
         statusEl.textContent = st.charAt(0).toUpperCase() + st.slice(1);
         statusEl.className = 'rcp-status ' + st;
 
         document.getElementById('rcpDateTime').textContent = `${data.date || ''} · ${data.time || ''}`;
-        
+
         document.getElementById('rcpPartyLabel').textContent = isCredit ? 'Transfer From' : 'Transfer To';
         document.getElementById('rcpParty').textContent = data.party || data.recipient_name || 'External Sender';
         document.getElementById('rcpRef').textContent = data.reference || '—';
         document.getElementById('rcpBank').textContent = data.bank || data.recipient_bank || 'Arcteron Trust';
-        
+        document.getElementById('rcpDescription').textContent = data.description || '—';
+
         let typeStr = (data.type || data.transaction_type || 'Transfer');
         typeStr = typeStr.replace(/_/g, ' ');
         // Title Case
@@ -456,22 +465,23 @@ const ReceiptModal = (function() {
         if (!txId) return;
         const token = typeof Api !== 'undefined' ? Api.getToken() : localStorage.getItem('arcteronToken');
         const API_BASE = typeof Api !== 'undefined' && Api.API_BASE ? Api.API_BASE : 'http://127.0.0.1:8000';
-        
+
         try {
             const res = await fetch(`${API_BASE}/api/transactions/${txId}`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (!res.ok) throw new Error('Transaction not found');
             const tx = await res.json();
-            
+
             // Format time correctly if TimeUtils is present
             let dateStr = "—";
             let timeStr = "—";
+            let displayDate = tx.transaction_date || tx.created_at;
             if (typeof TimeUtils !== 'undefined') {
-                dateStr = TimeUtils.formatDate(tx.created_at);
-                timeStr = TimeUtils.formatTimeUTC(tx.created_at);
+                dateStr = TimeUtils.formatDate(displayDate);
+                timeStr = TimeUtils.formatTimeUTC(displayDate);
             } else {
-                const d = new Date(tx.created_at);
+                const d = new Date(displayDate);
                 dateStr = d.toLocaleDateString();
                 timeStr = d.toLocaleTimeString() + " UTC";
             }
@@ -489,7 +499,8 @@ const ReceiptModal = (function() {
                 reference: tx.reference,
                 type: tx.transaction_type,
                 recipientAccount: tx.recipient_account,
-                account: tx.own_account_number
+                account: tx.own_account_number,
+                description: tx.description || '—'
             });
 
         } catch (err) {
@@ -508,12 +519,12 @@ const ReceiptModal = (function() {
         const token = typeof Api !== 'undefined' ? Api.getToken() : localStorage.getItem('arcteronToken');
         const API_BASE = typeof Api !== 'undefined' && Api.API_BASE ? Api.API_BASE : 'http://127.0.0.1:8000';
         const theme = document.documentElement.getAttribute('data-theme') || 'dark';
-        
+
         const url = `${API_BASE}/api/transactions/${currentTransactionId}/receipt?theme=${theme}`;
-        
+
         // Show loading state on button
         const btn = document.getElementById('rcpDlBtn'); // we didn't specify ID for PDF button, lets rely on class or just ignore
-        
+
         fetch(url, { headers: { 'Authorization': `Bearer ${token}` } })
             .then(res => {
                 if (!res.ok) throw new Error('Could not download receipt');
@@ -523,7 +534,7 @@ const ReceiptModal = (function() {
                 const objUrl = URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 a.href = objUrl;
-                a.download = `Arcteron_Receipt_${currentTransactionId.substring(0,8)}.pdf`;
+                a.download = `Arcteron_Receipt_${currentTransactionId.substring(0, 8)}.pdf`;
                 document.body.appendChild(a);
                 a.click();
                 document.body.removeChild(a);
@@ -551,7 +562,7 @@ const ReceiptModal = (function() {
             await new Promise(r => setTimeout(r, 100));
 
             const canvas = await html2canvas(captureElem, {
-                scale: 2, 
+                scale: 2,
                 useCORS: true,
                 backgroundColor: null,
                 logging: false,
@@ -561,8 +572,8 @@ const ReceiptModal = (function() {
 
             // Convert to blob
             canvas.toBlob(async (blob) => {
-                const filename = `Arcteron_Receipt_${currentTransactionId ? currentTransactionId.substring(0,8) : 'export'}.png`;
-                
+                const filename = `Arcteron_Receipt_${currentTransactionId ? currentTransactionId.substring(0, 8) : 'export'}.png`;
+
                 // Try to use Web Share API
                 if (navigator.canShare && navigator.canShare({ files: [new File([blob], filename, { type: 'image/png' })] })) {
                     try {
@@ -582,7 +593,7 @@ const ReceiptModal = (function() {
                 }
                 btn.innerHTML = originalText;
             }, 'image/png');
-            
+
         } catch (err) {
             console.error('Image capture failed', err);
             alert('Failed to generate image. Please try downloading PDF instead.');
