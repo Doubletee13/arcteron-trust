@@ -24,5 +24,43 @@ services:
       - "1025:1025" # SMTP
       - "8025:8025" # Web UI
 
+  pgadmin:
+    container_name: arcteron_pgadmin_dev
+    image: dpage/pgadmin4:latest
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@arcteron.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5050:80"
+    depends_on:
+      - db
+
+  backend:
+    container_name: arcteron_backend_dev
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "8000:8000"
+    env_file:
+      - backend/.env
+    # Override the database URL inside container to use the internal docker network (db)
+    environment:
+      - DATABASE_URL=postgresql://postgres:arcteronpass123@db:5432/arcterontrust
+    depends_on:
+      - db
+
+  frontend:
+    container_name: arcteron_frontend_dev
+    image: nginx:alpine
+    restart: always
+    ports:
+      - "5501:80"
+    volumes:
+      - ./frontend:/usr/share/nginx/html/frontend
+    # Note: Volumes map the local frontend directory directly into Nginx so changes reflect instantly without rebuilding.
+
 volumes:
   arcteron_pgdata:

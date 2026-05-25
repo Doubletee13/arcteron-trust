@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal Banking — Arcteron Trust</title>
+    <meta name="description"
+        content="Checking, savings, credit cards, and more. Arcteron Trust personal banking products designed around your life in Boston, MA.">
+    <link rel="icon" type="image/svg+xml" href="/frontend/assets/images/logo.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="/frontend/assets/css/theme.css">
+    <link rel="stylesheet" href="/frontend/assets/css/style.css">
+    <link rel="stylesheet" href="/frontend/assets/css/public.css">
+    <script src="/frontend/assets/js/theme.js"></script>
+</head>
+
+<body class="public-page">
+
+    <!-- Ticker -->
+    <div class="news-ticker-bar">
+        <div class="ticker-label">
+            <div class="ticker-dot"></div>LIVE
+        </div>
+        <div class="ticker-track-wrap">
+            <div class="ticker-track" id="tickerTrack"></div>
+        </div>
+    </div>
+
+    <!-- Nav -->
+    <nav class="pub-nav">
+        <div class="nav-inner">
+            <a href="/frontend/index.html" class="nav-brand">
+                <svg class="nav-brand-logo" viewBox="0 0 40 40" fill="none">
+                    <circle cx="20" cy="20" r="18" stroke="currentColor" stroke-width="1.5" opacity="0.3" />
+                    <path d="M20 8 L30 28 H24 L20 20 L16 28 H10 Z" fill="currentColor" opacity="0.9" />
+                    <path d="M14 23 H26" stroke="currentColor" stroke-width="1.5" opacity="0.6" />
+                    <circle cx="20" cy="6" r="2" fill="currentColor" opacity="0.5" />
+                </svg>
+                <div class="nav-brand-text"><span class="nav-brand-name">Arcteron Trust</span><span
+                        class="nav-brand-sub">Private Banking</span></div>
+            </a>
+            <ul class="nav-links">
+                <li><button class="nav-link-btn active">Personal Banking <svg class="nav-chevron" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="6 9 12 15 18 9" />
+                        </svg></button>
+                    <div class="nav-dropdown"><a href="/frontend/pages/personal-banking.html">Checking Accounts</a><a
+                            href="#savings">Savings Accounts</a><a href="#credit">Credit Cards</a>
+                        <div class="nav-dropdown-divider"></div><a href="/frontend/pages/login.html">Online Banking</a>
+                    </div>
+                </li>
+                <li><button class="nav-link-btn">Business Banking <svg class="nav-chevron" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="6 9 12 15 18 9" />
+                        </svg></button>
+                    <div class="nav-dropdown"><a href="/frontend/pages/business-banking.html">Business Checking</a><a
+                            href="/frontend/pages/business-banking.html#merchant">Merchant Services</a><a
+                            href="/frontend/pages/business-banking.html#loans">Business Loans</a><a
+                            href="/frontend/pages/business-banking.html#treasury">Treasury Management</a></div>
+                </li>
+                <li><button class="nav-link-btn">Wealth Management <svg class="nav-chevron" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="6 9 12 15 18 9" />
+                        </svg></button>
+                    <div class="nav-dropdown"><a href="/frontend/pages/wealth-management.html">Investment Advisory</a><a
+                            href="/frontend/pages/wealth-management.html#retirement">Retirement Planning</a><a
+                            href="/frontend/pages/wealth-management.html#estate">Estate Planning</a><a
+                            href="/frontend/pages/wealth-management.html#trust">Trust Services</a></div>
+                </li>
+                <li><button class="nav-link-btn">Loans <svg class="nav-chevron" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2">
+                            <polyline points="6 9 12 15 18 9" />
+                        </svg></button>
+                    <div class="nav-dropdown"><a href="/frontend/pages/loans.html">Home Loans</a><a
+                            href="/frontend/pages/loans.html#auto">Auto Loans</a><a
+                            href="/frontend/pages/loans.html#personal">Personal Loans</a><a
+                            href="/frontend/pages/loans.html#student">Student Loans</a></div>
+                </li>
+                <li><button class="nav-link-btn">About Us <svg class="nav-chevron" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2">
+                            <polyline points="6 9 12 15 18 9" />
+                        </svg></button>
+                    <div class="nav-dropdown"><a href="/frontend/pages/about.html">Our Story</a><a
+                            href="/frontend/pages/about.html#leadership">Leadership</a><a
+                            href="/frontend/pages/about.html#community">Community</a><a
+                            href="/frontend/pages/about.html#careers">Careers</a></div>
+                </li>
+                <li><a href="/frontend/pages/contact.html" class="nav-link-btn">Contact</a></li>
+            </ul>
+            <div class="nav-actions">
+                <a href="/frontend/pages/login.html" class="nav-btn-signin">Sign In</a>
+                <a href="/frontend/pages/register.html" class="nav-btn-open">Open Account</a>
+                <button class="nav-theme-btn" id="themeToggle" aria-label="Toggle theme"></button>
+                <button class="nav-hamburger" id="navHamburger"><svg width="20" height="20" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="3" y1="6" x2="21" y2="6" />
+                        <line x1="3" y1="12" x2="21" y2="12" />
+                        <line x1="3" y1="18" x2="21" y2="18" />
+                    </svg></button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Drawer -->
+    <div class="mobile-drawer" id="mobileDrawer">
+        <div class="drawer-overlay"></div>
+        <div class="drawer-panel">
+            <div class="drawer-header"><span class="nav-brand-name">Arcteron Trust</span><button class="drawer-close"
+                    id="drawerClose"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18" />
+                        <line x1="6" y1="6" x2="18" y2="18" />
+                    </svg></button></div>
+            <div class="drawer-nav"><a href="/frontend/pages/personal-banking.html" class="drawer-solo-link">Checking
+                    Accounts</a><a href="#savings" class="drawer-solo-link">Savings Accounts</a><a href="#credit"
+                    class="drawer-solo-link">Credit Cards</a><a href="/frontend/pages/business-banking.html"
+                    class="drawer-solo-link">Business Banking</a><a href="/frontend/pages/wealth-management.html"
+                    class="drawer-solo-link">Wealth Management</a><a href="/frontend/pages/loans.html"
+                    class="drawer-solo-link">Loans</a><a href="/frontend/pages/about.html"
+                    class="drawer-solo-link">About Us</a><a href="/frontend/pages/contact.html"
+                    class="drawer-solo-link">Contact</a></div>
+            <div class="drawer-footer"><a href="/frontend/pages/login.html" class="nav-btn-signin">Sign In</a><a
+                    href="/frontend/pages/register.html" class="nav-btn-open">Open Account</a></div>
+        </div>
+    </div>
+
+    <!-- Page Hero -->
+    <div class="page-hero">
+        <div class="pub-container page-hero-inner">
+            <div class="page-hero-eyebrow">Personal Banking</div>
+            <h1 class="page-hero-title">Banking That Fits<br>Your Life</h1>
+            <p class="page-hero-subtitle">Zero-fee checking, high-yield savings, and competitive credit products —
+                designed for real people living real lives in Boston and beyond.</p>
+        </div>
+    </div>
+
+    <!-- Checking -->
+    <section class="pub-section" style="background:var(--bg-secondary)">
+        <div class="pub-container">
+            <div class="reveal">
+                <div class="section-eyebrow">Checking Accounts</div>
+                <h2 class="section-title">The Account that Works as Hard as You Do</h2>
+                <p class="section-subtitle">No monthly fees. No minimums. Free nationwide ATM access with every Arcteron
+                    Checking account.</p>
+            </div>
+            <div class="services-grid" style="margin-top:48px">
+                <div class="service-card reveal delay-1">
+                    <div class="service-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.75">
+                            <rect x="2" y="5" width="20" height="14" rx="2" />
+                            <line x1="2" y1="10" x2="22" y2="10" />
+                        </svg></div>
+                    <div class="service-card-title">Arcteron Essential Checking</div>
+                    <p class="service-card-desc">Perfect for everyday banking. No monthly maintenance fee. Free debit
+                        card. Real-time transaction notifications and overdraft protection.</p><a
+                        href="/frontend/pages/register.html" class="service-card-link">Open now <svg viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="5" y1="12" x2="19" y2="12" />
+                            <polyline points="12 5 19 12 12 19" />
+                        </svg></a>
+                </div>
+                <div class="service-card reveal delay-2">
+                    <div class="service-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.75">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                        </svg></div>
+                    <div class="service-card-title">Arcteron Premier Checking</div>
+                    <p class="service-card-desc">For clients who want more. Unlimited fee-free ATM reimbursements,
+                        priority customer service, travel benefits, and exclusive member rates on loans.</p><a
+                        href="/frontend/pages/register.html" class="service-card-link">Open now <svg viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="5" y1="12" x2="19" y2="12" />
+                            <polyline points="12 5 19 12 12 19" />
+                        </svg></a>
+                </div>
+                <div class="service-card reveal delay-3">
+                    <div class="service-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.75">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                            <circle cx="9" cy="7" r="4" />
+                        </svg></div>
+                    <div class="service-card-title">Arcteron Student Checking</div>
+                    <p class="service-card-desc">Built for college students. No monthly fees. Fee-free Zelle transfers.
+                        Budgeting tools and financial literacy resources built into the mobile app.</p><a
+                        href="/frontend/pages/register.html" class="service-card-link">Open now <svg viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="5" y1="12" x2="19" y2="12" />
+                            <polyline points="12 5 19 12 12 19" />
+                        </svg></a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Savings -->
+    <section id="savings" class="pub-section features-section">
+        <div class="pub-container">
+            <div class="reveal" style="text-align:center">
+                <div class="section-eyebrow" style="justify-content:center">Savings & CDs</div>
+                <h2 class="section-title" style="text-align:center">Make Your Money Work Harder</h2>
+                <p class="section-subtitle" style="margin:14px auto 0;text-align:center">Competitive rates that keep
+                    pace with the market — and your ambitions.</p>
+            </div>
+            <div class="features-grid" style="margin-top:48px">
+                <div class="feature-item reveal delay-1">
+                    <div class="feature-icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.75">
+                            <line x1="12" y1="1" x2="12" y2="23" />
+                            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+                        </svg></div>
+                    <h3>High-Yield Savings</h3>
+                    <p>Earn up to 5.10% APY — 10x the national average. FDIC insured. No minimum balance required.
+                        Automatic transfers to help you save effortlessly.</p>
+                </div>
+                <div class="feature-item reveal delay-2">
+                    <div class="feature-icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.75">
+                            <rect x="3" y="4" width="18" height="18" rx="2" />
+                            <line x1="16" y1="2" x2="16" y2="6" />
+                            <line x1="8" y1="2" x2="8" y2="6" />
+                            <line x1="3" y1="10" x2="21" y2="10" />
+                        </svg></div>
+                    <h3>Certificates of Deposit</h3>
+                    <p>Lock in a guaranteed rate for 3, 6, 12, 24, or 60-month terms. Rates up to 5.25% APY. Ideal for
+                        medium-term savings goals and risk-averse investors.</p>
+                </div>
+                <div class="feature-item reveal delay-3">
+                    <div class="feature-icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.75">
+                            <path
+                                d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+                        </svg></div>
+                    <h3>Money Market Account</h3>
+                    <p>The flexibility of a checking account with savings-level yields. Earn 4.85% APY with
+                        check-writing privileges, debit card access, and five free monthly transfers.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Credit -->
+    <section id="credit" class="pub-section" style="background:var(--bg-secondary)">
+        <div class="pub-container">
+            <div class="reveal">
+                <div class="section-eyebrow">Credit Cards</div>
+                <h2 class="section-title">Credit Cards with Real Rewards</h2>
+                <p class="section-subtitle">No annual fee options, cashback on everyday purchases, and industry-low APRs
+                    for Arcteron members.</p>
+            </div>
+            <div class="services-grid" style="margin-top:48px">
+                <div class="service-card reveal delay-1">
+                    <div class="service-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.75">
+                            <rect x="1" y="4" width="22" height="16" rx="2" ry="2" />
+                            <line x1="1" y1="10" x2="23" y2="10" />
+                        </svg></div>
+                    <div class="service-card-title">Arcteron Cashback Card</div>
+                    <p class="service-card-desc">Earn 2% cashback on all purchases. No annual fee. No foreign
+                        transaction fees. Zero liability fraud protection. Credit limits up to $25,000.</p><a
+                        href="/frontend/pages/register.html" class="service-card-link">Apply now <svg
+                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="5" y1="12" x2="19" y2="12" />
+                            <polyline points="12 5 19 12 12 19" />
+                        </svg></a>
+                </div>
+                <div class="service-card reveal delay-2">
+                    <div class="service-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.75">
+                            <path d="M12 2L2 7l10 5 10-5-10-5z" />
+                            <path d="M2 17l10 5 10-5" />
+                            <path d="M2 12l10 5 10-5" />
+                        </svg></div>
+                    <div class="service-card-title">Arcteron Rewards Platinum</div>
+                    <p class="service-card-desc">3x points on dining and travel. 2x on groceries and gas. Annual travel
+                        credit of $200. Access to 1,300+ airport lounges. 15.99% introductory APR.</p><a
+                        href="/frontend/pages/register.html" class="service-card-link">Apply now <svg
+                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="5" y1="12" x2="19" y2="12" />
+                            <polyline points="12 5 19 12 12 19" />
+                        </svg></a>
+                </div>
+                <div class="service-card reveal delay-3">
+                    <div class="service-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.75">
+                            <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
+                        </svg></div>
+                    <div class="service-card-title">Arcteron Student Credit</div>
+                    <p class="service-card-desc">Build credit responsibly. 1.5% cashback. No annual fee. Credit-builder
+                        tools and free monthly FICO score. Designed for students with limited credit history.</p><a
+                        href="/frontend/pages/register.html" class="service-card-link">Apply now <svg
+                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="5" y1="12" x2="19" y2="12" />
+                            <polyline points="12 5 19 12 12 19" />
+                        </svg></a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="pub-section cta-section">
+        <div class="pub-container">
+            <div class="cta-inner reveal-scale">
+                <div class="cta-eyebrow">Get Started</div>
+                <h2 class="cta-title">Open Your Account in Minutes</h2>
+                <p class="cta-subtitle">No branch visit needed. Apply online, get approved instantly, and start banking
+                    with Arcteron today.</p>
+                <div class="cta-actions"><a href="/frontend/pages/register.html" class="cta-btn-white">Open an
+                        Account</a><a href="/frontend/pages/contact.html" class="cta-btn-outline">Talk to Someone</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="pub-footer">
+        <div class="pub-container">
+            <div class="footer-grid">
+                <div>
+                    <div class="footer-brand-logo"><svg viewBox="0 0 40 40" fill="none">
+                            <circle cx="20" cy="20" r="18" stroke="currentColor" stroke-width="1.5" opacity="0.3" />
+                            <path d="M20 8 L30 28 H24 L20 20 L16 28 H10 Z" fill="currentColor" opacity="0.9" />
+                            <path d="M14 23 H26" stroke="currentColor" stroke-width="1.5" opacity="0.6" />
+                        </svg><span class="footer-brand-name">Arcteron Trust</span></div>
+                    <p class="footer-brand-desc">Private banking and wealth management in Boston, MA since 2004.</p>
+                    <address class="footer-address" style="font-style:normal">100 Federal Street, Suite 2500<br>Boston,
+                        MA 02110<br>(617) 555-0200</address>
+                    <div class="footer-fdic">
+                        <div class="footer-fdic-dot"></div><span>FDIC Insured · Member FDIC</span>
+                    </div>
+                </div>
+                <div>
+                    <div class="footer-col-title">Personal</div>
+                    <ul class="footer-links">
+                        <li><a href="/frontend/pages/personal-banking.html">Checking Accounts</a></li>
+                        <li><a href="#savings">Savings & CDs</a></li>
+                        <li><a href="#credit">Credit Cards</a></li>
+                        <li><a href="/frontend/pages/loans.html">Home Loans</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <div class="footer-col-title">Other Services</div>
+                    <ul class="footer-links">
+                        <li><a href="/frontend/pages/business-banking.html">Business Banking</a></li>
+                        <li><a href="/frontend/pages/wealth-management.html">Wealth Management</a></li>
+                        <li><a href="/frontend/pages/loans.html">Loans</a></li>
+                        <li><a href="/frontend/pages/contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <div class="footer-col-title">Legal</div>
+                    <ul class="footer-links">
+                        <li><a href="/frontend/pages/terms.html">Terms of Service</a></li>
+                        <li><a href="/frontend/pages/privacy.html">Privacy Policy</a></li>
+                        <li><a href="/frontend/pages/about.html">About Us</a></li>
+                        <li><a href="/frontend/pages/about.html#careers">Careers</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p class="footer-copy">© <span class="current-year">2025</span> Arcteron Trust. All rights reserved. FDIC insured up to $250,000.</p>
+                <div class="footer-legal-links"><a href="/frontend/pages/terms.html">Terms</a><a
+                        href="/frontend/pages/privacy.html">Privacy</a></div>
+            </div>
+        </div>
+    </footer>
+
+    <button class="back-to-top" id="backToTop"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2">
+            <polyline points="18 15 12 9 6 15" />
+        </svg></button>
+    <script src="/frontend/assets/js/public.js"></script>
+</body>
+
+</html>

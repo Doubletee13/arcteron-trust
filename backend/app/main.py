@@ -8,6 +8,7 @@ from app.routers import transactions
 from app.routers import notifications
 from app.routers import transfers
 from app.routers import admin
+from app.routers import cards
 
 app = FastAPI(
     title=settings.APP_NAME,
@@ -36,6 +37,7 @@ app.include_router(transactions.router)
 app.include_router(notifications.router)
 app.include_router(transfers.router)
 app.include_router(admin.router)
+app.include_router(cards.router, prefix="/api/cards", tags=["cards"])
 
 @app.get("/")
 def root():

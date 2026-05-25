@@ -1,4 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
+import base64
+import os
+import httpx
 from sqlalchemy.orm import Session
 from app.database import get_db
 from app.schemas.user import (
@@ -330,21 +333,53 @@ def update_profile_photo(
     if not data.photo_data:
         raise HTTPException(status_code=400, detail="No photo data provided")
 
-    # Basic validation for base64 image
     if not data.photo_data.startswith('data:image/'):
         raise HTTPException(status_code=400, detail="Invalid image format")
 
-    # In a production environment, you would:
-    # 1. Decode the base64 data
-    # 2. Validate the image
-    # 3. Upload to cloud storage (S3, etc.)
-    # 4. Store the URL in the database
-    # For now, we'll store the base64 data directly (not recommended for production)
-    current_user.profile_photo = data.photo_data
+    try:
+        # 1. Decode the base64 data to raw byte blocks
+        header, encoded = data.photo_data.split(",", 1)
+        mime_type = header.split(";")[0].replace("data:", "")
+        ext = "jpg" if "jpeg" in mime_type else mime_type.split("/")[1]
+        
+        file_bytes = base64.b64decode(encoded)
+        
+        supabase_url = os.environ.get("SUPABASE_URL")
+        supabase_key = os.environ.get("SUPABASE_KEY")
+        
+        if supabase_url and supabase_key:
+            # 2. Upload to Supabase Storage 'avatars' Bucket via REST API
+            filename = f"user_{current_user.id}.{ext}"
+            upload_url = f"{supabase_url}/storage/v1/object/avatars/{filename}"
+            
+            headers = {
+                "Authorization": f"Bearer {supabase_key}",
+                "Content-Type": mime_type,
+                "x-upsert": "true"
+            }
+            
+            # Send file synchronously
+            with httpx.Client() as client:
+                res = client.post(upload_url, headers=headers, content=file_bytes)
+                if res.status_code not in (200, 201):
+                    raise HTTPException(status_code=500, detail=f"Storage upload failed: {res.text}")
+            
+            # 3. Store the clean short public URL in PostgreSQL instead of full file data
+            public_url = f"{supabase_url}/storage/v1/object/public/avatars/{filename}"
+            current_user.profile_photo = public_url
+        else:
+            # Failsafe if Supabase variables aren't configured yet so database doesn't crash on long Base64 string bounds
+            if len(data.photo_data) > 255:
+                current_user.profile_photo = f"https://ui-avatars.com/api/?name={current_user.first_name}+{current_user.last_name}"
+            else:
+                current_user.profile_photo = data.photo_data
 
-    db.commit()
-    db.refresh(current_user)
-    return user_to_response(current_user)
+        db.commit()
+        db.refresh(current_user)
+        return user_to_response(current_user)
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Photo processing failed: {str(e)}")
 
 
 @router.post("/change-password")

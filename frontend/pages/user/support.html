@@ -1401,7 +1401,7 @@
 
       <nav class="sidebar-nav">
         <div class="nav-section-label">Main</div>
-        <a class="nav-item active" href="dashboard.html" onclick="nav(event,'dashboard.html')">
+        <a class="nav-item" href="dashboard.html" onclick="nav(event,'dashboard.html')">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
             stroke-linejoin="round">
             <rect x="3" y="3" width="7" height="7" />
@@ -1466,7 +1466,7 @@
           Profile
         </a>
 
-        <a class="nav-item" href="support.html" onclick="nav(event,'support.html')">
+        <a class="nav-item active" href="support.html" onclick="nav(event,'support.html')">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
           </svg>
@@ -1508,7 +1508,7 @@
               <line x1="3" y1="18" x2="21" y2="18" />
             </svg>
           </button>
-          <span class="topbar-title">Dashboard</span>
+          <span class="topbar-title">Customer Support</span>
         </div>
         <div class="topbar-right">
           <button class="icon-btn" onclick="Theme.toggle()">
@@ -1531,259 +1531,100 @@
         </div>
       </header>
 
-      <main class="page-content">
+      <main class="page-content" style="max-width: 860px; margin: 0 auto;">
+  <style>
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+    .form-z { position: relative; z-index: 5; }
+    @media (max-width: 768px) {
+      .form-grid { grid-template-columns: 1fr; gap: 16px; }
+      .responsive-pad { padding: 24px !important; }
+    }
+  </style>
+  <div class="greeting-row" style="margin-bottom:30px; border-bottom:1px solid rgba(255,255,255,0.08); padding-bottom:24px;">
+    <div class="greeting-text">
+      <h2 style="font-size:28px; margin-bottom:10px;">Customer Support Center</h2>
+      <p style="font-size:14px; color:var(--text-secondary); line-height:1.6;">Welcome to Arcteron Trust's secure messaging portal. Our dedicated support representatives and private wealth advisors review inquiries 24/7. Standard inquiries typically receive a response within 4 hours, whereas high-priority flags related to card loss or account disputes are placed into an immediate queue. Please select your topic below to help us route your message accurately.</p>
+    </div>
+  </div>
 
-        <!-- Blocked Account Banner -->
-        <div id="blockedBanner" class="blocked-banner" style="display: none;">
-          <div class="blocked-banner-content">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="12" cy="12" r="10"></circle>
-              <line x1="15" y1="9" x2="9" y2="15"></line>
-              <line x1="9" y1="9" x2="15" y2="15"></line>
-            </svg>
-            <div>
-              <h3>Account Blocked</h3>
-              <p>Your account has been blocked. Contact <strong>support@arcterontrustbank.com</strong> for assistance.</p>
-            </div>
-          </div>
+  <div class="balance-card responsive-pad" style="padding: 40px;">
+    <form id="supportForm" class="form-z" style="display:flex; flex-direction:column; gap:24px;" onsubmit="event.preventDefault(); submitSupport();">
+      <div class="form-grid">
+        <div style="display:flex; flex-direction:column; gap:8px;">
+          <label style="font-size:13px; color:var(--text-secondary); font-weight:600;">Message Topic</label>
+          <select id="supportTopic" style="padding:14px; border-radius:10px; border:1px solid rgba(255,255,255,0.1); background:rgba(255,255,255,0.02); color:var(--text-primary); font-family:inherit; outline:none;" required>
+            <option value="" disabled selected style="color:#000">Choose a topic...</option>
+            <option value="General Inquiry" style="color:#000">General Inquiry</option>
+            <option value="Transaction Dispute" style="color:#000">Transaction Dispute</option>
+            <option value="Card Issue" style="color:#000">Card Replacement / Issues</option>
+            <option value="Account Settings" style="color:#000">Account Configuration</option>
+            <option value="Wealth Management" style="color:#000">Wealth Management Advisor</option>
+          </select>
         </div>
-
-        <!-- Greeting -->
-        <div class="greeting-row">
-          <div class="greeting-avatar" id="greetingAvatar">—</div>
-          <div class="greeting-text">
-            <h2 id="greetingText">Good morning.</h2>
-            <p id="greetingSub">Here's your financial overview for today.</p>
-          </div>
+        <div style="display:flex; flex-direction:column; gap:8px;">
+          <label style="font-size:13px; color:var(--text-secondary); font-weight:600;">Priority Level</label>
+          <select id="supportPriority" style="padding:14px; border-radius:10px; border:1px solid rgba(255,255,255,0.1); background:rgba(255,255,255,0.02); color:var(--text-primary); font-family:inherit; outline:none;" required>
+            <option value="Standard" style="color:#000">Standard Priority</option>
+            <option value="High" style="color:#000">High Priority (Urgent)</option>
+          </select>
         </div>
-
-        <!-- Balance card -->
-        <div class="balance-card">
-          <div class="balance-card-top">
-            <div class="balance-left">
-              <div class="balance-label-row">
-                <div class="balance-label">Available Balance</div>
-                <button class="privacy-btn" id="privacyBtn" onclick="togglePrivacy()" title="Toggle visibility">
-                  <svg id="privacyIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                    <circle cx="12" cy="12" r="3" />
-                  </svg>
-                </button>
-              </div>
-              <div class="balance-amount" id="balanceAmount">$0.00 <span class="balance-currency">USD</span></div>
-            </div>
-            <div class="balance-right">
-              <div class="balance-clock" id="liveClock">00:00:00</div>
-              <div class="account-badge">
-                <div class="acc-label">Account No.</div>
-                <div class="acc-number" id="accountNumber">**** ****</div>
-              </div>
-            </div>
-          </div>
-          <div class="balance-card-bottom">
-            <div class="balance-meta">
-              <div>
-                <div class="meta-label">Routing No.</div>
-                <div class="meta-value" id="routingNumber">021000021</div>
-              </div>
-              <div>
-                <div class="meta-label">Account Type</div>
-                <div class="meta-value">Checking</div>
-              </div>
-              <div>
-                <div class="meta-label">Swift Code</div>
-                <div class="meta-value">ARCTUSD1</div>
-              </div>
-            </div>
-            <div class="balance-actions">
-              <button class="bal-btn" onclick="nav(event,'transfer.html')">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                  stroke-linejoin="round">
-                  <line x1="22" y1="2" x2="11" y2="13" />
-                  <polygon points="22 2 15 22 11 13 2 9 22 2" />
-                </svg>
-                Send Money
-              </button>
-              <button class="bal-btn" onclick="downloadStatement()">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                  stroke-linejoin="round">
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                  <polyline points="7 10 12 15 17 10" />
-                  <line x1="12" y1="15" x2="12" y2="3" />
-                </svg>
-                Statement
-              </button>
-            </div>
-          </div>
+      </div>
+      
+      <div style="display:flex; flex-direction:column; gap:8px;">
+        <label style="font-size:13px; color:var(--text-secondary); font-weight:600;">Message Body</label>
+        <textarea id="supportMessage" rows="8" style="padding:14px; border-radius:10px; border:1px solid rgba(255,255,255,0.1); background:rgba(255,255,255,0.02); color:var(--text-primary); font-family:inherit; resize:vertical; outline:none;" placeholder="Please provide specific details regarding your inquiry..." required></textarea>
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-top:6px; flex-wrap: wrap; gap: 8px;">
+          <p style="font-size:12px; color:rgba(239, 68, 68, 0.8); margin:0;">⚠️ Never share your full account number or password.</p>
+          <p style="font-size:12px; color:var(--text-secondary); margin:0;">Directs to: support@arcterontrustbank.com</p>
         </div>
+      </div>
 
-        <!-- ATM Card -->
-        <div class="atm-section">
-          <div class="section-header">
-            <div class="section-title">My Card</div>
-            <button class="section-link" id="cardRequestBtn" onclick="requestCard()">Request Card</button>
-          </div>
+      <button type="submit" class="bal-btn" style="background:#ffffff; color:#000; justify-content:center; padding:16px; margin-top:12px; font-size:15px; border:none; transition: opacity 0.2s;">Securely Send Message</button>
+    </form>
+  </div>
 
-          <div class="atm-card-scene" id="atmCardScene" onclick="flipCard()">
-            <div class="atm-card-inner">
-              <div class="atm-card-front generic" id="cardFront">
-                <div class="card-front-content">
-                  <div class="card-top-row">
-                    <div class="card-bank-name">Arcteron Trust</div>
-                    <div class="card-network">
-                      <div class="card-circle-1"></div>
-                      <div class="card-circle-2"></div>
-                    </div>
-                  </div>
-                  <div id="cardMiddle">
-                    <div class="card-no-card">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none"
-                        stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                        <rect x="2" y="5" width="20" height="14" rx="2" />
-                        <line x1="2" y1="10" x2="22" y2="10" />
-                      </svg>
-                      <p>No card issued yet.<br>Request a card to get started.</p>
-                    </div>
-                  </div>
-                  <div id="cardBottomRow" style="display:none">
-                    <div class="card-number" id="cardNumber">**** **** **** ****</div>
-                    <div class="card-bottom-row" style="margin-top:6px;">
-                      <div>
-                        <div class="card-holder-label">Card Holder</div>
-                        <div class="card-holder-name" id="cardHolderName">— — —</div>
-                      </div>
-                      <div>
-                        <div class="card-expiry-label">Expires</div>
-                        <div class="card-expiry" id="cardExpiry">MM/YY</div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+  <script>
+    function submitSupport() {
+      const btn = document.querySelector('button[type="submit"]');
+      const originalText = btn.textContent;
+      
+      btn.textContent = 'Sending...';
+      btn.style.opacity = '0.7';
+      btn.disabled = true;
 
-              <div class="atm-card-back generic">
-                <div class="card-back-content">
-                  <div class="card-stripe"></div>
-                  <div class="card-cvv-row">
-                    <div class="card-cvv-label">CVV</div>
-                    <div class="card-cvv-box" id="cardCvv">•••</div>
-                  </div>
-                  <div class="card-back-bank">Arcteron Trust — Private Banking</div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="card-flip-hint" id="cardFlipHint">
-            <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none"
-              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <polyline points="1 4 1 10 7 10" />
-              <path d="M3.51 15a9 9 0 1 0 .49-4" />
-            </svg>
-            Tap card to flip
-          </div>
-        </div>
-
-        <!-- Quick actions -->
-        <div class="quick-actions">
-          <a class="quick-action-card" href="transfer.html" onclick="nav(event,'transfer.html')">
-            <div class="qa-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                stroke-linecap="round" stroke-linejoin="round">
-                <line x1="22" y1="2" x2="11" y2="13" />
-                <polygon points="22 2 15 22 11 13 2 9 22 2" />
-              </svg></div>
-            <div class="qa-label">Local Transfer</div>
-          </a>
-          <a class="quick-action-card" href="transfer.html?type=international"
-            onclick="nav(event,'transfer.html?type=international')">
-            <div class="qa-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="12" cy="12" r="10" />
-                <line x1="2" y1="12" x2="22" y2="12" />
-                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
-              </svg></div>
-            <div class="qa-label">International</div>
-          </a>
-          <a class="quick-action-card" href="transactions.html" onclick="nav(event,'transactions.html')">
-            <div class="qa-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                stroke-linecap="round" stroke-linejoin="round">
-                <line x1="8" y1="6" x2="21" y2="6" />
-                <line x1="8" y1="12" x2="21" y2="12" />
-                <line x1="8" y1="18" x2="21" y2="18" />
-                <line x1="3" y1="6" x2="3.01" y2="6" />
-                <line x1="3" y1="12" x2="3.01" y2="12" />
-                <line x1="3" y1="18" x2="3.01" y2="18" />
-              </svg></div>
-            <div class="qa-label">History</div>
-          </a>
-          <a class="quick-action-card" href="profile.html" onclick="nav(event,'profile.html')">
-            <div class="qa-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                stroke-linecap="round" stroke-linejoin="round">
-                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                <circle cx="12" cy="7" r="4" />
-              </svg></div>
-            <div class="qa-label">Profile</div>
-          </a>
-        </div>
-
-        <!-- Stats -->
-        <div class="stats-row">
-          <div class="stat-card">
-            <div class="stat-card-label">
-              <div class="stat-dot" style="background:#10B981"></div>Money In
-            </div>
-            <div class="stat-card-value" id="statCredit">$0.00</div>
-            <div class="stat-card-sub">Total credited this month</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-card-label">
-              <div class="stat-dot" style="background:#EF4444"></div>Money Out
-            </div>
-            <div class="stat-card-value" id="statDebit">$0.00</div>
-            <div class="stat-card-sub">Total debited this month</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-card-label">
-              <div class="stat-dot" style="background:#3B82F6"></div>Transactions
-            </div>
-            <div class="stat-card-value" id="statCount">0</div>
-            <div class="stat-card-sub">Total this month</div>
-          </div>
-        </div>
-
-        <!-- Recent Transactions -->
-        <div class="section-header">
-          <div class="section-title">Recent Transactions</div>
-          <a class="section-link" href="transactions.html" onclick="nav(event,'transactions.html')">View all →</a>
-        </div>
-
-        <div class="transactions-card" id="txContainer">
-          <div class="tx-item">
-            <div class="skeleton" style="width:34px;height:34px;border-radius:9px;flex-shrink:0"></div>
-            <div style="flex:1">
-              <div class="skeleton" style="height:12px;width:55%;margin-bottom:7px"></div>
-              <div class="skeleton" style="height:10px;width:30%"></div>
-            </div>
-            <div>
-              <div class="skeleton" style="height:12px;width:60px;margin-bottom:7px;margin-left:auto"></div>
-              <div class="skeleton" style="height:10px;width:40px;margin-left:auto"></div>
-            </div>
-          </div>
-          <div class="tx-item">
-            <div class="skeleton" style="width:34px;height:34px;border-radius:9px;flex-shrink:0"></div>
-            <div style="flex:1">
-              <div class="skeleton" style="height:12px;width:45%;margin-bottom:7px"></div>
-              <div class="skeleton" style="height:10px;width:25%"></div>
-            </div>
-            <div>
-              <div class="skeleton" style="height:12px;width:55px;margin-bottom:7px;margin-left:auto"></div>
-              <div class="skeleton" style="height:10px;width:40px;margin-left:auto"></div>
-            </div>
-          </div>
-        </div>
-
-      </main>
+      setTimeout(() => {
+        if(window.Utils && window.Utils.showToast) {
+          window.Utils.showToast('Message submitted securely to support.', 'success');
+        }
+        
+        btn.textContent = '✓ Successfully Delivered';
+        btn.style.background = '#10B981';
+        btn.style.color = '#ffffff';
+        btn.style.opacity = '1';
+        
+        setTimeout(() => {
+            document.getElementById('supportForm').reset();
+            btn.textContent = originalText;
+            btn.style.background = '#ffffff';
+            btn.style.color = '#000000';
+            btn.disabled = false;
+        }, 2500);
+        
+      }, 1500);
+    }
+    
+    document.addEventListener('DOMContentLoaded', () => {
+      const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+      document.querySelectorAll('input, select, textarea').forEach(el => {
+         if(!isDark) {
+            el.style.background = '#ffffff';
+            el.style.border = '1px solid #e5e7eb';
+            el.style.color = '#111827';
+         }
+      });
+    });
+  </script>
+</main>
     </div>
   </div>
 
@@ -1844,65 +1685,9 @@
       document.getElementById('atmCardScene').classList.toggle('flipped');
     }
 
-    async function requestCard() {
-      const btn = document.getElementById('cardRequestBtn');
-      if (btn) btn.textContent = 'Requesting...';
-      try {
-        const res = await Api.post('/api/cards/request', {}, true);
-        if (res && res.ok) {
-           Utils.showToast('Card successfully issued!', 'success');
-           await loadCard(); // reload card to update visual
-        } else {
-           Utils.showToast(res.data?.detail || 'Failed to request card', 'error');
-           if (btn) btn.textContent = 'Request Card';
-        }
-      } catch (err) {
-        Utils.showToast('Error requesting card', 'error');
-        if (btn) btn.textContent = 'Request Card';
-      }
+    function requestCard() {
+      alert('Card request submitted. Your Arcteron Trust card will be issued within 5–7 business days.');
     }
-    
-    async function loadCard() {
-      try {
-         const res = await Api.get('/api/cards/me', true);
-         const cDetails = document.getElementById('cardDetailsText');
-         const cReqBtn = document.getElementById('cardRequestBtn');
-         const front = document.querySelector('.atm-card-front');
-         const back = document.querySelector('.atm-card-back');
-         
-         const cNum = document.querySelector('.card-number');
-         const cExp = document.querySelector('.card-expiry');
-         const cName = document.querySelector('.card-holder-name');
-         const cCvv = document.querySelector('.card-cvv-box');
-         const cStatus = document.getElementById('cardStatusBadge'); // if we want to add one someday, wait dashboard doesn't have it explicitly.
-         
-         if (res && res.ok && res.data) {
-            // Card exists
-            cardIssued = true;
-            if (cDetails) cDetails.innerHTML = 'Physical Card<br><span style="font-size:12px;opacity:0.6">Active • Expected Delivery: 2 Days</span>';
-            if (cReqBtn) cReqBtn.style.display = 'none';
-            if (front) front.classList.remove('generic');
-            if (back) back.classList.remove('generic');
-            
-            const cmid = document.getElementById('cardMiddle');
-            if(cmid) cmid.style.display = 'none';
-            const cbot = document.getElementById('cardBottomRow');
-            if(cbot) cbot.style.display = 'block';
-
-            
-            if (cNum) cNum.textContent = res.data.card_number;
-            if (cExp) cExp.textContent = res.data.expiry_date;
-            if (cName) cName.textContent = res.data.card_holder_name;
-            if (cCvv) cCvv.textContent = res.data.cvv;
-         } else {
-            // No card
-            cardIssued = false;
-         }
-      } catch (e) {
-         console.error('Card fetch error', e);
-      }
-    }
-
     // Auto-close sidebar and clear overlay when resizing back to desktop
     window.addEventListener('resize', function () {
       if (window.innerWidth > 900) closeSidebar();
@@ -2071,7 +1856,7 @@
           }
         }
 
-        loadTransactions(); await loadCard();
+        loadTransactions();
       }
 
       async function loadTransactions() {

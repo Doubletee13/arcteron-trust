@@ -6,3 +6,4 @@ from app.models.audit_log import AuditLog
 from app.models.code import TransactionCode, CodeType
 from app.models.admin_transaction import AdminTransaction, AdminTransactionType, AdminTransferType
 from app.models.cot_code import COTCode, CodeType as COTCodeType
+from app.models.card import Card
