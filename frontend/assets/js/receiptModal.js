@@ -464,7 +464,7 @@ const ReceiptModal = (function () {
     async function openById(txId) {
         if (!txId) return;
         const token = typeof Api !== 'undefined' ? Api.getToken() : localStorage.getItem('arcteronToken');
-        const API_BASE = typeof Api !== 'undefined' && Api.API_BASE ? Api.API_BASE : 'http://127.0.0.1:8000';
+        const API_BASE = typeof Api !== 'undefined' && Api.API_BASE ? Api.API_BASE : 'https://arcteron-trust.onrender.com';
 
         try {
             const res = await fetch(`${API_BASE}/api/transactions/${txId}`, {
@@ -517,7 +517,7 @@ const ReceiptModal = (function () {
     function downloadReceipt() {
         if (!currentTransactionId) return;
         const token = typeof Api !== 'undefined' ? Api.getToken() : localStorage.getItem('arcteronToken');
-        const API_BASE = typeof Api !== 'undefined' && Api.API_BASE ? Api.API_BASE : 'http://127.0.0.1:8000';
+        const API_BASE = typeof Api !== 'undefined' && Api.API_BASE ? Api.API_BASE : 'https://arcteron-trust.onrender.com';
         const theme = document.documentElement.getAttribute('data-theme') || 'dark';
 
         const url = `${API_BASE}/api/transactions/${currentTransactionId}/receipt?theme=${theme}`;
