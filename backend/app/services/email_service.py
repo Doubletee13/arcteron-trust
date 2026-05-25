@@ -1,5 +1,5 @@
-import emails
-from emails.template import JinjaTemplate
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import Mail
 from jinja2 import Environment, FileSystemLoader
 from pathlib import Path
 from datetime import datetime
@@ -15,25 +15,15 @@ def get_template(filename: str) -> str:
 
 
 def send_email(to: str, subject: str, html_content: str):
-    message = emails.Message(
+    sg = SendGridAPIClient(api_key=settings.MAIL_PASSWORD)
+    message = Mail(
+        from_email=(settings.MAIL_FROM, settings.APP_NAME),
+        to_emails=to,
         subject=subject,
-        html=html_content,
-        mail_from=(settings.APP_NAME, settings.MAIL_FROM)
+        html_content=html_content
     )
-
-    response = message.send(
-        to=to,
-        smtp={
-            "host": settings.MAIL_SERVER,
-            "port": settings.MAIL_PORT,
-            "tls": True,
-            "user": settings.MAIL_USERNAME,
-            "password": settings.MAIL_PASSWORD,
-        }
-    )
-    print(f"EMAIL TO: {to} | STATUS: {response.status_code} | ERROR: {response.error}")
-    if response.status_code not in (250, None):
-        raise Exception(f"Email failed with status {response.status_code}: {response.error}")
+    response = sg.send(message)
+    print(f"EMAIL TO: {to} | STATUS: {response.status_code} | BODY: {response.body}")
     return response
 
 

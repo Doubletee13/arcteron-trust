@@ -8,7 +8,7 @@ pydantic-settings
 passlib[bcrypt]
 python-jose[cryptography]
 python-multipart
-emails
+sendgrid
 jinja2
 reportlab==3.6.12
 pillow
