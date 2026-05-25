@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loans & Lending — Arcteron Trust</title>
+    <meta name="description"
+        content="Home loans, auto loans, personal loans, and student loans from Arcteron Trust. Competitive rates in Boston, MA.">
+    <link rel="icon" type="image/svg+xml" href="/frontend/assets/images/logo.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="/frontend/assets/css/theme.css">
+    <link rel="stylesheet" href="/frontend/assets/css/style.css">
+    <link rel="stylesheet" href="/frontend/assets/css/public.css">
+    <script src="/frontend/assets/js/theme.js"></script>
+</head>
+
+<body class="public-page">
+    <div class="news-ticker-bar">
+        <div class="ticker-label">
+            <div class="ticker-dot"></div>LIVE
+        </div>
+        <div class="ticker-track-wrap">
+            <div class="ticker-track" id="tickerTrack"></div>
+        </div>
+    </div>
+    <nav class="pub-nav">
+        <div class="nav-inner">
+            <a href="/frontend/index.html" class="nav-brand"><svg class="nav-brand-logo" viewBox="0 0 40 40"
+                    fill="none">
+                    <circle cx="20" cy="20" r="18" stroke="currentColor" stroke-width="1.5" opacity="0.3" />
+                    <path d="M20 8 L30 28 H24 L20 20 L16 28 H10 Z" fill="currentColor" opacity="0.9" />
+                    <path d="M14 23 H26" stroke="currentColor" stroke-width="1.5" opacity="0.6" />
+                    <circle cx="20" cy="6" r="2" fill="currentColor" opacity="0.5" />
+                </svg>
+                <div class="nav-brand-text"><span class="nav-brand-name">Arcteron Trust</span><span
+                        class="nav-brand-sub">Private Banking</span></div>
+            </a>
+            <ul class="nav-links">
+                <li><button class="nav-link-btn">Personal Banking <svg class="nav-chevron" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="6 9 12 15 18 9" />
+                        </svg></button>
+                    <div class="nav-dropdown"><a href="/frontend/pages/personal-banking.html">Checking Accounts</a><a
+                            href="/frontend/pages/personal-banking.html#savings">Savings Accounts</a><a
+                            href="/frontend/pages/personal-banking.html#credit">Credit Cards</a>
+                        <div class="nav-dropdown-divider"></div><a href="/frontend/pages/login.html">Online Banking</a>
+                    </div>
+                </li>
+                <li><button class="nav-link-btn">Business Banking <svg class="nav-chevron" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="6 9 12 15 18 9" />
+                        </svg></button>
+                    <div class="nav-dropdown"><a href="/frontend/pages/business-banking.html">Business Checking</a><a
+                            href="/frontend/pages/business-banking.html#merchant">Merchant Services</a><a
+                            href="/frontend/pages/business-banking.html#loans">Business Loans</a><a
+                            href="/frontend/pages/business-banking.html#treasury">Treasury Management</a></div>
+                </li>
+                <li><button class="nav-link-btn">Wealth Management <svg class="nav-chevron" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="6 9 12 15 18 9" />
+                        </svg></button>
+                    <div class="nav-dropdown"><a href="/frontend/pages/wealth-management.html">Investment Advisory</a><a
+                            href="/frontend/pages/wealth-management.html#retirement">Retirement Planning</a><a
+                            href="/frontend/pages/wealth-management.html#estate">Estate Planning</a><a
+                            href="/frontend/pages/wealth-management.html#trust">Trust Services</a></div>
+                </li>
+                <li><button class="nav-link-btn active">Loans <svg class="nav-chevron" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2">
+                            <polyline points="6 9 12 15 18 9" />
+                        </svg></button>
+                    <div class="nav-dropdown"><a href="/frontend/pages/loans.html">Home Loans</a><a href="#auto">Auto
+                            Loans</a><a href="#personal">Personal Loans</a><a href="#student">Student Loans</a></div>
+                </li>
+                <li><button class="nav-link-btn">About Us <svg class="nav-chevron" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2">
+                            <polyline points="6 9 12 15 18 9" />
+                        </svg></button>
+                    <div class="nav-dropdown"><a href="/frontend/pages/about.html">Our Story</a><a
+                            href="/frontend/pages/about.html#leadership">Leadership</a><a
+                            href="/frontend/pages/about.html#community">Community</a><a
+                            href="/frontend/pages/about.html#careers">Careers</a></div>
+                </li>
+                <li><a href="/frontend/pages/contact.html" class="nav-link-btn">Contact</a></li>
+            </ul>
+            <div class="nav-actions"><a href="/frontend/pages/login.html" class="nav-btn-signin">Sign In</a><a
+                    href="/frontend/pages/register.html" class="nav-btn-open">Open Account</a><button
+                    class="nav-theme-btn" id="themeToggle"></button><button class="nav-hamburger" id="navHamburger"><svg
+                        width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="3" y1="6" x2="21" y2="6" />
+                        <line x1="3" y1="12" x2="21" y2="12" />
+                        <line x1="3" y1="18" x2="21" y2="18" />
+                    </svg></button></div>
+        </div>
+    </nav>
+    <div class="mobile-drawer" id="mobileDrawer">
+        <div class="drawer-overlay"></div>
+        <div class="drawer-panel">
+            <div class="drawer-header"><span class="nav-brand-name">Arcteron Trust</span><button class="drawer-close"
+                    id="drawerClose"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18" />
+                        <line x1="6" y1="6" x2="18" y2="18" />
+                    </svg></button></div>
+            <div class="drawer-nav"><a href="/frontend/pages/personal-banking.html" class="drawer-solo-link">Personal
+                    Banking</a><a href="/frontend/pages/business-banking.html" class="drawer-solo-link">Business
+                    Banking</a><a href="/frontend/pages/wealth-management.html" class="drawer-solo-link">Wealth
+                    Management</a><a href="/frontend/pages/loans.html" class="drawer-solo-link">Loans</a><a
+                    href="/frontend/pages/about.html" class="drawer-solo-link">About Us</a><a
+                    href="/frontend/pages/contact.html" class="drawer-solo-link">Contact</a></div>
+        </div>
+    </div>
+
+    <div class="page-hero">
+        <div class="pub-container page-hero-inner">
+            <div class="page-hero-eyebrow">Personal Lending</div>
+            <h1 class="page-hero-title">Borrow Smarter. Live Better.</h1>
+            <p class="page-hero-subtitle">Whether you're buying a home, purchasing a vehicle, or financing an education,
+                Arcteron provides competitive rates and fast, local decisions.</p>
+        </div>
+    </div>
+
+    <section class="pub-section" style="background:var(--bg-secondary)">
+        <div class="pub-container">
+            <div class="reveal">
+                <div class="section-eyebrow">Home Mortgages</div>
+                <h2 class="section-title">Finance Your Piece of New England</h2>
+                <p class="section-subtitle">Dedicated local underwriters who understand the Boston housing market from
+                    Beacon Hill to the suburbs.</p>
+            </div>
+            <div class="services-grid" style="margin-top:48px">
+                <div class="service-card reveal delay-1">
+                    <div class="service-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.75">
+                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                        </svg></div>
+                    <div class="service-card-title">Fixed-Rate Mortgages</div>
+                    <p class="service-card-desc">Lock in your rate and your payment for 15, 20, or 30 years. Perfect for
+                        long-term stability in your forever home.</p>
+                </div>
+                <div class="service-card reveal delay-2">
+                    <div class="service-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.75">
+                            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+                        </svg></div>
+                    <div class="service-card-title">Adjustable-Rate (ARM)</div>
+                    <p class="service-card-desc">Lower initial rates for the first 5, 7, or 10 years. An excellent
+                        strategy if you plan to move or refinance within a decade.</p>
+                </div>
+                <div class="service-card reveal delay-3">
+                    <div class="service-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.75">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                        </svg></div>
+                    <div class="service-card-title">HELOCs</div>
+                    <p class="service-card-desc">Access the equity in your home with a Home Equity Line of Credit. Pay
+                        only for what you use, ideal for renovations or major expenses.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="pub-section features-section">
+        <div class="pub-container">
+            <div class="features-grid">
+                <div id="auto" class="feature-item reveal delay-1">
+                    <div class="feature-icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.75">
+                            <rect x="1" y="3" width="15" height="13" rx="2" />
+                            <polygon points="16 8 20 8 23 11 23 16 16 16 16 8" />
+                            <circle cx="5.5" cy="18.5" r="2.5" />
+                            <circle cx="18.5" cy="18.5" r="2.5" />
+                        </svg></div>
+                    <h3>Auto Loans</h3>
+                    <p>Up to 100% financing on new and used vehicles. Fast pre-approvals via our mobile app give you
+                        buying confidence before you visit the dealership.</p>
+                </div>
+                <div id="personal" class="feature-item reveal delay-2">
+                    <div class="feature-icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.75">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                            <circle cx="12" cy="7" r="4" />
+                        </svg></div>
+                    <h3>Personal Loans</h3>
+                    <p>Unsecured loans up to $50,000 for debt consolidation, major purchases, or unexpected expenses
+                        with predictable fixed monthly payments.</p>
+                </div>
+                <div id="student" class="feature-item reveal delay-3">
+                    <div class="feature-icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.75">
+                            <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
+                            <path d="M6 12v5c3 3 9 3 12 0v-5" />
+                        </svg></div>
+                    <h3>Student Loans</h3>
+                    <p>Bridge the gap for higher education with flexible private student loans. Co-signer options
+                        available and rate discounts for automated payments.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="pub-section cta-section">
+        <div class="pub-container">
+            <div class="cta-inner reveal-scale">
+                <div class="cta-eyebrow">Check Your Rate</div>
+                <h2 class="cta-title">Ready to Apply?</h2>
+                <p class="cta-subtitle">Our application process is fast, secure, and entirely online. Get a decision on
+                    most personal and auto loans within 24 hours.</p>
+                <div class="cta-actions"><a href="/frontend/pages/register.html" class="cta-btn-white">Apply
+                        Online</a><a href="/frontend/pages/contact.html" class="cta-btn-outline">Speak with a Loan
+                        Officer</a></div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="pub-footer">
+        <div class="pub-container">
+            <div class="footer-grid">
+                <div>
+                    <div class="footer-brand-logo"><svg viewBox="0 0 40 40" fill="none">
+                            <circle cx="20" cy="20" r="18" stroke="currentColor" stroke-width="1.5" opacity="0.3" />
+                            <path d="M20 8 L30 28 H24 L20 20 L16 28 H10 Z" fill="currentColor" opacity="0.9" />
+                            <path d="M14 23 H26" stroke="currentColor" stroke-width="1.5" opacity="0.6" />
+                        </svg><span class="footer-brand-name">Arcteron Trust</span></div>
+                    <p class="footer-brand-desc">Private banking &amp; wealth management in Boston, MA since 2004.</p>
+                </div>
+                <div>
+                    <div class="footer-col-title">Loans</div>
+                    <ul class="footer-links">
+                        <li><a href="/frontend/pages/loans.html">Home Mortgages</a></li>
+                        <li><a href="#auto">Auto Loans</a></li>
+                        <li><a href="#personal">Personal Loans</a></li>
+                        <li><a href="#student">Student Loans</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <div class="footer-col-title">Other Services</div>
+                    <ul class="footer-links">
+                        <li><a href="/frontend/pages/personal-banking.html">Personal Banking</a></li>
+                        <li><a href="/frontend/pages/business-banking.html">Business Banking</a></li>
+                        <li><a href="/frontend/pages/wealth-management.html">Wealth Management</a></li>
+                        <li><a href="/frontend/pages/contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <div class="footer-col-title">Legal</div>
+                    <ul class="footer-links">
+                        <li><a href="/frontend/pages/terms.html">Terms of Service</a></li>
+                        <li><a href="/frontend/pages/privacy.html">Privacy Policy</a></li>
+                        <li><a href="/frontend/pages/about.html">About Us</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p class="footer-copy">© <span class="current-year">2025</span> Arcteron Trust. All loans subject to credit approval. Equal Housing
+                    Lender.</p>
+                <div class="footer-legal-links"><a href="/frontend/pages/terms.html">Terms</a><a
+                        href="/frontend/pages/privacy.html">Privacy</a></div>
+            </div>
+        </div>
+    </footer>
+    <button class="back-to-top" id="backToTop"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2">
+            <polyline points="18 15 12 9 6 15" />
+        </svg></button>
+    <script src="/frontend/assets/js/public.js"></script>
+</body>
+
+</html>

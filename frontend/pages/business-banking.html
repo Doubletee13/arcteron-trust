@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Business Banking — Arcteron Trust</title>
+    <meta name="description"
+        content="Business checking, merchant services, loans, and treasury management from Arcteron Trust.">
+    <link rel="icon" type="image/svg+xml" href="/frontend/assets/images/logo.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="/frontend/assets/css/theme.css">
+    <link rel="stylesheet" href="/frontend/assets/css/style.css">
+    <link rel="stylesheet" href="/frontend/assets/css/public.css">
+    <script src="/frontend/assets/js/theme.js"></script>
+</head>
+
+<body class="public-page">
+    <div class="news-ticker-bar">
+        <div class="ticker-label">
+            <div class="ticker-dot"></div>LIVE
+        </div>
+        <div class="ticker-track-wrap">
+            <div class="ticker-track" id="tickerTrack"></div>
+        </div>
+    </div>
+    <nav class="pub-nav">
+        <div class="nav-inner">
+            <a href="/frontend/index.html" class="nav-brand"><svg class="nav-brand-logo" viewBox="0 0 40 40"
+                    fill="none">
+                    <circle cx="20" cy="20" r="18" stroke="currentColor" stroke-width="1.5" opacity="0.3" />
+                    <path d="M20 8 L30 28 H24 L20 20 L16 28 H10 Z" fill="currentColor" opacity="0.9" />
+                    <path d="M14 23 H26" stroke="currentColor" stroke-width="1.5" opacity="0.6" />
+                    <circle cx="20" cy="6" r="2" fill="currentColor" opacity="0.5" />
+                </svg>
+                <div class="nav-brand-text"><span class="nav-brand-name">Arcteron Trust</span><span
+                        class="nav-brand-sub">Private Banking</span></div>
+            </a>
+            <ul class="nav-links">
+                <li><button class="nav-link-btn">Personal Banking <svg class="nav-chevron" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="6 9 12 15 18 9" />
+                        </svg></button>
+                    <div class="nav-dropdown"><a href="/frontend/pages/personal-banking.html">Checking Accounts</a><a
+                            href="/frontend/pages/personal-banking.html#savings">Savings Accounts</a><a
+                            href="/frontend/pages/personal-banking.html#credit">Credit Cards</a>
+                        <div class="nav-dropdown-divider"></div><a href="/frontend/pages/login.html">Online Banking</a>
+                    </div>
+                </li>
+                <li><button class="nav-link-btn active">Business Banking <svg class="nav-chevron" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="6 9 12 15 18 9" />
+                        </svg></button>
+                    <div class="nav-dropdown"><a href="/frontend/pages/business-banking.html">Business Checking</a><a
+                            href="#merchant">Merchant Services</a><a href="#loans">Business Loans</a><a
+                            href="#treasury">Treasury Management</a></div>
+                </li>
+                <li><button class="nav-link-btn">Wealth Management <svg class="nav-chevron" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="6 9 12 15 18 9" />
+                        </svg></button>
+                    <div class="nav-dropdown"><a href="/frontend/pages/wealth-management.html">Investment Advisory</a><a
+                            href="/frontend/pages/wealth-management.html#retirement">Retirement Planning</a><a
+                            href="/frontend/pages/wealth-management.html#estate">Estate Planning</a><a
+                            href="/frontend/pages/wealth-management.html#trust">Trust Services</a></div>
+                </li>
+                <li><button class="nav-link-btn">Loans <svg class="nav-chevron" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2">
+                            <polyline points="6 9 12 15 18 9" />
+                        </svg></button>
+                    <div class="nav-dropdown"><a href="/frontend/pages/loans.html">Home Loans</a><a
+                            href="/frontend/pages/loans.html#auto">Auto Loans</a><a
+                            href="/frontend/pages/loans.html#personal">Personal Loans</a><a
+                            href="/frontend/pages/loans.html#student">Student Loans</a></div>
+                </li>
+                <li><button class="nav-link-btn">About Us <svg class="nav-chevron" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2">
+                            <polyline points="6 9 12 15 18 9" />
+                        </svg></button>
+                    <div class="nav-dropdown"><a href="/frontend/pages/about.html">Our Story</a><a
+                            href="/frontend/pages/about.html#leadership">Leadership</a><a
+                            href="/frontend/pages/about.html#community">Community</a><a
+                            href="/frontend/pages/about.html#careers">Careers</a></div>
+                </li>
+                <li><a href="/frontend/pages/contact.html" class="nav-link-btn">Contact</a></li>
+            </ul>
+            <div class="nav-actions"><a href="/frontend/pages/login.html" class="nav-btn-signin">Sign In</a><a
+                    href="/frontend/pages/register.html" class="nav-btn-open">Open Account</a><button
+                    class="nav-theme-btn" id="themeToggle"></button><button class="nav-hamburger" id="navHamburger"><svg
+                        width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="3" y1="6" x2="21" y2="6" />
+                        <line x1="3" y1="12" x2="21" y2="12" />
+                        <line x1="3" y1="18" x2="21" y2="18" />
+                    </svg></button></div>
+        </div>
+    </nav>
+    <div class="mobile-drawer" id="mobileDrawer">
+        <div class="drawer-overlay"></div>
+        <div class="drawer-panel">
+            <div class="drawer-header"><span class="nav-brand-name">Arcteron Trust</span><button class="drawer-close"
+                    id="drawerClose"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18" />
+                        <line x1="6" y1="6" x2="18" y2="18" />
+                    </svg></button></div>
+            <div class="drawer-nav"><a href="/frontend/pages/personal-banking.html" class="drawer-solo-link">Personal
+                    Banking</a><a href="/frontend/pages/business-banking.html" class="drawer-solo-link">Business
+                    Banking</a><a href="/frontend/pages/wealth-management.html" class="drawer-solo-link">Wealth
+                    Management</a><a href="/frontend/pages/loans.html" class="drawer-solo-link">Loans</a><a
+                    href="/frontend/pages/about.html" class="drawer-solo-link">About Us</a><a
+                    href="/frontend/pages/contact.html" class="drawer-solo-link">Contact</a></div>
+            <div class="drawer-footer"><a href="/frontend/pages/login.html" class="nav-btn-signin">Sign In</a><a
+                    href="/frontend/pages/register.html" class="nav-btn-open">Open Account</a></div>
+        </div>
+    </div>
+
+    <div class="page-hero">
+        <div class="pub-container page-hero-inner">
+            <div class="page-hero-eyebrow">Business Banking</div>
+            <h1 class="page-hero-title">Fueling Bold Vision</h1>
+            <p class="page-hero-subtitle">Comprehensive financial solutions tailored for growing enterprises. From
+                scalable checking accounts to complex treasury management.</p>
+        </div>
+    </div>
+
+    <section class="pub-section" style="background:var(--bg-secondary)">
+        <div class="pub-container">
+            <div class="reveal">
+                <div class="section-eyebrow">Checking &amp; Lending</div>
+                <h2 class="section-title">Foundational Business Accounts</h2>
+                <p class="section-subtitle">Accounts built to scale effortlessly with your company's transaction volumes
+                    and lending needs.</p>
+            </div>
+            <div class="services-grid" style="margin-top:48px">
+                <div class="service-card reveal delay-1">
+                    <div class="service-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.75">
+                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                        </svg></div>
+                    <div class="service-card-title">Business Checking</div>
+                    <p class="service-card-desc">Tiered checking accounts designed for startups to enterprises. No fee
+                        options available, integration with major accounting tools, and high daily limits.</p>
+                </div>
+                <div id="loans" class="service-card reveal delay-2">
+                    <div class="service-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.75">
+                            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+                        </svg></div>
+                    <div class="service-card-title">Commercial Lending</div>
+                    <p class="service-card-desc">Term loans, SBA loans, equipment financing, and commercial real estate
+                        lending with competitive rates and local underwriting.</p>
+                </div>
+                <div class="service-card reveal delay-3">
+                    <div class="service-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.75">
+                            <rect x="1" y="4" width="22" height="16" rx="2" ry="2" />
+                            <line x1="1" y1="10" x2="23" y2="10" />
+                        </svg></div>
+                    <div class="service-card-title">Corporate Credit Cards</div>
+                    <p class="service-card-desc">Empower your team while maintaining control. Individual spending
+                        limits, real-time receipt capture, and robust expense management reporting.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="treasury" class="pub-section features-section">
+        <div class="pub-container">
+            <div class="reveal" style="text-align:center">
+                <div class="section-eyebrow" style="justify-content:center">Treasury Management</div>
+                <h2 class="section-title" style="text-align:center">Optimize Cash Flow</h2>
+            </div>
+            <div class="features-grid">
+                <div class="feature-item reveal delay-1">
+                    <div class="feature-icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.75">
+                            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+                        </svg></div>
+                    <h3>Receivables Solutions</h3>
+                    <p>Accelerate cash collection with Remote Deposit Capture, Lockbox services, ACH incoming
+                        collection, and integrated merchant processing systems.</p>
+                </div>
+                <div class="feature-item reveal delay-2">
+                    <div class="feature-icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.75">
+                            <polyline points="15 3 21 3 21 9" />
+                            <polyline points="9 21 3 21 3 15" />
+                            <line x1="21" y1="3" x2="14" y2="10" />
+                            <line x1="3" y1="21" x2="10" y2="14" />
+                        </svg></div>
+                    <h3>Payables Solutions</h3>
+                    <p>Streamline disbursements with ACH origination, domestic and international wire transfers, payroll
+                        processing, and automated bill pay.</p>
+                </div>
+                <div class="feature-item reveal delay-3">
+                    <div class="feature-icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.75">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                        </svg></div>
+                    <h3>Fraud Protection</h3>
+                    <p>Protect against unauthorized transactions with Positive Pay for checks and ACH blocks/filters,
+                        managed directly through your business banking dashboard.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="merchant" class="pub-section" style="background:var(--bg-secondary)">
+        <div class="pub-container">
+            <div class="about-split" style="grid-template-columns:1fr 1fr">
+                <div class="about-img-wrap reveal-left"><img
+                        src="https://images.unsplash.com/photo-1556740738-b6a63e27c4df?w=900&q=80&auto=format&fit=crop"
+                        alt="Merchant terminal" loading="lazy">
+                    <div class="about-badge">
+                        <div class="about-badge-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path
+                                    d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+                            </svg></div>
+                        <div class="about-badge-text"><strong>Next-Day Funding</strong><span>Included standard</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="reveal-right">
+                    <div class="section-eyebrow">Merchant Services</div>
+                    <h2 class="section-title">Seamless Payment Processing</h2>
+                    <p class="section-subtitle">Accept credit cards, debit cards, and contactless payments securely with
+                        Arcteron Merchant solutions.</p>
+                    <ul class="about-list">
+                        <li>
+                            <div class="about-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="3">
+                                    <polyline points="20 6 9 17 4 12" />
+                                </svg></div>Competitive flat-rate and interchange-plus pricing models
+                        </li>
+                        <li>
+                            <div class="about-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="3">
+                                    <polyline points="20 6 9 17 4 12" />
+                                </svg></div>Point-of-Sale (POS) hardware and e-commerce gateway integrations
+                        </li>
+                        <li>
+                            <div class="about-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="3">
+                                    <polyline points="20 6 9 17 4 12" />
+                                </svg></div>Next-business-day funding directly to your Arcteron checking account
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="pub-section cta-section">
+        <div class="pub-container">
+            <div class="cta-inner reveal-scale">
+                <div class="cta-eyebrow">Scale With Confidence</div>
+                <h2 class="cta-title">Talk to a Business Banking Specialist</h2>
+                <p class="cta-subtitle">Our dedicated corporate bankers are ready to build a customized proposal for
+                    your treasury and lending needs.</p>
+                <div class="cta-actions"><a href="/frontend/pages/contact.html" class="cta-btn-white">Contact a
+                        Specialist</a><a href="/frontend/pages/register.html" class="cta-btn-outline">Open Business
+                        Account</a></div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="pub-footer">
+        <div class="pub-container">
+            <div class="footer-grid">
+                <div>
+                    <div class="footer-brand-logo"><svg viewBox="0 0 40 40" fill="none">
+                            <circle cx="20" cy="20" r="18" stroke="currentColor" stroke-width="1.5" opacity="0.3" />
+                            <path d="M20 8 L30 28 H24 L20 20 L16 28 H10 Z" fill="currentColor" opacity="0.9" />
+                            <path d="M14 23 H26" stroke="currentColor" stroke-width="1.5" opacity="0.6" />
+                        </svg><span class="footer-brand-name">Arcteron Trust</span></div>
+                    <p class="footer-brand-desc">Private banking &amp; wealth management in Boston, MA since 2004.</p>
+                </div>
+                <div>
+                    <div class="footer-col-title">Business Services</div>
+                    <ul class="footer-links">
+                        <li><a href="/frontend/pages/business-banking.html">Business Checking</a></li>
+                        <li><a href="#merchant">Merchant Services</a></li>
+                        <li><a href="#loans">Commercial Lending</a></li>
+                        <li><a href="#treasury">Treasury Management</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <div class="footer-col-title">Other Services</div>
+                    <ul class="footer-links">
+                        <li><a href="/frontend/pages/personal-banking.html">Personal Banking</a></li>
+                        <li><a href="/frontend/pages/wealth-management.html">Wealth Management</a></li>
+                        <li><a href="/frontend/pages/loans.html">Personal Loans</a></li>
+                        <li><a href="/frontend/pages/contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <div class="footer-col-title">Legal</div>
+                    <ul class="footer-links">
+                        <li><a href="/frontend/pages/terms.html">Terms of Service</a></li>
+                        <li><a href="/frontend/pages/privacy.html">Privacy Policy</a></li>
+                        <li><a href="/frontend/pages/about.html">About Us</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p class="footer-copy">© <span class="current-year">2025</span> Arcteron Trust. All rights reserved.</p>
+                <div class="footer-legal-links"><a href="/frontend/pages/terms.html">Terms</a><a
+                        href="/frontend/pages/privacy.html">Privacy</a></div>
+            </div>
+        </div>
+    </footer>
+    <button class="back-to-top" id="backToTop"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2">
+            <polyline points="18 15 12 9 6 15" />
+        </svg></button>
+    <script src="/frontend/assets/js/public.js"></script>
+</body>
+
+</html>

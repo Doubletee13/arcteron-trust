@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wealth Management — Arcteron Trust</title>
+    <meta name="description"
+        content="Investment advisory, retirement planning, estate planning and trust services from Arcteron Trust.">
+    <link rel="icon" type="image/svg+xml" href="/frontend/assets/images/logo.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="/frontend/assets/css/theme.css">
+    <link rel="stylesheet" href="/frontend/assets/css/style.css">
+    <link rel="stylesheet" href="/frontend/assets/css/public.css">
+    <script src="/frontend/assets/js/theme.js"></script>
+</head>
+
+<body class="public-page">
+    <div class="news-ticker-bar">
+        <div class="ticker-label">
+            <div class="ticker-dot"></div>LIVE
+        </div>
+        <div class="ticker-track-wrap">
+            <div class="ticker-track" id="tickerTrack"></div>
+        </div>
+    </div>
+    <nav class="pub-nav">
+        <div class="nav-inner">
+            <a href="/frontend/index.html" class="nav-brand"><svg class="nav-brand-logo" viewBox="0 0 40 40"
+                    fill="none">
+                    <circle cx="20" cy="20" r="18" stroke="currentColor" stroke-width="1.5" opacity="0.3" />
+                    <path d="M20 8 L30 28 H24 L20 20 L16 28 H10 Z" fill="currentColor" opacity="0.9" />
+                    <path d="M14 23 H26" stroke="currentColor" stroke-width="1.5" opacity="0.6" />
+                    <circle cx="20" cy="6" r="2" fill="currentColor" opacity="0.5" />
+                </svg>
+                <div class="nav-brand-text"><span class="nav-brand-name">Arcteron Trust</span><span
+                        class="nav-brand-sub">Private Banking</span></div>
+            </a>
+            <ul class="nav-links">
+                <li><button class="nav-link-btn">Personal Banking <svg class="nav-chevron" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="6 9 12 15 18 9" />
+                        </svg></button>
+                    <div class="nav-dropdown"><a href="/frontend/pages/personal-banking.html">Checking Accounts</a><a
+                            href="/frontend/pages/personal-banking.html#savings">Savings Accounts</a><a
+                            href="/frontend/pages/personal-banking.html#credit">Credit Cards</a>
+                        <div class="nav-dropdown-divider"></div><a href="/frontend/pages/login.html">Online Banking</a>
+                    </div>
+                </li>
+                <li><button class="nav-link-btn">Business Banking <svg class="nav-chevron" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="6 9 12 15 18 9" />
+                        </svg></button>
+                    <div class="nav-dropdown"><a href="/frontend/pages/business-banking.html">Business Checking</a><a
+                            href="/frontend/pages/business-banking.html#merchant">Merchant Services</a><a
+                            href="/frontend/pages/business-banking.html#loans">Business Loans</a><a
+                            href="/frontend/pages/business-banking.html#treasury">Treasury Management</a></div>
+                </li>
+                <li><button class="nav-link-btn active">Wealth Management <svg class="nav-chevron" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="6 9 12 15 18 9" />
+                        </svg></button>
+                    <div class="nav-dropdown"><a href="/frontend/pages/wealth-management.html">Investment Advisory</a><a
+                            href="#retirement">Retirement Planning</a><a href="#estate">Estate Planning</a><a
+                            href="#trust">Trust Services</a></div>
+                </li>
+                <li><button class="nav-link-btn">Loans <svg class="nav-chevron" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2">
+                            <polyline points="6 9 12 15 18 9" />
+                        </svg></button>
+                    <div class="nav-dropdown"><a href="/frontend/pages/loans.html">Home Loans</a><a
+                            href="/frontend/pages/loans.html#auto">Auto Loans</a><a
+                            href="/frontend/pages/loans.html#personal">Personal Loans</a><a
+                            href="/frontend/pages/loans.html#student">Student Loans</a></div>
+                </li>
+                <li><button class="nav-link-btn">About Us <svg class="nav-chevron" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2">
+                            <polyline points="6 9 12 15 18 9" />
+                        </svg></button>
+                    <div class="nav-dropdown"><a href="/frontend/pages/about.html">Our Story</a><a
+                            href="/frontend/pages/about.html#leadership">Leadership</a><a
+                            href="/frontend/pages/about.html#community">Community</a><a
+                            href="/frontend/pages/about.html#careers">Careers</a></div>
+                </li>
+                <li><a href="/frontend/pages/contact.html" class="nav-link-btn">Contact</a></li>
+            </ul>
+            <div class="nav-actions"><a href="/frontend/pages/login.html" class="nav-btn-signin">Sign In</a><a
+                    href="/frontend/pages/register.html" class="nav-btn-open">Open Account</a><button
+                    class="nav-theme-btn" id="themeToggle"></button><button class="nav-hamburger" id="navHamburger"><svg
+                        width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="3" y1="6" x2="21" y2="6" />
+                        <line x1="3" y1="12" x2="21" y2="12" />
+                        <line x1="3" y1="18" x2="21" y2="18" />
+                    </svg></button></div>
+        </div>
+    </nav>
+    <div class="mobile-drawer" id="mobileDrawer">
+        <div class="drawer-overlay"></div>
+        <div class="drawer-panel">
+            <div class="drawer-header"><span class="nav-brand-name">Arcteron Trust</span><button class="drawer-close"
+                    id="drawerClose"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18" />
+                        <line x1="6" y1="6" x2="18" y2="18" />
+                    </svg></button></div>
+            <div class="drawer-nav"><a href="/frontend/pages/personal-banking.html" class="drawer-solo-link">Personal
+                    Banking</a><a href="/frontend/pages/business-banking.html" class="drawer-solo-link">Business
+                    Banking</a><a href="/frontend/pages/wealth-management.html" class="drawer-solo-link">Wealth
+                    Management</a><a href="/frontend/pages/loans.html" class="drawer-solo-link">Loans</a><a
+                    href="/frontend/pages/about.html" class="drawer-solo-link">About Us</a><a
+                    href="/frontend/pages/contact.html" class="drawer-solo-link">Contact</a></div>
+            <div class="drawer-footer"><a href="/frontend/pages/login.html" class="nav-btn-signin">Sign In</a><a
+                    href="/frontend/pages/register.html" class="nav-btn-open">Open Account</a></div>
+        </div>
+    </div>
+
+    <div class="page-hero">
+        <div class="pub-container page-hero-inner">
+            <div class="page-hero-eyebrow">Wealth Management</div>
+            <h1 class="page-hero-title">Grow, Protect &<br>Transfer Your Wealth</h1>
+            <p class="page-hero-subtitle">Boston's most trusted private wealth advisors craft bespoke investment,
+                estate, and retirement strategies tailored to your unique legacy goals.</p>
+        </div>
+    </div>
+
+    <section class="pub-section" style="background:var(--bg-secondary)">
+        <div class="pub-container">
+            <div class="about-split">
+                <div class="reveal-left">
+                    <div class="section-eyebrow">Investment Advisory</div>
+                    <h2 class="section-title">Portfolios Built Around You</h2>
+                    <p class="section-subtitle">We don't believe in one-size-fits-all. Every investment strategy begins
+                        with a comprehensive assessment of your goals, time horizon, and risk tolerance.</p>
+                    <ul class="about-list">
+                        <li>
+                            <div class="about-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="3">
+                                    <polyline points="20 6 9 17 4 12" />
+                                </svg></div>Tax-efficient portfolio construction and rebalancing
+                        </li>
+                        <li>
+                            <div class="about-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="3">
+                                    <polyline points="20 6 9 17 4 12" />
+                                </svg></div>ESG and impact investing options available
+                        </li>
+                        <li>
+                            <div class="about-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="3">
+                                    <polyline points="20 6 9 17 4 12" />
+                                </svg></div>Alternative investments for qualified clients
+                        </li>
+                        <li>
+                            <div class="about-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="3">
+                                    <polyline points="20 6 9 17 4 12" />
+                                </svg></div>Quarterly performance reviews with your advisor
+                        </li>
+                    </ul><a href="/frontend/pages/contact.html" class="about-link">Schedule a consultation <svg
+                            width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <line x1="5" y1="12" x2="19" y2="12" />
+                            <polyline points="12 5 19 12 12 19" />
+                        </svg></a>
+                </div>
+                <div class="about-img-wrap reveal-right"><img
+                        src="https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=900&q=80&auto=format&fit=crop"
+                        alt="Investment advisory" loading="lazy">
+                    <div class="about-badge">
+                        <div class="about-badge-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+                            </svg></div>
+                        <div class="about-badge-text"><strong>$2.8B+</strong><span>Assets Under Management</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="retirement" class="pub-section features-section">
+        <div class="pub-container">
+            <div class="reveal" style="text-align:center">
+                <div class="section-eyebrow" style="justify-content:center">Retirement Planning</div>
+                <h2 class="section-title" style="text-align:center">Your Future, Thoughtfully Planned</h2>
+            </div>
+            <div class="features-grid">
+                <div class="feature-item reveal delay-1">
+                    <div class="feature-icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.75">
+                            <circle cx="12" cy="12" r="10" />
+                            <polyline points="12 6 12 12 16 14" />
+                        </svg></div>
+                    <h3>IRA Accounts</h3>
+                    <p>Traditional and Roth IRA accounts with professional management. Rollover assistance and
+                        distribution planning for tax-optimized retirement income.</p>
+                </div>
+                <div class="feature-item reveal delay-2">
+                    <div class="feature-icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.75">
+                            <rect x="2" y="7" width="20" height="14" rx="2" />
+                            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
+                        </svg></div>
+                    <h3>401(k) Rollovers</h3>
+                    <p>Seamlessly consolidate former employer plans into an IRA while maintaining tax-deferred status
+                        and avoiding early distribution penalties.</p>
+                </div>
+                <div class="feature-item reveal delay-3">
+                    <div class="feature-icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.75">
+                            <path
+                                d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+                        </svg></div>
+                    <h3>Annuities</h3>
+                    <p>Fixed and variable annuity products that provide guaranteed income streams to protect you from
+                        the risk of outliving your savings.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="estate" class="pub-section" style="background:var(--bg-secondary)">
+        <div class="pub-container">
+            <div class="reveal">
+                <div class="section-eyebrow">Estate &amp; Trust Services</div>
+                <h2 class="section-title">Protect Your Legacy</h2>
+                <p class="section-subtitle">Comprehensive estate planning and trust administration to ensure your wealth
+                    passes to future generations exactly as you intend.</p>
+            </div>
+            <div class="services-grid" style="margin-top:48px">
+                <div class="service-card reveal delay-1">
+                    <div class="service-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.75">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                            <polyline points="14 2 14 8 20 8" />
+                        </svg></div>
+                    <div class="service-card-title">Estate Planning</div>
+                    <p class="service-card-desc">Wills, living trusts, powers of attorney, healthcare directives, and
+                        beneficiary coordination — our advisors and estate attorneys work together on your behalf.</p>
+                </div>
+                <div class="service-card reveal delay-2" id="trust">
+                    <div class="service-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.75">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                        </svg></div>
+                    <div class="service-card-title">Trust Administration</div>
+                    <p class="service-card-desc">Revocable, irrevocable, charitable, and special needs trusts. Arcteron
+                        acts as a neutral, professional trustee protecting your beneficiaries' interests.</p>
+                </div>
+                <div class="service-card reveal delay-3">
+                    <div class="service-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="1.75">
+                            <path d="M20 12V22H4V12" />
+                            <path d="M22 7H2v5h20V7z" />
+                            <path d="M12 22V7" />
+                        </svg></div>
+                    <div class="service-card-title">Charitable Giving</div>
+                    <p class="service-card-desc">Donor-advised funds, charitable remainder trusts, and philanthropic
+                        planning that maximize impact while delivering meaningful tax advantages.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="pub-section cta-section">
+        <div class="pub-container">
+            <div class="cta-inner reveal-scale">
+                <div class="cta-eyebrow">Begin Your Wealth Journey</div>
+                <h2 class="cta-title">Schedule a Private Wealth Consultation</h2>
+                <p class="cta-subtitle">Our senior advisors offer complimentary 60-minute consultations. No obligation —
+                    just thoughtful conversation about your financial future.</p>
+                <div class="cta-actions"><a href="/frontend/pages/contact.html" class="cta-btn-white">Schedule
+                        Consultation</a><a href="/frontend/pages/register.html" class="cta-btn-outline">Open an
+                        Account</a></div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="pub-footer">
+        <div class="pub-container">
+            <div class="footer-grid">
+                <div>
+                    <div class="footer-brand-logo"><svg viewBox="0 0 40 40" fill="none">
+                            <circle cx="20" cy="20" r="18" stroke="currentColor" stroke-width="1.5" opacity="0.3" />
+                            <path d="M20 8 L30 28 H24 L20 20 L16 28 H10 Z" fill="currentColor" opacity="0.9" />
+                            <path d="M14 23 H26" stroke="currentColor" stroke-width="1.5" opacity="0.6" />
+                        </svg><span class="footer-brand-name">Arcteron Trust</span></div>
+                    <p class="footer-brand-desc">Private banking &amp; wealth management in Boston, MA since 2004.</p>
+                    <address class="footer-address" style="font-style:normal">100 Federal Street, Suite 2500<br>Boston,
+                        MA 02110<br>(617) 555-0200</address>
+                    <div class="footer-fdic">
+                        <div class="footer-fdic-dot"></div><span>FDIC Insured · Member FDIC</span>
+                    </div>
+                </div>
+                <div>
+                    <div class="footer-col-title">Wealth Services</div>
+                    <ul class="footer-links">
+                        <li><a href="/frontend/pages/wealth-management.html">Investment Advisory</a></li>
+                        <li><a href="#retirement">Retirement Planning</a></li>
+                        <li><a href="#estate">Estate Planning</a></li>
+                        <li><a href="#trust">Trust Services</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <div class="footer-col-title">Other Services</div>
+                    <ul class="footer-links">
+                        <li><a href="/frontend/pages/personal-banking.html">Personal Banking</a></li>
+                        <li><a href="/frontend/pages/business-banking.html">Business Banking</a></li>
+                        <li><a href="/frontend/pages/loans.html">Loans</a></li>
+                        <li><a href="/frontend/pages/contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <div class="footer-col-title">Legal</div>
+                    <ul class="footer-links">
+                        <li><a href="/frontend/pages/terms.html">Terms of Service</a></li>
+                        <li><a href="/frontend/pages/privacy.html">Privacy Policy</a></li>
+                        <li><a href="/frontend/pages/about.html">About Us</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p class="footer-copy">© <span class="current-year">2025</span> Arcteron Trust. Investment products are not FDIC insured and may lose
+                    value.</p>
+                <div class="footer-legal-links"><a href="/frontend/pages/terms.html">Terms</a><a
+                        href="/frontend/pages/privacy.html">Privacy</a></div>
+            </div>
+        </div>
+    </footer>
+    <button class="back-to-top" id="backToTop"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2">
+            <polyline points="18 15 12 9 6 15" />
+        </svg></button>
+    <script src="/frontend/assets/js/public.js"></script>
+</body>
+
+</html>

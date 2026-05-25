@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page Not Found — Arcteron Trust</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=DM+Sans:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="/assets/css/theme.css">
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <script src="/assets/js/theme.js"></script>
+    <style>
+        body {
+            font-family: 'DM Sans', sans-serif;
+            margin: 0;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            text-align: center;
+        }
+
+        .error-container {
+            max-width: 500px;
+            padding: 40px;
+        }
+
+        .error-code {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 120px;
+            font-weight: 600;
+            line-height: 1;
+            margin: 0 0 20px 0;
+            background: linear-gradient(135deg, #FF6B6B, #FF8E53);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .error-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin: 0 0 16px 0;
+            font-family: 'Cormorant Garamond', serif;
+        }
+
+        .error-desc {
+            font-size: 15px;
+            color: var(--text-secondary);
+            margin: 0 0 32px 0;
+            line-height: 1.6;
+        }
+
+        .btn-return {
+            display: inline-block;
+            padding: 12px 24px;
+            background: var(--text-primary);
+            color: var(--bg-secondary);
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            text-decoration: none;
+            transition: opacity 0.2s;
+        }
+
+        .btn-return:hover {
+            opacity: 0.9;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="error-container">
+        <h1 class="error-code">404</h1>
+        <h2 class="error-title">Page Not Found</h2>
+        <p class="error-desc">The specific page or document you are looking for does not exist on Arcteron Trust's
+            servers. It may have been moved, deleted, or you might have mistyped the URL.</p>
+        <a href="/pages/auth/login.html" class="btn-return">Return to Safety</a>
+    </div>
+</body>
+
+</html>
