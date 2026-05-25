@@ -15,6 +15,7 @@ from app.utils.jwt import create_access_token
 from app.utils.account_number import generate_account_number
 from app.services.email_service import send_login_alert, send_verification_email
 from app.utils.tokens import generate_verification_token
+import traceback
 import re
 
 
@@ -55,6 +56,7 @@ def register_step1(data: RegisterStep1, db: Session) -> User:
         send_verification_email(user.email, user.first_name, token)
     except Exception as e:
         print(f"EMAIL ERROR: {e}")
+        print(traceback.format_exc())
         pass
 
     return user
