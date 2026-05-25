@@ -34,12 +34,25 @@ const Auth = {
       return false;
     }
 
+    // Validate token is still valid by hitting /api/auth/me
+    // If token expired, clear and redirect to login instead of PIN
     if (typeof user.has_pin !== 'boolean') {
+      const res = await Api.get('/api/auth/me', true);
+      if (!res || !res.ok) {
+        // Token invalid/expired - clear everything and go to login
+        this.logout();
+        return false;
+      }
+      Api.setUser(res.data);
+      user = res.data;
+    } else {
+      // Even if has_pin is cached, verify token validity periodically
       const res = await Api.get('/api/auth/me', true);
       if (!res || !res.ok) {
         this.logout();
         return false;
       }
+      // Update user cache with fresh data
       Api.setUser(res.data);
       user = res.data;
     }
