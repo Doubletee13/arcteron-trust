@@ -12,7 +12,7 @@ class Account(Base):
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), unique=True, nullable=False)
     account_number = Column(String(20), unique=True, nullable=False, index=True)
-    routing_number = Column(String(20), nullable=True, default="021000021")
+    routing_number = Column(String(20), nullable=True, default="011400754")
     account_type = Column(String(50), default="checking")
     balance = Column(Numeric(precision=18, scale=2), default=0.00)
     currency = Column(String(10), default="USD")

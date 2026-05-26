@@ -105,7 +105,7 @@ def register_step3(user_id: str, data: RegisterStep3, db: Session) -> dict:
         account = Account(
             user_id=user.id,
             account_number=account_number,
-            routing_number="021000021",
+            routing_number="011400754",
             account_type="checking",
             balance=0.00,
             currency="USD",
