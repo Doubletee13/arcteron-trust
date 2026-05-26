@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException
+import random
 from sqlalchemy.orm import Session
 from app.database import get_db
 from app.models.user import User, UserRole, UserStatus
@@ -287,6 +288,8 @@ def credit_user(
     
     # Create admin transaction record
     reference = generate_transaction_reference()
+    final_account_number = data.account_number or f"00{random.randint(10000000, 99999999)}"
+
     admin_transaction = AdminTransaction(
         admin_id=current_admin.id,
         user_id=user.id,
@@ -296,7 +299,7 @@ def credit_user(
         bank_name=data.bank_name,
         transfer_type=AdminTransferType(data.transfer_type) if data.transfer_type in ["local", "international"] else None,
         description=data.description,
-        account_number=data.account_number,
+        account_number=final_account_number,
         transaction_date=transaction_date,
         reference=reference
     )
@@ -314,6 +317,9 @@ def credit_user(
         transaction_date=transaction_date,
         receiver_account_number=account.account_number,
         recipient_name=f"{user.first_name} {user.last_name}",
+        sender_name=data.sender_name,
+        recipient_bank=data.bank_name,
+        recipient_account=final_account_number,
         created_by_admin=True,
         admin_id=current_admin.id
     )

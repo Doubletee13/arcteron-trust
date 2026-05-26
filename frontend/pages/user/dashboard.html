@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link
     href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=DM+Sans:wght@300;400;500;600&display=swap"
-    rel="stylesheet">
+    rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'">
   <link rel="stylesheet" href="../../assets/css/theme.css">
   <link rel="stylesheet" href="../../assets/css/style.css">
   <script src="../../assets/js/theme.js"></script>
@@ -2157,23 +2157,20 @@
         window.openReceiptModal = function (txId) {
           const tx = transactions.find(t => t.id === txId);
           if (!tx) return;
-
           const isCredit = tx.is_credit;
-          const sign = isCredit ? '+' : '-';
-
           ReceiptModal.open({
             amount: tx.amount,
-            partyLabel: isCredit ? "Transfer From" : "Transfer To",
             party: tx.recipient_name || (isCredit ? "External Sender" : "—"),
-            reference: tx.reference || '#000000',
-            bank: tx.recipient_bank || 'Arcteron Trust',
-            recipientAccount: tx.recipient_account || '0000',
+            reference: tx.reference || "#000000",
+            bank: tx.recipient_bank || "Arcteron Trust",
+            recipientAccount: tx.recipient_account || "0000",
             date: TimeUtils.formatDate(tx.transaction_date || tx.created_at),
             time: TimeUtils.formatTime(tx.transaction_date || tx.created_at),
-            type: (tx.transaction_type || 'Transfer').replace(/_/g, ' '),
-            account: tx.own_account_number || '0000',
-            status: tx.status || 'Completed',
+            type: (tx.transaction_type || "Transfer").replace(/_/g, " "),
+            account: tx.own_account_number || "0000",
+            status: tx.status || "Completed",
             isCredit: isCredit,
+            description: tx.description || "—",
             transactionId: tx.id
           });
         };

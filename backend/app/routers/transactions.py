@@ -53,11 +53,8 @@ def tx_to_dict(tx: Transaction, current_user_id, db: Session = None) -> dict:
             if is_credit:
                 display_name = admin_tx.sender_name or display_name
                 display_bank = admin_tx.bank_name or "Arcteron Trust"
-                import random
                 fallback_acct = getattr(admin_tx, 'account_number', None)
-                if not fallback_acct:
-                    fallback_acct = f"00{random.randint(10000000, 99999999)}"
-                display_account = fallback_acct
+                display_account = fallback_acct or None
             else:
                 display_name = "Arcteron Trust Admin"
                 display_bank = "Arcteron Trust"
@@ -428,6 +425,10 @@ def generate_receipt_pdf(tx, user, account, is_credit: bool, theme: str = 'dark'
                 bank_name  = "Arcteron Trust"
                 sender_acct = db.query(Account).filter(Account.user_id == sender.id).first()
                 if sender_acct: recipient_acct = sender_acct.account_number
+        elif tx.sender_name:
+            party_name = tx.sender_name
+            bank_name  = tx.recipient_bank or "Arcteron Trust"
+            recipient_acct = tx.recipient_account or "—"
     else:
         party_name = tx.recipient_name or "Unknown Recipient"
         if tx.receiver_id and db:
@@ -533,6 +534,7 @@ def generate_receipt_pdf(tx, user, account, is_credit: bool, theme: str = 'dark'
         ('Account No.',  display_recipient_acct),
         ('Reference',    tx.reference or '—'),
         ('Type',         tx_type_str),
+        ('Description',  tx.description or '—'),
         ('Your Account', display_user_acct),
     ]
 

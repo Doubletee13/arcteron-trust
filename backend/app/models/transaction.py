@@ -52,6 +52,7 @@ class Transaction(Base):
 
     # For international transfers
     recipient_name = Column(String(200), nullable=True)
+    sender_name = Column(String(200), nullable=True)
     recipient_bank = Column(String(200), nullable=True)
     recipient_bank_address = Column(String(255), nullable=True)
     recipient_account = Column(String(100), nullable=True)
