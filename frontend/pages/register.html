@@ -628,7 +628,27 @@
 
         <div class="field">
           <label>Phone Number</label>
-          <input type="tel" id="phone" placeholder="+1 (555) 000-0000">
+          <div style="display:flex;gap:0;">
+            <div class="select-wrap" style="flex-shrink:0;min-width:90px;">
+              <select id="phoneCode" style="border-radius:8px 0 0 8px;border-right:none;height:100%;padding:12px 28px 12px 12px;">
+                <option value="+1">🇺🇸 +1</option>
+                <option value="+44">🇬🇧 +44</option>
+                <option value="+91">🇮🇳 +91</option>
+                <option value="+234">🇳🇬 +234</option>
+                <option value="+33">🇫🇷 +33</option>
+                <option value="+49">🇩🇪 +49</option>
+                <option value="+81">🇯🇵 +81</option>
+                <option value="+86">🇨🇳 +86</option>
+                <option value="+55">🇧🇷 +55</option>
+                <option value="+27">🇿🇦 +27</option>
+                <option value="+971">🇦🇪 +971</option>
+                <option value="+966">🇸🇦 +966</option>
+                <option value="+61">🇦🇺 +61</option>
+                <option value="+1-CA">🇨🇦 +1</option>
+              </select>
+            </div>
+            <input type="tel" id="phone" placeholder="(555) 000-0000" style="border-radius:0 8px 8px 0;flex:1;">
+          </div>
         </div>
 
         <div class="field">
@@ -718,12 +738,45 @@
 
         <div class="field-row">
           <div class="field"><label>City</label><input type="text" id="city" placeholder="New York"></div>
-          <div class="field"><label>State</label><input type="text" id="state" placeholder="NY"></div>
+          <div class="field">
+            <label>State</label>
+            <div class="select-wrap">
+              <select id="state">
+                <option value="">Select state</option>
+                <option value="AL">Alabama</option><option value="AK">Alaska</option>
+                <option value="AZ">Arizona</option><option value="AR">Arkansas</option>
+                <option value="CA">California</option><option value="CO">Colorado</option>
+                <option value="CT">Connecticut</option><option value="DE">Delaware</option>
+                <option value="FL">Florida</option><option value="GA">Georgia</option>
+                <option value="HI">Hawaii</option><option value="ID">Idaho</option>
+                <option value="IL">Illinois</option><option value="IN">Indiana</option>
+                <option value="IA">Iowa</option><option value="KS">Kansas</option>
+                <option value="KY">Kentucky</option><option value="LA">Louisiana</option>
+                <option value="ME">Maine</option><option value="MD">Maryland</option>
+                <option value="MA">Massachusetts</option><option value="MI">Michigan</option>
+                <option value="MN">Minnesota</option><option value="MS">Mississippi</option>
+                <option value="MO">Missouri</option><option value="MT">Montana</option>
+                <option value="NE">Nebraska</option><option value="NV">Nevada</option>
+                <option value="NH">New Hampshire</option><option value="NJ">New Jersey</option>
+                <option value="NM">New Mexico</option><option value="NY">New York</option>
+                <option value="NC">North Carolina</option><option value="ND">North Dakota</option>
+                <option value="OH">Ohio</option><option value="OK">Oklahoma</option>
+                <option value="OR">Oregon</option><option value="PA">Pennsylvania</option>
+                <option value="RI">Rhode Island</option><option value="SC">South Carolina</option>
+                <option value="SD">South Dakota</option><option value="TN">Tennessee</option>
+                <option value="TX">Texas</option><option value="UT">Utah</option>
+                <option value="VT">Vermont</option><option value="VA">Virginia</option>
+                <option value="WA">Washington</option><option value="WV">West Virginia</option>
+                <option value="WI">Wisconsin</option><option value="WY">Wyoming</option>
+                <option value="DC">District of Columbia</option>
+              </select>
+            </div>
+          </div>
         </div>
 
         <div class="field-row">
           <div class="field"><label>ZIP Code</label><input type="text" id="zipCode" placeholder="10001"></div>
-          <div class="field"><label>Country</label><input type="text" id="country" value="United States"></div>
+          <div class="field"><label>Country</label><input type="text" id="country" value="United States" readonly style="background:var(--bg-primary);cursor:not-allowed;opacity:0.7;"></div>
         </div>
 
         <div class="btn-row">
@@ -803,7 +856,20 @@
 
         <div class="field">
           <label>Source of Income</label>
-          <input type="text" id="sourceOfIncome" placeholder="e.g. Salary, Business, Investments">
+          <div class="select-wrap">
+              <select id="sourceOfIncome">
+                <option value="">Select source</option>
+                <option value="Salary">Salary / Wages</option>
+                <option value="Self-Employment">Self-Employment</option>
+                <option value="Business">Business Income</option>
+                <option value="Investments">Investments</option>
+                <option value="Rental Income">Rental Income</option>
+                <option value="Pension">Pension / Retirement</option>
+                <option value="Social Security">Social Security</option>
+                <option value="Inheritance">Inheritance / Gift</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
         </div>
 
         <div class="field">
@@ -987,7 +1053,7 @@
       first_name: firstName,
       last_name: lastName,
       middle_name: document.getElementById('middleName').value.trim() || null,
-      email, phone, password,
+      email, phone: (document.getElementById('phoneCode').value.replace('-CA','') + document.getElementById('phone').value.trim()), password,
       confirm_password: confirmPassword
     });
     setLoading('btn1', false);
@@ -996,9 +1062,25 @@
     else showAlert(res.data.detail || 'Something went wrong. Please try again.');
   }
 
+  // Set DOB max to 18 years ago on load
+  (function() {
+    const maxDob = new Date();
+    maxDob.setFullYear(maxDob.getFullYear() - 18);
+    document.getElementById('dob').max = maxDob.toISOString().split('T')[0];
+  })();
+
   async function submitStep2() {
     hideAlert();
     const dob = document.getElementById('dob').value;
+
+    // 18+ validation
+    if (dob) {
+      const dobDate = new Date(dob);
+      const today = new Date();
+      const age = today.getFullYear() - dobDate.getFullYear() -
+        (today < new Date(today.getFullYear(), dobDate.getMonth(), dobDate.getDate()) ? 1 : 0);
+      if (age < 18) return showAlert('You must be at least 18 years old to open an account.');
+    }
     const citizenship = document.getElementById('citizenship').value;
     const address = document.getElementById('address').value.trim();
     const city = document.getElementById('city').value.trim();
@@ -1025,6 +1107,13 @@
     else showAlert(res.data.detail || 'Something went wrong. Please try again.');
   }
 
+  // Set ID expiry min to tomorrow on load
+  (function() {
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    document.getElementById('idExpiry').min = tomorrow.toISOString().split('T')[0];
+  })();
+
   async function submitStep3() {
     hideAlert();
     const idType = document.getElementById('idType').value;
@@ -1036,6 +1125,12 @@
     const accountPurpose = document.getElementById('accountPurpose').value;
 
     if (!idType || !idNumber || !idExpiry || !employmentStatus || !annualIncome || !sourceOfIncome || !accountPurpose) return showAlert('Please fill in all required fields.');
+
+    // ID expiry must be in the future
+    const expiryDate = new Date(idExpiry);
+    const today3 = new Date();
+    today3.setHours(0,0,0,0);
+    if (expiryDate <= today3) return showAlert('ID expiry date must be a future date.');
 
     setLoading('btn3', true);
     const res = await Api.post(`/api/auth/register/step3/${userId}`, {
