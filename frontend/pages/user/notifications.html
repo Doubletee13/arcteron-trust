@@ -1265,7 +1265,11 @@
                     const res = await Api.post('/api/notifications/mark-all-read', {}, true);
 
                     if (res && res.data && res.data.success) {
-                        Utils.showToast('All notifications marked as read');
+                        if (res.data.updated_count > 0) {
+                            Utils.showToast('All notifications marked as read');
+                        } else {
+                            Utils.showToast('All notifications are already read');
+                        }
                         loadNotifications();
                         updateNotificationDot();
                     } else {
