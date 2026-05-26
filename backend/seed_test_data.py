@@ -22,13 +22,13 @@ def seed():
     db = SessionLocal()
     try:
         # 2. Create Admin 1 (Primary)
-        admin1 = db.query(User).filter(User.email == "admin@arcterontrustbank.com").first()
+        admin1 = db.query(User).filter(User.email == "admin@arcterontrust.com").first()
         if not admin1:
             print("Creating first admin user...")
             admin1 = User(
                 first_name="System",
                 last_name="Administrator",
-                email="admin@arcterontrustbank.com",
+                email="admin@arcterontrust.com",
                 hashed_password=hash_password("Admin@1234"),
                 role=UserRole.admin,
                 status=UserStatus.active,
@@ -41,16 +41,16 @@ def seed():
             
             admin_account = Account(user_id=admin1.id, account_number="0000000001", balance=Decimal("0.00"))
             db.add(admin_account)
-            print("Created admin user: admin@arcterontrustbank.com (Acc: 0000000001) - Password: Admin@1234")
+            print("Created admin user: admin@arcterontrust.com (Acc: 0000000001) - Password: Admin@1234")
             
         # 3. Create Admin 2 (Support)
-        admin2 = db.query(User).filter(User.email == "support@arcterontrustbank.com").first()
+        admin2 = db.query(User).filter(User.email == "support@arcterontrust.com").first()
         if not admin2:
             print("Creating second admin user...")
             admin2 = User(
                 first_name="Support",
                 last_name="Administrator",
-                email="support@arcterontrustbank.com",
+                email="support@arcterontrust.com",
                 hashed_password=hash_password("Support@1234"),
                 role=UserRole.admin,
                 status=UserStatus.active,
@@ -63,7 +63,7 @@ def seed():
             
             support_account = Account(user_id=admin2.id, account_number="0000000002", balance=Decimal("0.00"))
             db.add(support_account)
-            print("Created support admin: support@arcterontrustbank.com (Acc: 0000000002) - Password: Support@1234")
+            print("Created support admin: support@arcterontrust.com (Acc: 0000000002) - Password: Support@1234")
 
         db.commit()
     except Exception as e:
