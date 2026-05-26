@@ -9,7 +9,7 @@ from typing import Optional
 from datetime import datetime
 from uuid import UUID
 
-router = APIRouter(prefix="/api/notifications", tags=["Notifications"])
+router = APIRouter(prefix="/api/notifications", tags=["Notifications"], redirect_slashes=False)
 
 
 @router.get("/unread-count")
@@ -24,6 +24,20 @@ def get_unread_count(
     return {"count": count}
 
 
+@router.post("/mark-all-read")
+def mark_all_read(
+    current_user: User = Depends(get_current_active_user),
+    db: Session = Depends(get_db)
+):
+    updated = db.query(Notification).filter(
+        Notification.user_id == current_user.id,
+        Notification.status == NotificationStatus.unread
+    ).update({"status": NotificationStatus.read})
+    db.commit()
+    return {"success": True, "updated_count": updated}
+
+
+@router.get("")
 @router.get("/")
 def get_notifications(
     current_user: User = Depends(get_current_active_user),
@@ -94,6 +108,17 @@ def get_notifications(
     }
 
 
+@router.delete("/all")
+def delete_all_notifications(
+    current_user: User = Depends(get_current_active_user),
+    db: Session = Depends(get_db)
+):
+    db.query(Notification).filter(Notification.user_id == current_user.id).delete()
+    db.commit()
+
+    return {"success": True}
+
+
 @router.get("/{notification_id}")
 def get_notification(
     notification_id: str,
@@ -124,19 +149,6 @@ def get_notification(
         "related_type": notif.related_type,
         "data": notif.data
     }
-
-
-@router.post("/mark-all-read")
-def mark_all_read(
-    current_user: User = Depends(get_current_active_user),
-    db: Session = Depends(get_db)
-):
-    updated = db.query(Notification).filter(
-        Notification.user_id == current_user.id,
-        Notification.status == NotificationStatus.unread
-    ).update({"status": NotificationStatus.read})
-    db.commit()
-    return {"success": True, "updated_count": updated}
 
 
 @router.post("/{notification_id}/mark-read")
