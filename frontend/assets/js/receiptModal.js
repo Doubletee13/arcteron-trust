@@ -557,18 +557,41 @@ const ReceiptModal = (function () {
         const originalText = btn.innerHTML;
         btn.innerHTML = 'Generating...';
 
-        try {
-            // Wait slightly for fonts/rendering
-            await new Promise(r => setTimeout(r, 100));
 
-            const canvas = await html2canvas(captureElem, {
+        try {
+            // Short wait for render, skip external font loading
+            await new Promise(r => setTimeout(r, 150));
+
+            // Clone off-screen to avoid modal viewport positioning issues
+            const clone = captureElem.cloneNode(true);
+            clone.style.position = 'fixed';
+            clone.style.top = '0';
+            clone.style.left = '0';
+            clone.style.zIndex = '-9999';
+            clone.style.width = captureElem.offsetWidth + 'px';
+            clone.style.margin = '0';
+            clone.style.boxSizing = 'border-box';
+            document.body.appendChild(clone);
+
+            const fullWidth = clone.offsetWidth;
+            const fullHeight = clone.scrollHeight;
+
+            const canvas = await html2canvas(clone, {
                 scale: 2,
-                useCORS: true,
+                useCORS: false,
+                allowTaint: true,
                 backgroundColor: null,
                 logging: false,
-                windowWidth: captureElem.scrollWidth,
-                windowHeight: captureElem.scrollHeight
+                width: fullWidth,
+                height: fullHeight,
+                windowWidth: fullWidth,
+                windowHeight: fullHeight,
+                scrollX: 0,
+                scrollY: 0,
+                ignoreElements: (el) => el.tagName === "LINK" && el.rel === "stylesheet" && el.href && el.href.includes("fonts.googleapis")
             });
+
+            document.body.removeChild(clone);
 
             // Convert to blob
             canvas.toBlob(async (blob) => {
