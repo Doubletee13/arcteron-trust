@@ -295,7 +295,7 @@ def update_profile(
     if current_user.status == UserStatus.blocked:
         raise HTTPException(
             status_code=403, 
-            detail="Account blocked. Contact support@arcteronbank"
+            detail="Account blocked. Contact support@arcterontrust.com"
         )
     
     # Update only provided fields
@@ -334,7 +334,7 @@ def update_profile_photo(
     if current_user.status == UserStatus.blocked:
         raise HTTPException(
             status_code=403, 
-            detail="Account blocked. Contact support@arcteronbank"
+            detail="Account blocked. Contact support@arcterontrust.com"
         )
     
     # Validate base64 data
@@ -370,7 +370,7 @@ def update_profile_photo(
             with httpx.Client() as client:
                 res = client.post(upload_url, headers=headers, content=file_bytes)
                 if res.status_code not in (200, 201):
-                    raise HTTPException(status_code=500, detail=f"Storage upload failed: {res.text}")
+                    raise HTTPException(status_code=500, detail=f"Storage upload failed: status={res.status_code} body={res.text}")
             
             # 3. Store the clean short public URL in PostgreSQL instead of full file data
             public_url = f"{supabase_url}/storage/v1/object/public/avatars/{filename}"
