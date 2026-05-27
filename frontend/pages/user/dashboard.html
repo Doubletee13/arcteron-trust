@@ -2034,7 +2034,7 @@
 
 
 
-        const fullName = `${user.first_name} ${user.last_name}`;
+        const fullName = [user.first_name, user.middle_name, user.last_name].filter(Boolean).join(' ');
 
         const sA = document.getElementById('sidebarAvatar'); if(sA) sA.textContent = initials;
         const tA = document.getElementById('topbarAvatar'); if(tA) tA.textContent = initials;
@@ -2059,6 +2059,11 @@
               btn.style.opacity = '0.5';
             });
           }
+
+          // Update card holder name with fresh data
+          const freshName = [data.first_name, data.middle_name, data.last_name].filter(Boolean).join(' ');
+          const cHolderFresh = document.getElementById('cardHolderName');
+          if(cHolderFresh) cHolderFresh.textContent = freshName.toUpperCase();
 
           if (data.account) {
             actualBalance = fmt(data.account.balance);
