@@ -19,7 +19,8 @@ app = FastAPI(
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        settings.FRONTEND_URL,
+        "https://arcterontrust.com",
+        "https://www.arcterontrust.com",
         "https://arcteron-trust.vercel.app",
         "http://127.0.0.1:5500",
         "http://localhost:5500",
