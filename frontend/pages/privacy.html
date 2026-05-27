@@ -99,59 +99,158 @@
         </div>
     </nav>
     <div class="mobile-drawer" id="mobileDrawer">
-        <div class="drawer-overlay" id="drawerOverlay"></div>
+        <div class="drawer-overlay"></div>
         <div class="drawer-panel">
             <div class="drawer-header">
-                <span class="nav-brand-name">Arcteron Trust</span>
-                <button class="drawer-close" id="drawerClose">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <div class="nav-brand">
+                    <svg style="width:26px;height:26px;color:var(--text-primary)" viewBox="0 0 40 40" fill="none">
+                        <circle cx="20" cy="20" r="18" stroke="currentColor" stroke-width="1.5" opacity="0.3" />
+                        <path d="M20 8 L30 28 H24 L20 20 L16 28 H10 Z" fill="currentColor" opacity="0.9" />
+                        <path d="M14 23 H26" stroke="currentColor" stroke-width="1.5" opacity="0.6" />
+                    </svg>
+                    <span class="nav-brand-name">Arcteron Trust</span>
+                </div>
+                <button class="drawer-close" id="drawerClose" aria-label="Close menu">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <line x1="18" y1="6" x2="6" y2="18" />
                         <line x1="6" y1="6" x2="18" y2="18" />
                     </svg>
                 </button>
             </div>
             <div class="drawer-nav">
-                <button class="drawer-nav-trigger">Personal Banking</button>
-                <div class="drawer-sub-links">
-                    <a href="/frontend/pages/personal-banking.html">Checking Accounts</a>
-                    <a href="/frontend/pages/personal-banking.html#savings">Savings Accounts</a>
-                    <a href="/frontend/pages/personal-banking.html#credit">Credit Cards</a>
-                    <a href="/frontend/pages/login.html" class="drawer-bold-link">Online Banking</a>
+                <div class="drawer-nav-section">
+                    <button class="drawer-nav-trigger">Personal Banking <svg class="drawer-chevron" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="6 9 12 15 18 9" />
+                        </svg></button>
+                    <div class="drawer-sub-links">
+                        <a href="/frontend/pages/personal-banking.html"><svg viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2">
+                                <rect x="2" y="5" width="20" height="14" rx="2" />
+                                <line x1="2" y1="10" x2="22" y2="10" />
+                            </svg>Checking Accounts</a>
+                        <a href="/frontend/pages/personal-banking.html#savings"><svg viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10" />
+                            </svg>Savings Accounts</a>
+                        <a href="/frontend/pages/personal-banking.html#credit"><svg viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2">
+                                <rect x="1" y="4" width="22" height="16" rx="2" />
+                            </svg>Credit Cards</a>
+                        <a href="/frontend/pages/login.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
+                                <polyline points="10 17 15 12 10 7" />
+                            </svg>Online Banking</a>
+                    </div>
                 </div>
-                <button class="drawer-nav-trigger">Business Banking</button>
-                <div class="drawer-sub-links">
-                    <a href="/frontend/pages/business-banking.html">Business Checking</a>
-                    <a href="/frontend/pages/business-banking.html#merchant">Merchant Services</a>
-                    <a href="/frontend/pages/business-banking.html#loans">Business Loans</a>
+                <div class="drawer-nav-section">
+                    <button class="drawer-nav-trigger">Business Banking <svg class="drawer-chevron" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="6 9 12 15 18 9" />
+                        </svg></button>
+                    <div class="drawer-sub-links">
+                        <a href="/frontend/pages/business-banking.html"><svg viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2">
+                                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                            </svg>Business Checking</a>
+                        <a href="/frontend/pages/business-banking.html#merchant"><svg viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2">
+                                <line x1="12" y1="1" x2="12" y2="23" />
+                                <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+                            </svg>Merchant Services</a>
+                        <a href="/frontend/pages/business-banking.html#loans"><svg viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2">
+                                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+                            </svg>Business Loans</a>
+                        <a href="/frontend/pages/business-banking.html#treasury"><svg viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2">
+                                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8" />
+                            </svg>Treasury Management</a>
+                    </div>
                 </div>
-                <button class="drawer-nav-trigger">Wealth Management</button>
-                <div class="drawer-sub-links">
-                    <a href="/frontend/pages/wealth-management.html">Investment Advisory</a>
-                    <a href="/frontend/pages/wealth-management.html#retirement">Retirement Planning</a>
-                    <a href="/frontend/pages/wealth-management.html#trust">Trust Services</a>
+                <div class="drawer-nav-section">
+                    <button class="drawer-nav-trigger">Wealth Management <svg class="drawer-chevron" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="6 9 12 15 18 9" />
+                        </svg></button>
+                    <div class="drawer-sub-links">
+                        <a href="/frontend/pages/wealth-management.html"><svg viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2">
+                                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+                            </svg>Investment Advisory</a>
+                        <a href="/frontend/pages/wealth-management.html#retirement"><svg viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10" />
+                            </svg>Retirement Planning</a>
+                        <a href="/frontend/pages/wealth-management.html#estate"><svg viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2">
+                                <path d="M3 9l9-7 9 7v11" />
+                            </svg>Estate Planning</a>
+                        <a href="/frontend/pages/wealth-management.html#trust"><svg viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2">
+                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                            </svg>Trust Services</a>
+                    </div>
                 </div>
-                <button class="drawer-nav-trigger">Loans</button>
-                <div class="drawer-sub-links">
-                    <a href="/frontend/pages/loans.html">Home Loans</a>
-                    <a href="/frontend/pages/loans.html#auto">Auto Loans</a>
-                    <a href="/frontend/pages/loans.html#personal">Personal Loans</a>
-                    <a href="/frontend/pages/loans.html#student">Student Loans</a>
+                <div class="drawer-nav-section">
+                    <button class="drawer-nav-trigger">Loans <svg class="drawer-chevron" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2">
+                            <polyline points="6 9 12 15 18 9" />
+                        </svg></button>
+                    <div class="drawer-sub-links">
+                        <a href="/frontend/pages/loans.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path d="M3 9l9-7 9 7v11" />
+                            </svg>Home Loans</a>
+                        <a href="/frontend/pages/loans.html#auto"><svg viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2">
+                                <rect x="1" y="3" width="15" height="13" rx="2" />
+                            </svg>Auto Loans</a>
+                        <a href="/frontend/pages/loans.html#personal"><svg viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="7" r="4" />
+                            </svg>Personal Loans</a>
+                        <a href="/frontend/pages/loans.html#student"><svg viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2">
+                                <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
+                            </svg>Student Loans</a>
+                    </div>
                 </div>
-                <button class="drawer-nav-trigger">About Us</button>
-                <div class="drawer-sub-links">
-                    <a href="/frontend/pages/about.html">Our Story</a>
-                    <a href="/frontend/pages/about.html#leadership">Leadership Team</a>
-                    <a href="/frontend/pages/about.html#community">Community Impact</a>
-                    <a href="/frontend/pages/about.html#careers">Careers</a>
+                <div class="drawer-nav-section">
+                    <button class="drawer-nav-trigger">About Us <svg class="drawer-chevron" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="6 9 12 15 18 9" />
+                        </svg></button>
+                    <div class="drawer-sub-links">
+                        <a href="/frontend/pages/about.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <circle cx="12" cy="12" r="10" />
+                            </svg>Our Story</a>
+                        <a href="/frontend/pages/about.html#leadership"><svg viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5" />
+                            </svg>Leadership</a>
+                        <a href="/frontend/pages/about.html#community"><svg viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2">
+                                <path d="M3 9l9-7 9 7v11" />
+                            </svg>Community</a>
+                        <a href="/frontend/pages/about.html#careers"><svg viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2">
+                                <rect x="2" y="7" width="20" height="14" rx="2" />
+                            </svg>Careers</a>
+                    </div>
                 </div>
                 <a href="/frontend/pages/contact.html" class="drawer-solo-link">Contact</a>
             </div>
             <div class="drawer-footer">
-                <a href="/frontend/pages/login.html" class="drawer-btn-secondary">Sign In</a>
-                <a href="/frontend/pages/register.html" class="drawer-btn-primary">Open Account</a>
+                <a href="/frontend/pages/login.html" class="nav-btn-signin">Sign In</a>
+                <a href="/frontend/pages/register.html" class="nav-btn-open">Open Account</a>
             </div>
         </div>
     </div>
+    </div>
+
 
 
     <div class="legal-content">
