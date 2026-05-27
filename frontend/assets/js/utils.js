@@ -83,6 +83,17 @@ const Utils = {
     setTimeout(() => { window.location.href = url; }, delay);
   },
 
+  setAvatar(elementId, user) {
+    const el = document.getElementById(elementId);
+    if (!el) return;
+    if (user.profile_photo) {
+      el.innerHTML = '<img src="' + user.profile_photo + '" alt="' + (user.first_name || '') + '" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">';
+    } else {
+      const initials = (user.first_name?.[0] || '') + (user.last_name?.[0] || '');
+      el.textContent = initials.toUpperCase();
+    }
+  },
+
   showToast(message, type = 'error') {
     let container = document.getElementById('toast-container');
     if (!container) {

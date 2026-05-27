@@ -2061,9 +2061,9 @@
           
           // Update sidebar
           const initials = (user.first_name[0] + user.last_name[0]).toUpperCase();
-          const sA = document.getElementById('sidebarAvatar'); if(sA) sA.textContent = initials;
+          Utils.setAvatar('sidebarAvatar', user);
           document.getElementById('sidebarName').textContent = `${user.first_name} ${user.last_name}`;
-          const tA = document.getElementById('topbarAvatar'); if(tA) tA.textContent = initials;
+          Utils.setAvatar('topbarAvatar', user);
           
           // Update profile header
           const profilePhoto = document.getElementById('profilePhoto');

@@ -2036,9 +2036,9 @@
 
         const fullName = [user.first_name, user.middle_name, user.last_name].filter(Boolean).join(' ');
 
-        const sA = document.getElementById('sidebarAvatar'); if(sA) sA.textContent = initials;
-        const tA = document.getElementById('topbarAvatar'); if(tA) tA.textContent = initials;
-        const gA = document.getElementById('greetingAvatar'); if(gA) gA.textContent = initials;
+        Utils.setAvatar('sidebarAvatar', user);
+        Utils.setAvatar('topbarAvatar', user);
+        Utils.setAvatar('greetingAvatar', user);
         const sN = document.getElementById('sidebarName'); if(sN) sN.textContent = fullName;
         const cHolder = document.getElementById('cardHolderName'); if(cHolder) cHolder.textContent = fullName.toUpperCase();
         setGreeting(user.first_name);
