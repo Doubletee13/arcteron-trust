@@ -1674,7 +1674,7 @@
           closeModal('personalInfoModal');
           loadProfile(); // Reload profile data
         } else {
-          Utils.showToast(res?.data?.detail || 'Failed to update personal information');
+          Utils.showToast('Failed to update personal information. Please try again.');
         }
       } catch (err) {
         console.error('Error updating personal info:', err);
@@ -1749,7 +1749,7 @@
           closeModal('addressModal');
           loadProfile(); // Reload profile data
         } else {
-          Utils.showToast(res?.data?.detail || 'Failed to update address');
+          Utils.showToast('Failed to update address. Please try again.');
         }
       } catch (err) {
         console.error('Error updating address:', err);
@@ -1822,7 +1822,7 @@
             closeModal('photoModal');
             loadProfile(); // Reload profile data
           } else {
-            Utils.showToast(res?.data?.detail || 'Failed to upload photo');
+            Utils.showToast('Photo upload failed. Please try again or contact support.');
           }
         };
         reader.readAsDataURL(selectedPhotoFile);
