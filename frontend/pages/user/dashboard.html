@@ -2060,10 +2060,12 @@
             });
           }
 
-          // Update card holder name with fresh data
+          // Update name fields with fresh data
           const freshName = [data.first_name, data.middle_name, data.last_name].filter(Boolean).join(' ');
           const cHolderFresh = document.getElementById('cardHolderName');
           if(cHolderFresh) cHolderFresh.textContent = freshName.toUpperCase();
+          const sNFresh = document.getElementById('sidebarName');
+          if(sNFresh) sNFresh.textContent = freshName;
 
           if (data.account) {
             actualBalance = fmt(data.account.balance);
