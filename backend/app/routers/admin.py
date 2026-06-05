@@ -490,11 +490,12 @@ def block_user(
     
     db.commit()
 
-    # Notify blocked user
+    # Notify blocked user — capture user_id before session expires the object
+    blocked_user_id = user.id
     from app.models.notification import NotificationType as NT
     NotificationService.create_notification(
         db,
-        user.id,
+        blocked_user_id,
         "Account Blocked",
         f"Your account has been blocked. Reason: {data.reason}. Please contact support@arcteronbank for assistance.",
         NT.warning
@@ -547,11 +548,13 @@ def activate_user(
     user.status = UserStatus.active
     db.commit()
 
+    # Capture user_id before session expires the object
+    activated_user_id = user.id
     from app.models.notification import NotificationType as NT
     from app.services.notification_service import NotificationService
     NotificationService.create_notification(
         db,
-        user.id,
+        activated_user_id,
         "Account Activated",
         "Your account has been activated by an administrator. You can now log in and access all features.",
         NT.system
@@ -671,12 +674,17 @@ def generate_cot_code(
     db.add(cot_code)
     db.commit()
 
+    # Capture user details before session expires the object
+    cot_user_id = user.id  # capture before commit
+    cot_user_email = user.email
+    cot_user_first_name = user.first_name
+
     # Send email to user with the code
     try:
         from app.services.email_service import send_cot_bop_code_email
         send_cot_bop_code_email(
-            to=user.email,
-            first_name=user.first_name,
+            to=cot_user_email,
+            first_name=cot_user_first_name,
             code_type=data.code_type.upper(),
             code=code,
             expires_at=expires_at.strftime("%Y-%m-%d %H:%M UTC")
@@ -689,7 +697,7 @@ def generate_cot_code(
     from app.services.notification_service import NotificationService
     NotificationService.create_notification(
         db,
-        user.id,
+        cot_user_id,
         f"{data.code_type.upper()} Code Generated",
         f"Your {data.code_type.upper()} authorization code is: {code}. It expires at {expires_at.strftime('%Y-%m-%d %H:%M UTC')}. Use it when prompted during your transfer.",
         NT.system
@@ -712,23 +720,53 @@ def delete_user(
     db: Session = Depends(get_db),
     current_admin: User = Depends(get_current_admin)
 ):
-    """Delete a user"""
+    """Delete a user and all related records"""
+    from app.models.notification import Notification
+    from app.models.transaction import Transaction
+    from app.models.cot_code import COTCode
+    from app.models.admin_transaction import AdminTransaction
+
     user = db.query(User).filter(User.id == user_id).first()
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
-    
+
     if user.id == current_admin.id:
         raise HTTPException(status_code=400, detail="You cannot delete yourself")
-    
-    # Delete user's account
-    account = db.query(Account).filter(Account.user_id == user.id).first()
+
+    uid = user.id  # capture before session expires it
+
+    # 1. Delete notifications
+    db.query(Notification).filter(Notification.user_id == uid).delete(synchronize_session=False)
+
+    # 2. Delete COT codes
+    db.query(COTCode).filter(COTCode.user_id == uid).delete(synchronize_session=False)
+
+    # 3. AdminTransactions: delete where user is the subject, null out where user was the admin
+    db.query(AdminTransaction).filter(AdminTransaction.user_id == uid).delete(synchronize_session=False)
+    db.query(AdminTransaction).filter(AdminTransaction.admin_id == uid).update(
+        {"admin_id": None}, synchronize_session=False
+    )
+
+    # 4. Null out transaction references (preserve financial history)
+    db.query(Transaction).filter(Transaction.sender_id == uid).update(
+        {"sender_id": None}, synchronize_session=False
+    )
+    db.query(Transaction).filter(Transaction.receiver_id == uid).update(
+        {"receiver_id": None}, synchronize_session=False
+    )
+    db.query(Transaction).filter(Transaction.admin_id == uid).update(
+        {"admin_id": None}, synchronize_session=False
+    )
+
+    # 5. Delete account
+    account = db.query(Account).filter(Account.user_id == uid).first()
     if account:
         db.delete(account)
-    
-    # Delete user
+
+    # 6. Delete user
     db.delete(user)
     db.commit()
-    
+
     return {"message": "User deleted successfully"}
 
 
@@ -757,11 +795,16 @@ def generate_code_by_email(
     db.add(cot_code)
     db.commit()
 
+    # Capture user details before session expires the object
+    email_user_id = user.id  # capture before commit
+    email_user_email = user.email
+    email_user_first_name = user.first_name
+
     try:
         from app.services.email_service import send_cot_bop_code_email
         send_cot_bop_code_email(
-            to=user.email,
-            first_name=user.first_name,
+            to=email_user_email,
+            first_name=email_user_first_name,
             code_type=data.code_type.upper(),
             code=code,
             expires_at=expires_at.strftime("%Y-%m-%d %H:%M UTC")
@@ -772,7 +815,7 @@ def generate_code_by_email(
     from app.models.notification import NotificationType as NT
     from app.services.notification_service import NotificationService
     NotificationService.create_notification(
-        db, user.id,
+        db, email_user_id,
         f"{data.code_type.upper()} Code Generated",
         f"Your {data.code_type.upper()} authorization code is: {code}. Expires: {expires_at.strftime('%Y-%m-%d %H:%M UTC')}.",
         NT.system
