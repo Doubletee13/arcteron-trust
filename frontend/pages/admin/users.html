@@ -1002,6 +1002,59 @@
         .toast-close:hover {
             color: var(--text-primary);
         }
+        .toast.confirm {
+            border-left: 4px solid #F59E0B;
+            min-width: 340px;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 12px;
+        }
+        .toast.confirm .toast-icon {
+            color: #F59E0B;
+        }
+        .toast-confirm-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+        }
+        .toast-confirm-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            flex: 1;
+        }
+        .toast-confirm-body {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+        .toast-confirm-actions {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            justify-content: flex-end;
+            width: 100%;
+        }
+        .toast-btn {
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            border: 1px solid var(--border-color);
+            transition: opacity 0.2s;
+        }
+        .toast-btn:hover { opacity: 0.8; }
+        .toast-btn.cancel {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+        .toast-btn.danger {
+            background: #EF4444;
+            color: #fff;
+            border-color: #EF4444;
+        }
 
         /* Overlay */
         .sidebar-overlay {
@@ -2041,30 +2094,55 @@
         }
 
         // Delete user
-        async function deleteUser(userId, btn) {
-            if (!confirm('Are you sure you want to delete this user? This cannot be undone.')) return;
-            if (btn) { btn.disabled = true; btn.textContent = 'Deleting...'; }
-            const token = localStorage.getItem('admin_token');
-            try {
-                const response = await fetch(`${API_BASE}/api/admin/users/${userId}`, {
-                    method: 'DELETE',
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-
-                if (response.ok) {
-                    showToast('User deleted successfully', 'success');
-                    loadUsers();
-                } else {
-                    const error = await response.json().catch(() => ({}));
-                    showToast(error.detail || 'Failed to delete user', 'error');
-                }
-            } catch (error) {
-                console.error('Error deleting user:', error);
-                showToast('Error deleting user', 'error');
-            }
+        function showConfirmToast(message, onConfirm) {
+            const container = document.getElementById('toastContainer');
+            container.querySelectorAll('.toast.confirm').forEach(t => t.remove());
+            const toast = document.createElement('div');
+            toast.className = 'toast confirm';
+            toast.innerHTML = `
+                <div class="toast-confirm-header">
+                    <span class="toast-icon">&#9888;</span>
+                    <span class="toast-confirm-title">Confirm Action</span>
+                    <button class="toast-close" onclick="this.closest('.toast').remove()">&times;</button>
+                </div>
+                <div class="toast-confirm-body">${message}</div>
+                <div class="toast-confirm-actions">
+                    <button class="toast-btn cancel" onclick="this.closest('.toast').remove()">Cancel</button>
+                    <button class="toast-btn danger" id="confirmDeleteBtn">Delete</button>
+                </div>
+            `;
+            container.appendChild(toast);
+            toast.querySelector('#confirmDeleteBtn').addEventListener('click', () => {
+                toast.remove();
+                onConfirm();
+            });
         }
+
+        async function deleteUser(userId, btn) {
+            showConfirmToast('Are you sure you want to delete this user? This cannot be undone.', async () => {
+                if (btn) { btn.disabled = true; btn.textContent = 'Deleting...'; }
+                const token = localStorage.getItem('admin_token');
+                try {
+                    const response = await fetch(`${API_BASE}/api/admin/users/${userId}`, {
+                        method: 'DELETE',
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    if (response.ok) {
+                        showToast('User deleted successfully', 'success');
+                        loadUsers();
+                    } else {
+                        const error = await response.json().catch(() => ({}));
+                        if (btn) { btn.disabled = false; btn.textContent = 'Delete'; }
+                        showToast(error.detail || 'Failed to delete user', 'error');
+                    }
+                } catch (error) {
+                    console.error('Error deleting user:', error);
+                    if (btn) { btn.disabled = false; btn.textContent = 'Delete'; }
+                    showToast('Error deleting user', 'error');
+                }
+            });
+        }
+
 
         function closeModal(modalId) {
             document.getElementById(modalId).classList.remove('show');
