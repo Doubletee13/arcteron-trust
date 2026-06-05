@@ -758,12 +758,31 @@ def delete_user(
         {"admin_id": None}, synchronize_session=False
     )
 
-    # 5. Delete account
+    # 5. Null out TransactionCode references
+    from app.models.code import TransactionCode
+    db.query(TransactionCode).filter(TransactionCode.assigned_to_user_id == uid).update(
+        {"assigned_to_user_id": None}, synchronize_session=False
+    )
+    db.query(TransactionCode).filter(TransactionCode.generated_by_admin_id == uid).update(
+        {"generated_by_admin_id": None}, synchronize_session=False
+    )
+
+    # 6. Null out AuditLog admin_id where deleted user was the admin
+    from app.models.audit_log import AuditLog
+    db.query(AuditLog).filter(AuditLog.admin_id == uid).update(
+        {"admin_id": None}, synchronize_session=False
+    )
+
+    # 7. Delete cards (FK: account_id → accounts, must go before account)
+    from app.models.card import Card
+    db.query(Card).filter(Card.user_id == uid).delete(synchronize_session=False)
+
+    # 8. Delete account
     account = db.query(Account).filter(Account.user_id == uid).first()
     if account:
         db.delete(account)
 
-    # 6. Delete user
+    # 9. Delete user
     db.delete(user)
     db.commit()
 
