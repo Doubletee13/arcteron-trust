@@ -297,6 +297,8 @@
     .page-content {
       padding: 28px;
       flex: 1;
+      overflow-x: hidden; /* step6 */
+      min-width: 0;
     }
 
     /* ── Greeting row ── */
@@ -578,7 +580,8 @@
     }
 
     .atm-card-scene {
-      width: 320px;
+      width: 100%;
+      max-width: 320px;
       height: 190px;
       perspective: 1000px;
       cursor: pointer;
