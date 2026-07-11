@@ -87,9 +87,12 @@ const Utils = {
     const el = document.getElementById(elementId);
     if (!el) return;
     if (user.profile_photo) {
-      el.innerHTML = '<img src="' + user.profile_photo + '" alt="' + (user.first_name || '') + '" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">';
+      el.innerHTML = '<img src="' + user.profile_photo + '" alt="' + (user.first_name || user.email) + '" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">';
     } else {
-      const initials = (user.first_name?.[0] || '') + (user.last_name?.[0] || '');
+      let initials = (user.first_name?.[0] || '') + (user.last_name?.[0] || '');
+      if (!initials && user.email) {
+        initials = user.email[0];
+      }
       el.textContent = initials.toUpperCase();
     }
   },
