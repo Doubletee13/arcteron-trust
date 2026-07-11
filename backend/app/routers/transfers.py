@@ -133,7 +133,7 @@ def local_transfer(
         sender_id=current_user.id,
         receiver_id=recipient_account.user_id,
         amount=amount,
-        currency="USD",
+        currency=sender_account.currency or "USD",
         transaction_type=TransactionType.local_transfer,
         status=TransactionStatus.completed,
         description=data.description or f"Transfer to {recipient_user.first_name} {recipient_user.last_name}",
