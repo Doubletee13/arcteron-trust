@@ -8,6 +8,9 @@ from app.schemas.user import (
     RegisterStep1,
     RegisterStep2,
     RegisterStep3,
+    RegisterStep4,
+    OTPVerifyRequest,
+    KYCSubmitRequest,
     LoginRequest,
     TokenResponse,
     UserResponse,
@@ -41,6 +44,8 @@ from app.utils.tokens import (
     verify_pin_reset_token,
     generate_verification_token,
     verify_verification_token,
+    generate_otp,
+    verify_otp,
 )
 from app.utils.jwt import create_access_token
 from app.services.email_service import send_password_reset_email, send_pin_reset_email, send_verification_email
@@ -69,17 +74,34 @@ def register_step_two(user_id: str, data: RegisterStep2, db: Session = Depends(g
     }
 
 
-@router.post("/register/step3/{user_id}", response_model=TokenResponse)
-def register_step_three(user_id: str, data: RegisterStep3, background_tasks: BackgroundTasks, db: Session = Depends(get_db)):
-    result = register_step3(user_id, data, db)
-    user_email = result["user"].email
-    user_first_name = result["user"].first_name
+@router.post("/register/step3/{user_id}")
+def register_step_three(user_id: str, data: RegisterStep3, db: Session = Depends(get_db)):
+    user = register_step3(user_id, data, db)
+    return {
+        "message": "Step 3 complete. Proceed to step 4.",
+        "user_id": str(user.id)
+    }
+
+
+@router.post("/register/step4/{user_id}")
+def register_step_four(user_id: str, data: RegisterStep4, background_tasks: BackgroundTasks, db: Session = Depends(get_db)):
+    from app.services.auth_service import register_step4
+    result = register_step4(user_id, data, db)
+    
+    # Generate 6-digit OTP code and trigger email dispatch
+    user = result["user"]
+    user_email = user.email
+    user_first_name = user.first_name
+    
+    otp_code = generate_otp(user_email)
+    
     background_tasks.add_task(
         send_verification_email,
         user_email,
         user_first_name,
-        generate_verification_token(user_email)
+        otp_code
     )
+    
     return result
 
 
@@ -245,13 +267,18 @@ def verify_pin_login(
 
 
 @router.post("/email-verification/request")
-def request_email_verification(data: EmailVerificationRequest, db: Session = Depends(get_db)):
+def request_email_verification(data: EmailVerificationRequest, background_tasks: BackgroundTasks, db: Session = Depends(get_db)):
     user = db.query(User).filter(User.email == data.email).first()
     if user and not user.is_email_verified:
-        token = generate_verification_token(user.email)
-        send_verification_email(user.email, user.first_name, token)
+        otp_code = generate_otp(user.email)
+        background_tasks.add_task(
+            send_verification_email,
+            user.email,
+            user.first_name,
+            otp_code
+        )
     # Always return success to avoid email enumeration
-    return {"message": "If that email exists and is not verified, a verification link has been sent."}
+    return {"message": "If that email exists and is not verified, a verification code has been sent."}
 
 
 @router.post("/email-verification/confirm")
@@ -282,6 +309,152 @@ def confirm_email_verification(data: EmailVerificationConfirm, db: Session = Dep
     db.commit()
 
     return {"message": "Email verified successfully"}
+
+
+@router.post("/email-verification/otp")
+def confirm_email_otp(
+    data: OTPVerifyRequest,
+    background_tasks: BackgroundTasks,
+    db: Session = Depends(get_db)
+):
+    from app.services.email_service import send_welcome_email
+    email = data.email.lower()
+    
+    if not verify_otp(email, data.code):
+        raise HTTPException(status_code=400, detail="Invalid or expired verification code")
+
+    user = db.query(User).filter(User.email == email).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    if user.is_email_verified:
+        return {"message": "Email already verified"}
+
+    user.is_email_verified = True
+    db.commit()
+    db.refresh(user)
+
+    # Create notification
+    NotificationService.create_notification(
+        db,
+        user.id,
+        "Email Verified",
+        "Your email has been successfully verified. Please complete your identity verification (KYC).",
+        NotificationType.email
+    )
+    db.commit()
+
+    # Trigger welcome email in the background with account number
+    if user.account:
+        background_tasks.add_task(
+            send_welcome_email,
+            to=user.email,
+            first_name=user.first_name,
+            full_name=f"{user.first_name} {user.last_name}",
+            account_number=user.account.account_number,
+            account_type=user.account.account_type,
+            country=user.country or "United States"
+        )
+
+    return {"message": "Email verified successfully"}
+
+
+def upload_kyc_document(data_uri: str, user_id: str, doc_type: str) -> str:
+    """Helper to decode base64 URI and upload to Supabase avatars bucket."""
+    if not data_uri:
+        return None
+    if not data_uri.startswith('data:'):
+        return data_uri
+
+    try:
+        header, encoded = data_uri.split(",", 1)
+        mime_type = header.split(";")[0].replace("data:", "")
+        ext = "jpg" if "jpeg" in mime_type else mime_type.split("/")[1]
+        file_bytes = base64.b64decode(encoded)
+        
+        supabase_url = os.environ.get("SUPABASE_URL")
+        supabase_key = os.environ.get("SUPABASE_KEY")
+        
+        if supabase_url and supabase_key:
+            filename = f"kyc_{user_id}_{doc_type}.{ext}"
+            upload_url = f"{supabase_url}/storage/v1/object/avatars/{filename}"
+            headers = {
+                "Authorization": f"Bearer {supabase_key}",
+                "Content-Type": mime_type,
+                "x-upsert": "true"
+            }
+            try:
+                with httpx.Client(timeout=15.0) as client:
+                    res = client.post(upload_url, headers=headers, content=file_bytes)
+                    if res.status_code in (200, 201):
+                        return f"{supabase_url}/storage/v1/object/public/avatars/{filename}"
+                    else:
+                        print(f"Supabase upload failed ({res.status_code}): {res.text[:200]}")
+            except Exception as upload_err:
+                print(f"Supabase upload exception: {upload_err}")
+        
+        return "https://ui-avatars.com/api/?name=KYC+Document"
+    except Exception:
+        return "https://ui-avatars.com/api/?name=KYC+Document"
+
+
+@router.post("/kyc/submit")
+def submit_kyc(
+    data: KYCSubmitRequest,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    if current_user.status == UserStatus.blocked:
+        raise HTTPException(status_code=403, detail="Account blocked. Please contact support.")
+
+    # Upload files using base64 image data
+    id_front_url = upload_kyc_document(data.id_front_data, str(current_user.id), "front")
+    id_back_url = upload_kyc_document(data.id_back_data, str(current_user.id), "back")
+    passport_photo_url = upload_kyc_document(data.passport_photo_data, str(current_user.id), "passport")
+
+    current_user.title = data.title
+    current_user.gender = data.gender
+    current_user.date_of_birth = data.date_of_birth
+    current_user.zip_code = data.zip_code
+    current_user.ssn_encrypted = hash_password(data.ssn) if data.ssn else None
+    if data.ssn:
+        current_user.ssn_last_four = data.ssn.replace("-", "")[-4:]
+
+    current_user.employment_status = data.employment_status
+    current_user.employer_name = data.employer_name
+    current_user.annual_income = data.annual_income
+    current_user.source_of_income = data.source_of_income
+    current_user.account_purpose = data.account_purpose
+
+    current_user.address = data.address
+    current_user.city = data.city
+    current_user.state = data.state
+    current_user.country = data.nationality
+
+    current_user.next_of_kin_name = data.next_of_kin_name
+    current_user.next_of_kin_address = data.next_of_kin_address
+    current_user.next_of_kin_relationship = data.next_of_kin_relationship
+    current_user.next_of_kin_age = data.next_of_kin_age
+
+    current_user.id_type = data.id_type
+    current_user.id_number = data.id_number
+    current_user.id_expiry_date = data.id_expiry_date
+
+    if id_front_url:
+        current_user.id_front_image = id_front_url
+    if id_back_url:
+        current_user.id_back_image = id_back_url
+    if passport_photo_url:
+        current_user.profile_photo = passport_photo_url
+
+    current_user.kyc_submitted_at = datetime.utcnow()
+    current_user.is_kyc_complete = True
+    current_user.status = UserStatus.pending
+
+    db.commit()
+    db.refresh(current_user)
+
+    return {"message": "KYC submitted successfully. Account pending activation.", "user": user_to_response(current_user)}
 
 
 @router.put("/me", response_model=UserResponse)

@@ -1,6 +1,7 @@
 from typing import Optional
 from itsdangerous import URLSafeTimedSerializer
 from app.config import settings
+from app.utils.otp_store import generate_otp, verify_otp
 
 serializer = URLSafeTimedSerializer(settings.SECRET_KEY)
 

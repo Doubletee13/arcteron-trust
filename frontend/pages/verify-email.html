@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Verify Email — Arcteron Trust</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=DM+Sans:wght@300;400;500;600&display=swap"
+        rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <link rel="stylesheet" href="../assets/css/theme.css">
     <link rel="stylesheet" href="../assets/css/style.css">
     <script src="../assets/js/theme.js"></script>
@@ -147,6 +150,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="verification-container">
         <div class="logo-section">
@@ -160,89 +164,177 @@
             <p>Private Banking & Wealth Management</p>
         </div>
 
-        <div id="statusMessage" class="status-message loading">
-            <div class="status-icon">⏳</div>
-            <div class="status-text">Verifying your email...</div>
-            <div class="status-subtext">Please wait while we process your verification</div>
+        <div id="statusMessage" class="status-message" style="display: none;">
+            <div class="status-icon" id="messageStatusIcon">✕</div>
+            <div class="status-text" id="messageStatusText">Verification Failed</div>
+            <div class="status-subtext" id="messageStatusSub">Please try again.</div>
         </div>
 
-        <div id="actionSection" style="display: none;">
-            <button id="actionButton" class="action-button" onclick="handleAction()">Continue to Login</button>
-            <div class="resend-link">
-                <a href="resend-verification.html">Didn't receive the email? Request a new one</a>
+        <div id="otpFormSection">
+            <h2
+                style="font-size: 18px; font-weight: 600; text-align: center; color: var(--text-primary); margin-bottom: 8px;">
+                Verify Your Email</h2>
+            <p
+                style="font-size: 13px; color: var(--text-secondary); text-align: center; margin-bottom: 24px; line-height: 1.5;">
+                We sent a 6-digit confirmation code to <br><strong id="emailDisplay"
+                    style="color: var(--text-primary);">your email</strong>.
+            </p>
+
+            <div class="otp-fields" style="display: flex; gap: 10px; justify-content: center; margin-bottom: 24px;">
+                <input type="text" maxlength="1" class="otp-input" pattern="[0-9]*" inputmode="numeric"
+                    style="width: 48px; height: 48px; font-size: 20px; text-align: center; border-radius: 8px; border: 1.5px solid var(--border-color); background: var(--bg-primary); color: var(--text-primary); outline: none;">
+                <input type="text" maxlength="1" class="otp-input" pattern="[0-9]*" inputmode="numeric"
+                    style="width: 48px; height: 48px; font-size: 20px; text-align: center; border-radius: 8px; border: 1.5px solid var(--border-color); background: var(--bg-primary); color: var(--text-primary); outline: none;">
+                <input type="text" maxlength="1" class="otp-input" pattern="[0-9]*" inputmode="numeric"
+                    style="width: 48px; height: 48px; font-size: 20px; text-align: center; border-radius: 8px; border: 1.5px solid var(--border-color); background: var(--bg-primary); color: var(--text-primary); outline: none;">
+                <input type="text" maxlength="1" class="otp-input" pattern="[0-9]*" inputmode="numeric"
+                    style="width: 48px; height: 48px; font-size: 20px; text-align: center; border-radius: 8px; border: 1.5px solid var(--border-color); background: var(--bg-primary); color: var(--text-primary); outline: none;">
+                <input type="text" maxlength="1" class="otp-input" pattern="[0-9]*" inputmode="numeric"
+                    style="width: 48px; height: 48px; font-size: 20px; text-align: center; border-radius: 8px; border: 1.5px solid var(--border-color); background: var(--bg-primary); color: var(--text-primary); outline: none;">
+                <input type="text" maxlength="1" class="otp-input" pattern="[0-9]*" inputmode="numeric"
+                    style="width: 48px; height: 48px; font-size: 20px; text-align: center; border-radius: 8px; border: 1.5px solid var(--border-color); background: var(--bg-primary); color: var(--text-primary); outline: none;">
             </div>
+
+            <button id="verifyButton" class="action-button" onclick="submitOtpVerification()"
+                style="margin-bottom: 16px;">Verify Email</button>
+
+            <p style="font-size: 12px; color: var(--text-muted); text-align: center; margin-bottom: 24px;">
+                Code is valid for 60 minutes.
+            </p>
+
+            <div class="resend-link">
+                <a href="#" onclick="resendCode(event)">Didn't receive the email? Resend code</a>
+            </div>
+        </div>
+
+        <div id="successSection" style="display: none; text-align: center;">
+            <div class="status-message success" style="margin-bottom: 24px;">
+                <div class="status-icon">✓</div>
+                <div class="status-text">Verification Successful!</div>
+                <div class="status-subtext">Your email address has been verified. Welcome to Arcteron Trust.</div>
+            </div>
+            <button class="action-button" onclick="goToLogin()">Proceed to login / KYC setup</button>
         </div>
     </div>
 
+    <script src="../assets/js/api.js"></script>
+    <script src="../assets/js/auth.js"></script>
+    <script src="../assets/js/utils.js"></script>
+    <style>
+        .otp-input:focus {
+            border-color: var(--text-primary) !important;
+            box-shadow: 0 0 0 2px rgba(17, 24, 39, 0.06);
+        }
+    </style>
     <script>
-        const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? 'http://localhost:8000' : 'https://arcteron-trust.onrender.com';
+        Auth.requireGuest();
 
-        async function verifyEmail() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const token = urlParams.get('token');
+        const urlParams = new URLSearchParams(window.location.search);
+        const email = urlParams.get('email') || '';
 
-            if (!token) {
-                showError('Invalid verification link. No token provided.');
-                return;
-            }
+        if (email) {
+            document.getElementById('emailDisplay').textContent = email;
+        }
 
-            try {
-                const response = await fetch(`${API_BASE}/api/auth/email-verification/confirm`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ token: token })
-                });
+        // Setup OTP inputs navigation
+        const inputs = document.querySelectorAll('.otp-input');
+        inputs.forEach((input, index) => {
+            input.addEventListener('input', (e) => {
+                const value = e.target.value;
+                e.target.value = value.replace(/[^\d]/g, ''); // only numbers
 
-                const data = await response.json();
-
-                if (response.ok) {
-                    showSuccess(data.message);
-                } else {
-                    showError(data.detail || 'Verification failed. Please try again.');
+                if (e.target.value && index < inputs.length - 1) {
+                    inputs[index + 1].focus();
                 }
-            } catch (error) {
-                showError('Network error. Please check your connection and try again.');
+            });
+
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Backspace' && !e.target.value && index > 0) {
+                    inputs[index - 1].focus();
+                }
+            });
+        });
+
+        function getOtpValue() {
+            let code = '';
+            inputs.forEach(input => code += input.value);
+            return code;
+        }
+
+        function showMessage(type, title, message) {
+            const statusMessage = document.getElementById('statusMessage');
+            const icon = document.getElementById('messageStatusIcon');
+            const txt = document.getElementById('messageStatusText');
+            const sub = document.getElementById('messageStatusSub');
+
+            statusMessage.style.display = 'block';
+            statusMessage.className = `status-message ${type}`;
+
+            icon.textContent = type === 'success' ? '✓' : '✕';
+            txt.textContent = title;
+            sub.textContent = message;
+
+            statusMessage.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        function hideMessage() {
+            document.getElementById('statusMessage').style.display = 'none';
+        }
+
+        async function submitOtpVerification() {
+            hideMessage();
+            const code = getOtpValue();
+
+            if (code.length !== 6) {
+                return showMessage('error', 'Incomplete Code', 'Please fill in all 6 digits.');
+            }
+            if (!email) {
+                return showMessage('error', 'Missing Email', 'No email address found in the verification URL parameters.');
+            }
+
+            const verifyButton = document.getElementById('verifyButton');
+            verifyButton.disabled = true;
+            verifyButton.textContent = 'Verifying...';
+
+            const res = await Api.post('/api/auth/email-verification/otp', {
+                email: email,
+                code: code
+            });
+
+            verifyButton.disabled = false;
+            verifyButton.textContent = 'Verify Email';
+
+            if (res.ok) {
+                document.getElementById('otpFormSection').style.display = 'none';
+                document.getElementById('successSection').style.display = 'block';
+            } else {
+                showMessage('error', 'Verification Failed', res.data.detail || 'The code entered is invalid or expired.');
             }
         }
 
-        function showSuccess(message) {
-            const statusMessage = document.getElementById('statusMessage');
-            statusMessage.className = 'status-message success';
-            statusMessage.innerHTML = `
-                <div class="status-icon">✓</div>
-                <div class="status-text">${message}</div>
-                <div class="status-subtext">Your email has been verified successfully</div>
-            `;
+        async function resendCode(e) {
+            e.preventDefault();
+            hideMessage();
 
-            const actionSection = document.getElementById('actionSection');
-            actionSection.style.display = 'block';
+            if (!email) {
+                return showMessage('error', 'Missing Email', 'Cannot request a verification code without an email parameter.');
+            }
+
+            const res = await Api.post('/api/auth/email-verification/request', {
+                email: email
+            });
+
+            if (res.ok) {
+                showMessage('success', 'Code Sent Successfully', 'A new 6-digit confirmation code has been dispatched to your email.');
+            } else {
+                showMessage('error', 'Request Failed', res.data.detail || 'Something went wrong. Please try again.');
+            }
         }
 
-        function showError(message) {
-            const statusMessage = document.getElementById('statusMessage');
-            statusMessage.className = 'status-message error';
-            statusMessage.innerHTML = `
-                <div class="status-icon">✕</div>
-                <div class="status-text">Verification Failed</div>
-                <div class="status-subtext">${message}</div>
-            `;
-
-            const actionSection = document.getElementById('actionSection');
-            actionSection.style.display = 'block';
-
-            const actionButton = document.getElementById('actionButton');
-            actionButton.textContent = 'Request New Verification Email';
-            actionButton.onclick = () => window.location.href = 'resend-verification.html';
+        function goToLogin() {
+            Utils.navigateTo('/frontend/pages/login.html');
         }
-
-        function handleAction() {
-            window.location.href = 'login.html';
-        }
-
-        // Auto-verify on page load
-        window.addEventListener('DOMContentLoaded', verifyEmail);
     </script>
 </body>
+
 </html>

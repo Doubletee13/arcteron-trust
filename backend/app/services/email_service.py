@@ -13,8 +13,8 @@ def get_template(filename: str) -> str:
 
 
 def send_email(to: str, subject: str, html_content: str):
-    # Use SMTP if MAIL_SERVER is not SendGrid (i.e. local MailHog)
-    if settings.MAIL_SERVER != "smtp.sendgrid.net":
+    # Use SMTP if MAIL_SERVER is not Resend or SendGrid (i.e. local MailHog)
+    if settings.MAIL_SERVER not in ["smtp.resend.com", "smtp.sendgrid.net"]:
         # Local SMTP via MailHog
         import smtplib
         from email.mime.multipart import MIMEMultipart
@@ -28,26 +28,70 @@ def send_email(to: str, subject: str, html_content: str):
         part = MIMEText(html_content, 'html')
         msg.attach(part)
 
-        with smtplib.SMTP(settings.MAIL_SERVER, settings.MAIL_PORT) as server:
-            server.sendmail(settings.MAIL_FROM, to, msg.as_string())
-
-        print(f"EMAIL (LOCAL SMTP) TO: {to} | SUBJECT: {subject}")
+        try:
+            with smtplib.SMTP(settings.MAIL_SERVER, settings.MAIL_PORT) as server:
+                server.sendmail(settings.MAIL_FROM, to, msg.as_string())
+            print(f"EMAIL (LOCAL SMTP) TO: {to} | SUBJECT: {subject}")
+        except ConnectionRefusedError:
+            print(f"MOCKED EMAIL TO: {to} | SUBJECT: {subject} (Local SMTP down, bypassing)")
+            
         return {"status_code": 250}
     else:
-        # Production: SendGrid HTTP API
-        from sendgrid import SendGridAPIClient
-        from sendgrid.helpers.mail import Mail
+        # Production: HTTP API (SendGrid or Resend) via Python standard urllib
+        import urllib.request
+        import urllib.error
+        import json
 
-        sg = SendGridAPIClient(api_key=settings.MAIL_PASSWORD)
-        message = Mail(
-            from_email=(settings.MAIL_FROM, settings.APP_NAME),
-            to_emails=to,
-            subject=subject,
-            html_content=html_content
+        is_sendgrid = settings.MAIL_SERVER == "smtp.sendgrid.net"
+
+        if is_sendgrid:
+            url = "https://api.sendgrid.com/v3/mail/send"
+            payload = {
+                "personalizations": [{"to": [{"email": to}]}],
+                "from": {"email": settings.MAIL_FROM, "name": settings.APP_NAME},
+                "subject": subject,
+                "content": [{"type": "text/html", "value": html_content}]
+            }
+            provider = "SENDGRID"
+        else:
+            # Resend
+            url = "https://api.resend.com/emails"
+            payload = {
+                "from": f"{settings.APP_NAME} <{settings.MAIL_FROM}>",
+                "to": [to],
+                "subject": subject,
+                "html": html_content
+            }
+            provider = "RESEND"
+
+        headers = {
+            "Authorization": f"Bearer {settings.MAIL_PASSWORD}",
+            "Content-Type": "application/json"
+        }
+
+        req = urllib.request.Request(
+            url,
+            data=json.dumps(payload).encode("utf-8"),
+            headers=headers,
+            method="POST"
         )
-        response = sg.send(message)
-        print(f"EMAIL TO: {to} | STATUS: {response.status_code} | BODY: {response.body}")
-        return response
+        try:
+            with urllib.request.urlopen(req) as response:
+                status_code = response.getcode()
+                body = response.read().decode("utf-8")
+                print(f"EMAIL ({provider}) TO: {to} | STATUS: {status_code}")
+                class MockResponse:
+                    def __init__(self, sc, b):
+                        self.status_code = sc
+                        self.body = b
+                return MockResponse(status_code, body)
+        except urllib.error.HTTPError as e:
+            error_body = e.read().decode("utf-8")
+            print(f"{provider} ERROR {e.code}: {e.reason} | BODY: {error_body}")
+            raise e
+        except Exception as e:
+            print(f"FAILED TO SEND EMAIL VIA {provider}: {e}")
+            raise e
 
 
 def send_login_alert(
@@ -90,16 +134,37 @@ def send_pin_reset_email(to: str, first_name: str, token: str):
     send_email(to, f"{settings.APP_NAME} — PIN Reset Request", html)
 
 
-def send_verification_email(to: str, first_name: str, token: str):
-    verification_url = f"{settings.FRONTEND_URL}/pages/verify-email.html?token={token}"
-    template = get_template("email_verification.html")
+def send_verification_email(to: str, first_name: str, otp_code: str):
+    template = get_template("email_verification_otp.html")
     html = template.render(
         first_name=first_name,
-        verification_url=verification_url,
+        otp_code=otp_code,
         frontend_url=settings.FRONTEND_URL,
         year=datetime.utcnow().year
     )
     send_email(to, f"{settings.APP_NAME} — Verify Your Email Address", html)
+
+
+def send_welcome_email(
+    to: str,
+    first_name: str,
+    full_name: str,
+    account_number: str,
+    account_type: str,
+    country: str
+):
+    template = get_template("welcome.html")
+    html = template.render(
+        first_name=first_name,
+        full_name=full_name,
+        account_number=account_number,
+        account_type=account_type.capitalize(),
+        country=country,
+        created_date=datetime.utcnow().strftime("%B %d, %Y"),
+        frontend_url=settings.FRONTEND_URL,
+        year=datetime.utcnow().year
+    )
+    send_email(to, f"Welcome to {settings.APP_NAME} — Your Account Is Ready", html)
 
 
 def send_transfer_sent_email(
