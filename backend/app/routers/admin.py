@@ -14,6 +14,7 @@ from app.utils.account_number import generate_account_number
 from app.utils.account_number import generate_transaction_reference
 from app.services.email_service import send_admin_credit_email, send_admin_debit_email
 from app.services.notification_service import NotificationService
+from app.utils.currency import get_currency_for_country
 from datetime import datetime, timedelta
 from decimal import Decimal
 from pydantic import BaseModel
@@ -39,6 +40,8 @@ class UserCreateRequest(BaseModel):
     password: str
     first_name: str
     last_name: str
+    middle_name: Optional[str] = None
+    username: Optional[str] = None
     transaction_pin: Optional[str] = None
     phone: Optional[str] = None
     date_of_birth: Optional[str] = None
@@ -48,6 +51,7 @@ class UserCreateRequest(BaseModel):
     zip_code: Optional[str] = None
     country: Optional[str] = "United States"
     initial_balance: Optional[float] = 0.0
+    account_type: Optional[str] = "checking"
     skip_email_verification: bool = False
 
 
@@ -166,6 +170,8 @@ def create_user(
         hashed_password=hash_password(data.password),
         first_name=data.first_name,
         last_name=data.last_name,
+        middle_name=data.middle_name,
+        username=data.username,
         phone=data.phone,
         address=data.address,
         city=data.city,
@@ -186,11 +192,16 @@ def create_user(
     db.refresh(user)
     
     # Create account
+    currency = get_currency_for_country(user.country)
     account_number = generate_account_number(db)
     account = Account(
         user_id=user.id,
         account_number=account_number,
-        balance=Decimal(str(data.initial_balance))
+        routing_number="011400754" if user.country == "United States" else None,
+        account_type=data.account_type,
+        balance=Decimal(str(data.initial_balance)),
+        currency=currency,
+        swift_code=f"ARCT{currency}1"
     )
     db.add(account)
     db.commit()

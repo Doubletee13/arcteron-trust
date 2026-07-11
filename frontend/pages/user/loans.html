@@ -1432,7 +1432,8 @@
           Transactions
         </a>
         <a class="nav-item" href="cards.html" onclick="nav(event,'cards.html')">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round">
             <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
             <line x1="1" y1="10" x2="23" y2="10"></line>
           </svg>
@@ -1448,7 +1449,8 @@
         </a>
 
         <a class="nav-item active" href="loans.html" onclick="nav(event,'loans.html')">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round">
             <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
             <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
           </svg>
@@ -1467,8 +1469,11 @@
         </a>
 
         <a class="nav-item" href="support.html" onclick="nav(event,'support.html')">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round">
+            <path
+              d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z">
+            </path>
           </svg>
           Support
         </a>
@@ -1532,115 +1537,154 @@
       </header>
 
       <main class="page-content" style="max-width: 860px; margin: 0 auto;">
-  <style>
-    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
-    .form-z { position: relative; z-index: 5; }
-    @media (max-width: 768px) {
-      .form-grid { grid-template-columns: 1fr; gap: 16px; }
-      .responsive-pad { padding: 24px !important; }
-    }
-  </style>
-  <div class="greeting-row" style="margin-bottom:30px; border-bottom:1px solid rgba(255,255,255,0.08); padding-bottom:24px;">
-    <div class="greeting-text">
-      <h2 style="font-size:28px; margin-bottom:10px;">Loan pre-approval application</h2>
-      <p style="font-size:14px; color:var(--text-secondary); line-height:1.6;">As an Arcteron Trust client, you have access to privileged lending rates and streamlined processing. Applying for a loan through this portal instantly queues your application with our underwriting desk. Typical review times are between 24 and 48 business hours. If approved, the loan capital will be disbursed directly into your primary Arcteron checking account.</p>
-    </div>
-  </div>
+        <style>
+          .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+          }
 
-  <div class="balance-card responsive-pad" style="padding: 40px;">
-    <form id="loanForm" class="form-z" style="display:flex; flex-direction:column; gap:24px;" onsubmit="event.preventDefault(); submitLoan();">
-      
-      <div class="form-grid">
-        <div style="display:flex; flex-direction:column; gap:8px;">
-          <label style="font-size:13px; color:var(--text-secondary); font-weight:600;">Loan Category</label>
-          <select id="loanCategory" style="padding:14px; border-radius:10px; border:1px solid rgba(255,255,255,0.1); background:rgba(255,255,255,0.02); color:var(--text-primary); font-family:inherit; outline:none;" required>
-            <option value="" disabled selected style="color:#000">Select Category...</option>
-            <option value="Personal Loan" style="color:#000">Personal Loan</option>
-            <option value="Auto Loan" style="color:#000">Auto Loan</option>
-            <option value="Home Mortgage" style="color:#000">Home Mortgage</option>
-            <option value="Student Loan" style="color:#000">Student Loan</option>
-            <option value="Business Line of Credit" style="color:#000">Business Line of Credit</option>
-          </select>
+          .form-z {
+            position: relative;
+            z-index: 5;
+          }
+
+          @media (max-width: 768px) {
+            .form-grid {
+              grid-template-columns: 1fr;
+              gap: 16px;
+            }
+
+            .responsive-pad {
+              padding: 24px !important;
+            }
+          }
+        </style>
+        <div class="greeting-row"
+          style="margin-bottom:30px; border-bottom:1px solid rgba(255,255,255,0.08); padding-bottom:24px;">
+          <div class="greeting-text">
+            <h2 style="font-size:28px; margin-bottom:10px;">Loan pre-approval application</h2>
+            <p style="font-size:14px; color:var(--text-secondary); line-height:1.6;">As an Arcteron Trust client, you
+              have access to privileged lending rates and streamlined processing. Applying for a loan through this
+              portal instantly queues your application with our underwriting desk. Typical review times are between 24
+              and 48 business hours. If approved, the loan capital will be disbursed directly into your primary Arcteron
+              checking account.</p>
+          </div>
         </div>
-        <div style="display:flex; flex-direction:column; gap:8px;">
-          <label style="font-size:13px; color:var(--text-secondary); font-weight:600;">Requested Amount ($)</label>
-          <input type="number" id="loanAmount" placeholder="e.g. 50000" min="1000" style="padding:14px; border-radius:10px; border:1px solid rgba(255,255,255,0.1); background:rgba(255,255,255,0.02); color:var(--text-primary); font-family:inherit; outline:none;" required />
+
+        <div class="balance-card responsive-pad" style="padding: 40px;">
+          <form id="loanForm" class="form-z" style="display:flex; flex-direction:column; gap:24px;"
+            onsubmit="event.preventDefault(); submitLoan();">
+
+            <div class="form-grid">
+              <div style="display:flex; flex-direction:column; gap:8px;">
+                <label style="font-size:13px; color:var(--text-secondary); font-weight:600;">Loan Category</label>
+                <select id="loanCategory"
+                  style="padding:14px; border-radius:10px; border:1px solid rgba(255,255,255,0.1); background:rgba(255,255,255,0.02); color:var(--text-primary); font-family:inherit; outline:none;"
+                  required>
+                  <option value="" disabled selected style="color:#000">Select Category...</option>
+                  <option value="Personal Loan" style="color:#000">Personal Loan</option>
+                  <option value="Auto Loan" style="color:#000">Auto Loan</option>
+                  <option value="Home Mortgage" style="color:#000">Home Mortgage</option>
+                  <option value="Student Loan" style="color:#000">Student Loan</option>
+                  <option value="Business Line of Credit" style="color:#000">Business Line of Credit</option>
+                </select>
+              </div>
+              <div style="display:flex; flex-direction:column; gap:8px;">
+                <label style="font-size:13px; color:var(--text-secondary); font-weight:600;">Requested Amount
+                  ($)</label>
+                <input type="number" id="loanAmount" placeholder="e.g. 50000" min="1000"
+                  style="padding:14px; border-radius:10px; border:1px solid rgba(255,255,255,0.1); background:rgba(255,255,255,0.02); color:var(--text-primary); font-family:inherit; outline:none;"
+                  required />
+              </div>
+            </div>
+
+            <div class="form-grid">
+              <div style="display:flex; flex-direction:column; gap:8px;">
+                <label style="font-size:13px; color:var(--text-secondary); font-weight:600;">Desired Term
+                  (Months)</label>
+                <select id="loanTerm"
+                  style="padding:14px; border-radius:10px; border:1px solid rgba(255,255,255,0.1); background:rgba(255,255,255,0.02); color:var(--text-primary); font-family:inherit; outline:none;"
+                  required>
+                  <option value="" disabled selected style="color:#000">Select Term length...</option>
+                  <option value="12" style="color:#000">12 Months</option>
+                  <option value="24" style="color:#000">24 Months</option>
+                  <option value="36" style="color:#000">36 Months</option>
+                  <option value="60" style="color:#000">60 Months</option>
+                  <option value="120" style="color:#000">120 Months</option>
+                  <option value="360" style="color:#000">360 Months (Mortgage)</option>
+                </select>
+              </div>
+              <div style="display:flex; flex-direction:column; gap:8px;">
+                <label style="font-size:13px; color:var(--text-secondary); font-weight:600;">Reported Annual Income
+                  ($)</label>
+                <input type="number" id="loanIncome" placeholder="e.g. 120000" min="15000"
+                  style="padding:14px; border-radius:10px; border:1px solid rgba(255,255,255,0.1); background:rgba(255,255,255,0.02); color:var(--text-primary); font-family:inherit; outline:none;"
+                  required />
+              </div>
+            </div>
+
+            <div style="display:flex; flex-direction:column; gap:8px;">
+              <label style="font-size:13px; color:var(--text-secondary); font-weight:600;">Extensive Purpose of
+                Loan</label>
+              <textarea id="loanPurpose" rows="4"
+                style="padding:14px; border-radius:10px; border:1px solid rgba(255,255,255,0.1); background:rgba(255,255,255,0.02); color:var(--text-primary); font-family:inherit; resize:vertical; outline:none;"
+                placeholder="Please provide specific details regarding how you plan to deploy this capital. Detailed descriptions result in faster underwriting."
+                required></textarea>
+              <div style="display:flex; justify-content:flex-end; margin-top:6px;">
+                <p style="font-size:12px; color:var(--text-secondary); margin:0;">Directs to:
+                  underwriting@arcterontrust.com</p>
+              </div>
+            </div>
+
+            <button type="submit" class="bal-btn"
+              style="background:#ffffff; color:#000; justify-content:center; padding:16px; margin-top:8px; font-size:15px; border:none; transition: opacity 0.2s;">Submit
+              Credit Application</button>
+          </form>
         </div>
-      </div>
 
-      <div class="form-grid">
-        <div style="display:flex; flex-direction:column; gap:8px;">
-          <label style="font-size:13px; color:var(--text-secondary); font-weight:600;">Desired Term (Months)</label>
-          <select id="loanTerm" style="padding:14px; border-radius:10px; border:1px solid rgba(255,255,255,0.1); background:rgba(255,255,255,0.02); color:var(--text-primary); font-family:inherit; outline:none;" required>
-            <option value="" disabled selected style="color:#000">Select Term length...</option>
-            <option value="12" style="color:#000">12 Months</option>
-            <option value="24" style="color:#000">24 Months</option>
-            <option value="36" style="color:#000">36 Months</option>
-            <option value="60" style="color:#000">60 Months</option>
-            <option value="120" style="color:#000">120 Months</option>
-            <option value="360" style="color:#000">360 Months (Mortgage)</option>
-          </select>
-        </div>
-        <div style="display:flex; flex-direction:column; gap:8px;">
-          <label style="font-size:13px; color:var(--text-secondary); font-weight:600;">Reported Annual Income ($)</label>
-          <input type="number" id="loanIncome" placeholder="e.g. 120000" min="15000" style="padding:14px; border-radius:10px; border:1px solid rgba(255,255,255,0.1); background:rgba(255,255,255,0.02); color:var(--text-primary); font-family:inherit; outline:none;" required />
-        </div>
-      </div>
+        <script>
+          function submitLoan() {
+            const btn = document.querySelector('button[type="submit"]');
+            const originalText = btn.textContent;
 
-      <div style="display:flex; flex-direction:column; gap:8px;">
-        <label style="font-size:13px; color:var(--text-secondary); font-weight:600;">Extensive Purpose of Loan</label>
-        <textarea id="loanPurpose" rows="4" style="padding:14px; border-radius:10px; border:1px solid rgba(255,255,255,0.1); background:rgba(255,255,255,0.02); color:var(--text-primary); font-family:inherit; resize:vertical; outline:none;" placeholder="Please provide specific details regarding how you plan to deploy this capital. Detailed descriptions result in faster underwriting." required></textarea>
-        <div style="display:flex; justify-content:flex-end; margin-top:6px;">
-           <p style="font-size:12px; color:var(--text-secondary); margin:0;">Directs to: underwriting@arcterontrust.com</p>
-        </div>
-      </div>
+            btn.textContent = 'Processing Application...';
+            btn.style.opacity = '0.7';
+            btn.disabled = true;
 
-      <button type="submit" class="bal-btn" style="background:#ffffff; color:#000; justify-content:center; padding:16px; margin-top:8px; font-size:15px; border:none; transition: opacity 0.2s;">Submit Credit Application</button>
-    </form>
-  </div>
+            setTimeout(() => {
+              if (window.Utils && window.Utils.showToast) {
+                window.Utils.showToast('Application successfully registered for underwriting review.', 'success');
+              }
 
-  <script>
-    function submitLoan() {
-      const btn = document.querySelector('button[type="submit"]');
-      const originalText = btn.textContent;
-      
-      btn.textContent = 'Processing Application...';
-      btn.style.opacity = '0.7';
-      btn.disabled = true;
+              btn.textContent = '✓ Application Registered';
+              btn.style.background = '#10B981';
+              btn.style.color = '#ffffff';
+              btn.style.opacity = '1';
 
-      setTimeout(() => {
-        if(window.Utils && window.Utils.showToast) {
-          window.Utils.showToast('Application successfully registered for underwriting review.', 'success');
-        }
-        
-        btn.textContent = '✓ Application Registered';
-        btn.style.background = '#10B981';
-        btn.style.color = '#ffffff';
-        btn.style.opacity = '1';
-        
-        setTimeout(() => {
-            document.getElementById('loanForm').reset();
-            btn.textContent = originalText;
-            btn.style.background = '#ffffff';
-            btn.style.color = '#000000';
-            btn.disabled = false;
-        }, 2500);
-        
-      }, 2000);
-    }
+              setTimeout(() => {
+                document.getElementById('loanForm').reset();
+                btn.textContent = originalText;
+                btn.style.background = '#ffffff';
+                btn.style.color = '#000000';
+                btn.disabled = false;
+              }, 2500);
 
-    document.addEventListener('DOMContentLoaded', () => {
-      const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-      document.querySelectorAll('input, select, textarea').forEach(el => {
-         if(!isDark) {
-            el.style.background = '#ffffff';
-            el.style.border = '1px solid #e5e7eb';
-            el.style.color = '#111827';
-         }
-      });
-    });
-  </script>
-</main>
+            }, 2000);
+          }
+
+          document.addEventListener('DOMContentLoaded', () => {
+            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+            document.querySelectorAll('input, select, textarea').forEach(el => {
+              if (!isDark) {
+                el.style.background = '#ffffff';
+                el.style.border = '1px solid #e5e7eb';
+                el.style.color = '#111827';
+              }
+            });
+          });
+        </script>
+      </main>
     </div>
   </div>
 
@@ -1685,11 +1729,11 @@
       const icon = document.getElementById('privacyIcon');
 
       if (balanceVisible) {
-        amountEl.innerHTML = `${actualBalance} <span class="balance-currency">USD</span>`;
+        amountEl.innerHTML = `${actualBalance} <span class="balance-currency">${userCurrency}</span>`;
         acctEl.textContent = lastFourAcct ? `**** ${lastFourAcct}` : '**** ****';
         icon.innerHTML = `<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>`;
       } else {
-        amountEl.innerHTML = `•••••• <span class="balance-currency">USD</span>`;
+        amountEl.innerHTML = `•••••• <span class="balance-currency">${userCurrency}</span>`;
         acctEl.textContent = '•••• ••••';
         icon.innerHTML = `<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>`;
       }
@@ -1753,8 +1797,9 @@
           `Here's your financial overview for today, ${TimeUtils.formatGreetingDate(new Date())}.`;
       }
 
+      let userCurrency = 'USD';
       function fmt(n) {
-        return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(n || 0);
+        return new Intl.NumberFormat('en-US', { style: 'currency', currency: userCurrency }).format(n || 0);
       }
 
       // ── Update notification dot ──
@@ -1796,9 +1841,9 @@
           if (res && res.ok) {
             const notif = res.data;
             if (notif.type === 'transaction' && notif.related_id) {
-               ReceiptModal.openById(notif.related_id);
+              ReceiptModal.openById(notif.related_id);
             } else if (notif.type === 'transaction' && notif.data && notif.data.transaction_id) {
-               ReceiptModal.openById(notif.data.transaction_id);
+              ReceiptModal.openById(notif.data.transaction_id);
             }
           }
         } catch (err) {
@@ -1823,11 +1868,11 @@
 
         // Always use freshest data from /me if first_name is missing
         if (!user.first_name) {
-            const meRes = await Api.get('/api/auth/me', true);
-            if (meRes && meRes.ok) {
-                Api.setUser(meRes.data);
-                user = meRes.data;
-            }
+          const meRes = await Api.get('/api/auth/me', true);
+          if (meRes && meRes.ok) {
+            Api.setUser(meRes.data);
+            user = meRes.data;
+          }
         }
 
         const initials = Auth.getInitials(user.first_name, user.last_name);
@@ -1840,8 +1885,8 @@
         Utils.setAvatar('sidebarAvatar', user);
         Utils.setAvatar('topbarAvatar', user);
         Utils.setAvatar('greetingAvatar', user);
-        const sN = document.getElementById('sidebarName'); if(sN) sN.textContent = fullName;
-        const cHolder = document.getElementById('cardHolderName'); if(cHolder) cHolder.textContent = fullName.toUpperCase();
+        const sN = document.getElementById('sidebarName'); if (sN) sN.textContent = fullName;
+        const cHolder = document.getElementById('cardHolderName'); if (cHolder) cHolder.textContent = fullName.toUpperCase();
         setGreeting(user.first_name);
         startClock();
 
@@ -1862,13 +1907,17 @@
           }
 
           if (data.account) {
+            userCurrency = data.account.currency || 'USD';
+            const currencySpans = document.querySelectorAll('.balance-currency');
+            currencySpans.forEach(span => span.textContent = userCurrency);
+
             actualBalance = fmt(data.account.balance);
             lastFourAcct = data.account.account_number.slice(-4);
-            const balAm = document.getElementById('balanceAmount'); if(balAm) balAm.innerHTML =
-              `${actualBalance} <span class="balance-currency">USD</span>`;
-            const accNum = document.getElementById('accountNumber'); if(accNum) accNum.textContent =
+            const balAm = document.getElementById('balanceAmount'); if (balAm) balAm.innerHTML =
+              `${actualBalance} <span class="balance-currency">${userCurrency}</span>`;
+            const accNum = document.getElementById('accountNumber'); if (accNum) accNum.textContent =
               `**** ${lastFourAcct}`;
-            const rNum = document.getElementById('routingNumber'); if(rNum) rNum.textContent = data.account.routing_number;
+            const rNum = document.getElementById('routingNumber'); if (rNum) rNum.textContent = data.account.routing_number || 'N/A';
           }
         }
 
@@ -1950,9 +1999,9 @@
         </div>`;
         }).join('');
 
-        const sC = document.getElementById('statCredit'); if(sC) sC.textContent = fmt(creditTotal);
-        const sD = document.getElementById('statDebit'); if(sD) sD.textContent = fmt(debitTotal);
-        const sCnt = document.getElementById('statCount'); if(sCnt) sCnt.textContent = transactions.length;
+        const sC = document.getElementById('statCredit'); if (sC) sC.textContent = fmt(creditTotal);
+        const sD = document.getElementById('statDebit'); if (sD) sD.textContent = fmt(debitTotal);
+        const sCnt = document.getElementById('statCount'); if (sCnt) sCnt.textContent = transactions.length;
 
         // ── Receipt Modal Logic ──
         window.openReceiptModal = function (txId) {
@@ -2076,13 +2125,22 @@
         border-radius:16px; padding:40px 32px; max-width:420px; width:calc(100% - 40px);
         text-align:center; box-shadow:0 24px 60px rgba(0,0,0,0.4);
     ">
-      <div style="width:56px;height:56px;border-radius:50%;background:rgba(239,68,68,0.12);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;">
-        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#EF4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
+      <div
+        style="width:56px;height:56px;border-radius:50%;background:rgba(239,68,68,0.12);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#EF4444" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10" />
+          <line x1="4.93" y1="4.93" x2="19.07" y2="19.07" />
+        </svg>
       </div>
-      <h2 style="font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;color:var(--text-primary);margin-bottom:10px;">Account Blocked</h2>
-      <p style="font-size:13px;color:var(--text-secondary);line-height:1.6;margin-bottom:6px;">Your account has been blocked by an administrator.</p>
+      <h2
+        style="font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;color:var(--text-primary);margin-bottom:10px;">
+        Account Blocked</h2>
+      <p style="font-size:13px;color:var(--text-secondary);line-height:1.6;margin-bottom:6px;">Your account has been
+        blocked by an administrator.</p>
       <p id="blockedReason" style="font-size:12px;color:#EF4444;margin-bottom:24px;"></p>
-      <p style="font-size:12px;color:var(--text-muted);">You will be redirected to the login page shortly. Contact <strong>support@arcterontrust.com</strong> for assistance.</p>
+      <p style="font-size:12px;color:var(--text-muted);">You will be redirected to the login page shortly. Contact
+        <strong>support@arcterontrust.com</strong> for assistance.</p>
     </div>
   </div>
 </body>

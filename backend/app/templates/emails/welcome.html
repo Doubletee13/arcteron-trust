@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to Arcteron Trust</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #F5F7FA;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        .wrapper {
+            max-width: 600px;
+            margin: 40px auto;
+            background: #ffffff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+        }
+
+        .header {
+            background-color: #0F1115;
+            padding: 32px 40px;
+            text-align: center;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .logo-svg {
+            width: 40px;
+            height: 40px;
+        }
+
+        .header h1 {
+            color: #ffffff;
+            font-size: 22px;
+            font-weight: 600;
+            margin: 0;
+            letter-spacing: 0.5px;
+        }
+
+        .header p {
+            color: #9CA3AF;
+            font-size: 13px;
+            margin: 6px 0 0;
+        }
+
+        .body {
+            padding: 40px;
+        }
+
+        .greeting {
+            font-size: 16px;
+            color: #111827;
+            margin-bottom: 8px;
+        }
+
+        .intro-text {
+            color: #374151;
+            font-size: 15px;
+            line-height: 1.6;
+            margin-bottom: 24px;
+        }
+
+        .details-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 24px 0;
+            font-size: 14px;
+            text-align: left;
+        }
+
+        .details-table th,
+        .details-table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid #E5E7EB;
+        }
+
+        .details-table th {
+            background-color: #F9FAFB;
+            color: #374151;
+            font-weight: 600;
+            width: 35%;
+        }
+
+        .details-table td {
+            color: #1F2937;
+        }
+
+        .btn-wrapper {
+            text-align: center;
+            margin: 32px 0;
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: #0F1115;
+            color: #ffffff;
+            text-decoration: none;
+            padding: 14px 36px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+        }
+
+        .support-note {
+            font-size: 13px;
+            color: #6B7280;
+            margin-top: 24px;
+            line-height: 1.6;
+            border-top: 1px solid #E5E7EB;
+            padding-top: 24px;
+        }
+
+        .footer {
+            background: #F9FAFB;
+            padding: 24px 40px;
+            text-align: center;
+            border-top: 1px solid #E5E7EB;
+        }
+
+        .footer p {
+            font-size: 12px;
+            color: #9CA3AF;
+            margin: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrapper">
+        <div class="header">
+            <div class="logo-container">
+                <svg class="logo-svg" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="20" cy="20" r="18" stroke="white" stroke-width="1.5" opacity="0.3" />
+                    <path d="M20 8 L30 28 H24 L20 20 L16 28 H10 Z" fill="white" opacity="0.9" />
+                    <path d="M14 23 H26" stroke="white" stroke-width="1.5" opacity="0.6" />
+                    <circle cx="20" cy="6" r="2" fill="white" opacity="0.5" />
+                </svg>
+                <h1>Arcteron Trust</h1>
+            </div>
+            <p>Private Banking &amp; Wealth Management</p>
+        </div>
+        <div class="body">
+            <p class="greeting">Dear <strong>{{ first_name }}</strong>,</p>
+            <p class="intro-text">
+                Welcome to Arcteron Trust. We are pleased to inform you that your secure offshore bank account has been
+                successfully initialized.
+                Please review your account details below.
+            </p>
+
+            <table class="details-table">
+                <tr>
+                    <th>Account Name</th>
+                    <td>{{ full_name }}</td>
+                </tr>
+                <tr>
+                    <th>Account Number</th>
+                    <td><code>{{ account_number }}</code></td>
+                </tr>
+                <tr>
+                    <th>Account Type</th>
+                    <td>{{ account_type }}</td>
+                </tr>
+                <tr>
+                    <th>Country</th>
+                    <td>{{ country }}</td>
+                </tr>
+                <tr>
+                    <th>Date Created</th>
+                    <td>{{ created_date }}</td>
+                </tr>
+            </table>
+
+            <p class="intro-text" style="margin-top: 24px;">
+                To activate and access your full dashboard resources, please log in and complete your identity/KYC
+                profile.
+                Once submitted, your account will be queued for manual compliance activation.
+            </p>
+
+            <div class="btn-wrapper">
+                <a href="{{ frontend_url }}/pages/login.html" class="btn" style="color: #ffffff;">Access My Account</a>
+            </div>
+
+            <p class="support-note">
+                If you have any questions or require immediate support, please contact our compliance desk at
+                <a href="mailto:support@arcterontrust.com"
+                    style="color: #0F1115; text-decoration: underline;">support@arcterontrust.com</a>.
+            </p>
+        </div>
+        <div class="footer">
+            <p>&copy; {{ year }} Arcteron Trust. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+
+</html>

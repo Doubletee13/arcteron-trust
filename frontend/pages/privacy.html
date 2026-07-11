@@ -95,7 +95,13 @@
                 <div class="nav-brand-text"><span class="nav-brand-name">Arcteron Trust</span></div>
             </a>
             <div class="nav-actions"><a href="/frontend/index.html" class="nav-btn-outline" style="border:none">Return
-                    to Home</a><button class="nav-theme-btn" id="themeToggle"></button><button class="nav-hamburger" id="navHamburger"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button></div>
+                    to Home</a><button class="nav-theme-btn" id="themeToggle"></button><button class="nav-hamburger"
+                    id="navHamburger"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2">
+                        <line x1="3" y1="6" x2="21" y2="6" />
+                        <line x1="3" y1="12" x2="21" y2="12" />
+                        <line x1="3" y1="18" x2="21" y2="18" />
+                    </svg></button></div>
         </div>
     </nav>
     <div class="mobile-drawer" id="mobileDrawer">
@@ -254,6 +260,10 @@
 
 
     <div class="legal-content">
+        <button onclick="window.history.length > 1 ? window.history.back() : window.close()" class="btn-secondary"
+            style="margin-bottom: 30px; font-size: 13px; padding: 8px 16px; border-radius: 4px;">
+            ← Go Back
+        </button>
         <h1>Privacy Policy</h1>
         <div class="legal-updated">Last Updated: January 15, 2025</div>
 
