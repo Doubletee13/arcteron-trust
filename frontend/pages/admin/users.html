@@ -1337,7 +1337,6 @@
         .modal-header h2 {
             font-size: 18px;
         }
-        }
 
         @media (max-width: 480px) {
             .stats-row {
@@ -1989,6 +1988,10 @@
                     <input type="email" id="editEmail" required placeholder="user@example.com">
                 </div>
                 <div class="form-group">
+                    <label>Country</label>
+                    <select id="editCountry" required></select>
+                </div>
+                <div class="form-group">
                     <label>First Name</label>
                     <input type="text" id="editFirstName" required placeholder="John">
                 </div>
@@ -2285,6 +2288,15 @@
                 document.getElementById('editUserId').value = user.id;
                 document.getElementById('editEmail').value = user.email;
                 document.getElementById('editFirstName').value = user.first_name;
+                const editCountryEl = document.getElementById('editCountry');
+                if (editCountryEl.options.length === 0) {
+                    const template = document.getElementById('createCountry');
+                    if (template) {
+                        editCountryEl.innerHTML = template.innerHTML;
+                    }
+                }
+                const matchCountry = Array.from(editCountryEl.options).some(o => o.value === user.country);
+                editCountryEl.value = matchCountry ? user.country : (user.country || 'United States');
                 document.getElementById('editLastName').value = user.last_name;
                 document.getElementById('editPhone').value = user.phone || '';
                 document.getElementById('editAddress').value = user.address || '';
@@ -2308,6 +2320,7 @@
             const userData = {
                 email: document.getElementById('editEmail').value,
                 first_name: document.getElementById('editFirstName').value,
+                country: document.getElementById('editCountry').value,
                 last_name: document.getElementById('editLastName').value,
                 phone: document.getElementById('editPhone').value,
                 address: document.getElementById('editAddress').value,

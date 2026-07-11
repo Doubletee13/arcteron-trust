@@ -332,7 +332,11 @@
         }
 
         function goToLogin() {
-            Utils.navigateTo('/frontend/pages/login.html');
+            if (Auth.isLoggedIn()) {
+                Utils.navigateTo('/frontend/pages/user/kyc.html');
+            } else {
+                Utils.navigateTo('/frontend/pages/login.html');
+            }
         }
     </script>
 </body>
