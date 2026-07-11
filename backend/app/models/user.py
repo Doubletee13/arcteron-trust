@@ -58,10 +58,23 @@ class User(Base):
     first_name = Column(String(100), nullable=False)
     last_name = Column(String(100), nullable=False)
     middle_name = Column(String(100), nullable=True)
+    username = Column(String(100), unique=True, nullable=True, index=True)
     email = Column(String(255), unique=True, nullable=False, index=True)
     phone = Column(String(20), unique=True, nullable=True)
     hashed_password = Column(String(255), nullable=False)
     transaction_pin = Column(String(255), nullable=True)
+
+    # --- KYC Compliance Flags / Details ---
+    title = Column(String(20), nullable=True)
+    gender = Column(String(20), nullable=True)
+    has_accepted_terms = Column(Boolean, default=False, nullable=True)
+    kyc_submitted_at = Column(DateTime, nullable=True)
+
+    # --- Next of Kin ---
+    next_of_kin_name = Column(String(200), nullable=True)
+    next_of_kin_address = Column(Text, nullable=True)
+    next_of_kin_relationship = Column(String(100), nullable=True)
+    next_of_kin_age = Column(Integer, nullable=True)
 
     # --- Personal Details (Registration Step 2) ---
     date_of_birth = Column(Date, nullable=True)

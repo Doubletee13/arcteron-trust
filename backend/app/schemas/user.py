@@ -19,10 +19,30 @@ class RegisterStep1(BaseModel):
     first_name: str
     last_name: str
     middle_name: Optional[str] = None
+    username: str
+
+class RegisterStep2(BaseModel):
     email: EmailStr
     phone: str
+    country: str
+
+class RegisterStep3(BaseModel):
+    currency: str
+    account_type: str
+    pin: str
+    confirm_pin: Optional[str] = None
+
+    @field_validator("pin")
+    @classmethod
+    def pin_length(cls, v):
+        if len(v) != 4 or not v.isdigit():
+            raise ValueError("PIN must be exactly 4 digits")
+        return v
+
+class RegisterStep4(BaseModel):
     password: str
     confirm_password: str
+    accept_terms: bool
 
     @field_validator("password")
     @classmethod
@@ -35,39 +55,43 @@ class RegisterStep1(BaseModel):
     def passwords_match(self):
         if self.password != self.confirm_password:
             raise ValueError("Passwords do not match")
+        if not self.accept_terms:
+            raise ValueError("You must accept the Terms of Service and Privacy Policy")
         return self
 
 
-class RegisterStep2(BaseModel):
+# --- OTP & KYC Schemas ---
+
+class OTPVerifyRequest(BaseModel):
+    email: EmailStr
+    code: str
+
+
+class KYCSubmitRequest(BaseModel):
+    title: str
+    gender: str
     date_of_birth: date
-    citizenship_status: CitizenshipStatus
-    ssn: Optional[str] = None
-    itin: Optional[str] = None
-    address: str
-    city: str
-    state: str
     zip_code: str
-    country: str = "United States"
-
-    @field_validator("ssn")
-    @classmethod
-    def validate_ssn(cls, v):
-        if v is not None:
-            cleaned = v.replace("-", "")
-            if len(cleaned) != 9 or not cleaned.isdigit():
-                raise ValueError("SSN must be 9 digits")
-        return v
-
-
-class RegisterStep3(BaseModel):
-    id_type: IDType
-    id_number: str
-    id_expiry_date: date
+    ssn: Optional[str] = None
     employment_status: EmploymentStatus
     employer_name: Optional[str] = None
     annual_income: str
     source_of_income: str
     account_purpose: AccountPurpose
+    address: str
+    city: str
+    state: str
+    nationality: str
+    next_of_kin_name: str
+    next_of_kin_address: str
+    next_of_kin_relationship: str
+    next_of_kin_age: int
+    id_type: IDType
+    id_number: str
+    id_expiry_date: date
+    id_front_data: Optional[str] = None  # Base64 raw image
+    id_back_data: Optional[str] = None   # Base64 raw image
+    passport_photo_data: Optional[str] = None  # Base64 raw image
 
 
 # --- Login Schema ---
@@ -214,6 +238,7 @@ class UserResponse(BaseModel):
     first_name: str
     last_name: str
     middle_name: Optional[str] = None
+    username: Optional[str] = None
     email: str
     phone: Optional[str] = None
     role: UserRole
@@ -234,6 +259,14 @@ class UserResponse(BaseModel):
     annual_income: Optional[str] = None
     account_purpose: Optional[AccountPurpose] = None
     profile_photo: Optional[str] = None
+    title: Optional[str] = None
+    gender: Optional[str] = None
+    has_accepted_terms: bool = False
+    kyc_submitted_at: Optional[datetime] = None
+    next_of_kin_name: Optional[str] = None
+    next_of_kin_address: Optional[str] = None
+    next_of_kin_relationship: Optional[str] = None
+    next_of_kin_age: Optional[int] = None
     created_at: datetime
     last_login: Optional[datetime] = None
     account: Optional[AccountResponse] = None

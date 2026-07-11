@@ -23,7 +23,7 @@ from app.models.code import TransactionCode
 config = context.config
 
 # Override sqlalchemy.url with value from .env
-config.set_main_option("sqlalchemy.url", settings.DATABASE_URL)
+config.set_main_option("sqlalchemy.url", settings.DATABASE_URL.replace("%", "%%"))
 
 # Interpret the config file for Python logging
 if config.config_file_name is not None:

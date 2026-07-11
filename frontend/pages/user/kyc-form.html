@@ -1,0 +1,1025 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KYC Verification — Arcteron Trust</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=DM+Sans:wght@300;400;500;600&display=swap"
+        rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="stylesheet" href="../../assets/css/theme.css">
+    <link rel="stylesheet" href="../../assets/css/style.css">
+    <script src="../../assets/js/theme.js"></script>
+    <style>
+        body {
+            font-family: 'DM Sans', sans-serif;
+            margin: 0;
+        }
+
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* ── Sidebar ── */
+        .sidebar {
+            width: 260px;
+            background: #171A20;
+            border-right: none;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            z-index: 300;
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar-logo {
+            padding: 0 20px;
+            height: 60px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-shrink: 0;
+        }
+
+        .sidebar-logo-icon {
+            width: 28px;
+            height: 28px;
+            flex-shrink: 0;
+            opacity: 0.8;
+        }
+
+        .sidebar-logo-text h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 16px;
+            font-weight: 600;
+            color: #ffffff;
+            line-height: 1.2;
+        }
+
+        .sidebar-logo-text p {
+            font-size: 9px;
+            color: rgba(255, 255, 255, 0.3);
+            margin-top: 1px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .sidebar-nav {
+            padding: 10px 10px;
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .nav-section-label {
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.25);
+            padding: 10px 10px 4px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-bottom: 1px;
+            text-decoration: none;
+        }
+
+        .nav-item:hover {
+            background: rgba(255, 255, 255, 0.07);
+            color: rgba(255, 255, 255, 0.85);
+        }
+
+        .nav-item.active {
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            font-weight: 600;
+        }
+
+        .nav-item svg {
+            width: 16px;
+            height: 16px;
+            flex-shrink: 0;
+        }
+
+        .nav-item.danger {
+            color: rgba(239, 68, 68, 0.7);
+        }
+
+        .nav-item.danger:hover {
+            background: rgba(239, 68, 68, 0.1);
+            color: #EF4444;
+        }
+
+        .sidebar-footer {
+            padding: 12px 10px;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            margin-top: auto;
+        }
+
+        .user-card {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-bottom: 4px;
+        }
+
+        .user-card:hover {
+            background: rgba(255, 255, 255, 0.07);
+        }
+
+        .sidebar-avatar {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.12);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 700;
+            flex-shrink: 0;
+            font-family: 'Cormorant Garamond', serif;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .user-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.85);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .user-role {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        /* ── Main ── */
+        .main-content {
+            margin-left: 260px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            background: var(--bg-primary);
+        }
+
+        /* ── Topbar ── */
+        .topbar {
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-color);
+            padding: 0 28px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 200;
+            flex-shrink: 0;
+        }
+
+        .topbar-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .menu-btn {
+            display: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--text-secondary);
+            flex-shrink: 0;
+        }
+
+        .topbar-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .icon-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--text-secondary);
+            transition: all 0.2s;
+            position: relative;
+            text-decoration: none;
+        }
+
+        .icon-btn:hover {
+            color: var(--text-primary);
+        }
+
+        .topbar-avatar {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: #111827;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            flex-shrink: 0;
+            font-family: 'Cormorant Garamond', serif;
+        }
+
+        [data-theme="dark"] .main-content .topbar-avatar {
+            background: #E5E7EB;
+            color: #111827;
+        }
+
+        /* ── Page content ── */
+        .page-content {
+            padding: 28px;
+            flex: 1;
+            max-width: 900px;
+            margin: 0 auto;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        /* ── KYC Card Styles ── */
+        .card {
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            padding: 32px;
+            margin-bottom: 24px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 0 0 8px 0;
+            font-family: 'Cormorant Garamond', serif;
+        }
+
+        .section-desc {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin: 0 0 24px 0;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .form-group-full {
+            grid-column: span 2;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px 14px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 14px;
+            color: var(--text-primary);
+            transition: all 0.2s;
+            outline: none;
+            box-sizing: border-box;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: var(--text-primary);
+        }
+
+        .form-group input:disabled {
+            background: rgba(120, 120, 120, 0.05);
+            color: var(--text-muted);
+            cursor: not-allowed;
+        }
+
+        .file-upload-wrapper {
+            border: 1.5px dashed var(--border-color);
+            border-radius: 10px;
+            padding: 24px;
+            text-align: center;
+            cursor: pointer;
+            position: relative;
+            transition: border-color 0.2s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .file-upload-wrapper:hover {
+            border-color: var(--text-primary);
+        }
+
+        .file-upload-wrapper input[type="file"] {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .file-preview {
+            margin-top: 12px;
+            max-width: 100%;
+            max-height: 150px;
+            border-radius: 6px;
+            display: none;
+        }
+
+        .alert {
+            padding: 16px;
+            border-radius: 10px;
+            margin-bottom: 24px;
+            font-size: 14px;
+            display: none;
+        }
+
+        .alert.error {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            color: #EF4444;
+        }
+
+        .alert.success {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            color: #10B981;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 14px;
+            background: var(--text-primary);
+            color: var(--bg-primary);
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-submit:hover {
+            opacity: 0.9;
+        }
+
+        .btn-submit:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        /* ── Responsive ── */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .menu-btn {
+                display: flex;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-group-full {
+                grid-column: span 1;
+            }
+
+            .page-content {
+                padding: 16px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="layout">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-logo">
+                <svg class="sidebar-logo-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="20" cy="20" r="18" stroke="#ffffff" stroke-width="1.5" opacity="0.3" />
+                    <path d="M20 8 L30 28 H24 L20 20 L16 28 H10 Z" fill="#ffffff" opacity="0.9" />
+                    <path d="M14 23 H26" stroke="#ffffff" stroke-width="1.5" opacity="0.6" />
+                    <circle cx="20" cy="6" r="2" fill="#ffffff" opacity="0.5" />
+                </svg>
+                <div class="sidebar-logo-text">
+                    <h1>Arcteron Trust</h1>
+                    <p>Wealth Management</p>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <div class="nav-section-label">Main Menu</div>
+                <a class="nav-item active" style="pointer-events: none; opacity: 0.6;">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                    </svg>
+                    KYC Request
+                </a>
+
+                <div class="nav-section-label" style="margin-top: 24px;">Legal</div>
+                <a class="nav-item" href="/frontend/pages/terms.html" target="_blank">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    Terms & Conditions
+                </a>
+                <a class="nav-item" href="/frontend/pages/privacy.html" target="_blank">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                    </svg>
+                    Privacy Policy
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="user-card" onclick="Auth.logout()">
+                    <div class="sidebar-avatar" id="sidebarAvatar">—</div>
+                    <div style="flex: 1; overflow: hidden;">
+                        <div class="user-name" id="sidebarName">Loading...</div>
+                        <div class="user-role">Sign Out</div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <div class="main-content">
+            <!-- Topbar -->
+            <header class="topbar">
+                <div class="topbar-left">
+                    <button class="menu-btn" onclick="toggleSidebar()">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                            width="24" height="24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
+                    <span class="topbar-title">Identity & Financial Verification</span>
+                </div>
+                <div class="topbar-right">
+                    <div class="topbar-avatar" id="topbarAvatar">—</div>
+                </div>
+            </header>
+
+            <!-- Page Content -->
+            <main class="page-content">
+                <div id="formAlert" class="alert error"></div>
+
+                <!-- Submission Status Banner -->
+                <div id="kycStatusBanner" class="card" style="display: none; text-align: center; padding: 48px 32px;">
+                    <div style="font-size: 48px; margin-bottom: 16px;" id="kycStatusIcon">⏳</div>
+                    <h2 class="section-title" id="kycStatusTitle" style="font-size: 24px; margin-bottom: 12px;">
+                        Verification Pending</h2>
+                    <p id="kycStatusDesc"
+                        style="color: var(--text-secondary); max-width: 500px; margin: 0 auto 24px; line-height: 1.6;">
+                        We received your document submissions. An administrative reviewer is currently inspecting files.
+                        We will activate services shortly.
+                    </p>
+                    <div style="display: inline-flex; gap: 12px;">
+                        <button class="btn-submit" onclick="Auth.logout()"
+                            style="width: auto; background: var(--border-color); color: var(--text-primary);">
+                            Sign Out Securely
+                        </button>
+                    </div>
+                </div>
+
+                <form id="kycForm" onsubmit="submitKYCForm(event)">
+                    <!-- Personal Card -->
+                    <div class="card">
+                        <h2 class="section-title">Personal Information Guide</h2>
+                        <p class="section-desc">Ensure spelling matches legal identification documents exactly.</p>
+
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="fullName">Full Legal Name</label>
+                                <input type="text" id="fullName" disabled>
+                            </div>
+                            <div class="form-group">
+                                <label for="email">E-mail Address</label>
+                                <input type="text" id="email" disabled>
+                            </div>
+                            <div class="form-group">
+                                <label for="phone">Phone Number</label>
+                                <input type="text" id="phone" disabled>
+                            </div>
+                            <div class="form-group">
+                                <label for="nationality">Nationality</label>
+                                <input type="text" id="nationality" disabled>
+                            </div>
+                            <div class="form-group">
+                                <label for="title">Salutation / Title</label>
+                                <select id="title" required>
+                                    <option value="" disabled selected>Select title</option>
+                                    <option value="Mr.">Mr.</option>
+                                    <option value="Mrs.">Mrs.</option>
+                                    <option value="Ms.">Ms.</option>
+                                    <option value="Dr.">Dr.</option>
+                                    <option value="Prof.">Prof.</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="gender">Gender</label>
+                                <select id="gender" required>
+                                    <option value="" disabled selected>Select gender</option>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="dob">Date of Birth</label>
+                                <input type="date" id="dob" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="zipCode">ZIP / Postal Code</label>
+                                <input type="text" id="zipCode" placeholder="90210" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Employment Profile -->
+                    <div class="card">
+                        <h2 class="section-title">Professional & Identification Information</h2>
+                        <p class="section-desc">Required parameters to establish legal eligibility and prevent money
+                            laundering.</p>
+
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="employmentStatus">Employment Classification</label>
+                                <select id="employmentStatus" required>
+                                    <option value="" disabled selected>Select status</option>
+                                    <option value="employed">Employed</option>
+                                    <option value="self_employed">Self Employed</option>
+                                    <option value="unemployed">Unemployed</option>
+                                    <option value="student">Student</option>
+                                    <option value="retired">Retired</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="employerName">Employer / Business Name</label>
+                                <input type="text" id="employerName" placeholder="Acme Corporation">
+                            </div>
+                            <div class="form-group">
+                                <label for="annualIncome">Annual Income Range</label>
+                                <select id="annualIncome" required>
+                                    <option value="" disabled selected>Select bracket</option>
+                                    <option value="Below $25,000">Below $25,000</option>
+                                    <option value="$25,000 - $50,000">$25,000 - $50,000</option>
+                                    <option value="$50,000 - $100,000">$50,000 - $100,000</option>
+                                    <option value="$100,000 - $250,000">$100,000 - $250,000</option>
+                                    <option value="Above $250,000">Above $250,000</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="sourceOfIncome">Source of Funds</label>
+                                <input type="text" id="sourceOfIncome" placeholder="Salary, Rent, Investments" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="accountPurpose">Account Purpose</label>
+                                <select id="accountPurpose" required>
+                                    <option value="" disabled selected>Select purpose</option>
+                                    <option value="personal">Personal Operations</option>
+                                    <option value="savings">Wealth Conservation</option>
+                                    <option value="business">Commercial / Business Operations</option>
+                                    <option value="investment">Capital Investment</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label id="ssnLabel" for="ssn">Tax ID / SSN Value</label>
+                                <input type="text" id="ssn" placeholder="Enter identification number" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Address Profile -->
+                    <div class="card">
+                        <h2 class="section-title">Home Address</h2>
+                        <p class="section-desc">Post Office boxes are not accepted.</p>
+
+                        <div class="form-grid">
+                            <div class="form-group form-group-full">
+                                <label for="address">Street Address</label>
+                                <input type="text" id="address" placeholder="123 Financial Row Blvd" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="city">City</label>
+                                <input type="text" id="city" placeholder="Beverly Hills" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="state">State / Province</label>
+                                <input type="text" id="state" placeholder="California" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Next of Kin Profile -->
+                    <div class="card">
+                        <h2 class="section-title">Beneficiary & Next of Kin</h2>
+                        <p class="section-desc">Designated recipient of account balance in the event of an emergency.
+                        </p>
+
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="nokName">Beneficiary Full Legal Name</label>
+                                <input type="text" id="nokName" placeholder="First Name Last Name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="nokRelationship">Relationship</label>
+                                <input type="text" id="nokRelationship" placeholder="Spouse, Child, Sibling" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="nokAge">Beneficiary Age</label>
+                                <input type="number" id="nokAge" min="0" max="120" placeholder="32" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="nokAddress">Beneficiary Address</label>
+                                <input type="text" id="nokAddress"
+                                    placeholder="Same as residential address / Street name" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Document Profile -->
+                    <div class="card">
+                        <h2 class="section-title">Identity Document Submissions (Upload)</h2>
+                        <p class="section-desc">Upload color photographic captures. Scanned copies can be rejected. Max
+                            size 7MB per file.</p>
+
+                        <div class="form-grid">
+                            <div class="form-group form-group-full">
+                                <label for="idType">Identification Document Type</label>
+                                <select id="idType" required onchange="handleIdTypeChange()">
+                                    <option value="passport" selected>International Passport</option>
+                                    <option value="drivers_license">Driver's License</option>
+                                    <option value="state_id">Government State ID Card</option>
+                                    <option value="military_id">Military ID Card</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="idNumber">Document Serial / Identification Number</label>
+                                <input type="text" id="idNumber" placeholder="U12345678" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="idExpiry">Document Expiry Date</label>
+                                <input type="date" id="idExpiry" required>
+                            </div>
+
+                            <!-- Document Upload Areas -->
+                            <div class="form-group">
+                                <label>Document Front Side Image</label>
+                                <div class="file-upload-wrapper">
+                                    <span id="labelFront">Drag & drop or Click to choose</span>
+                                    <input type="file" id="idFrontFile" accept="image/*" required
+                                        onchange="previewFile(this, 'imgFront')">
+                                    <img id="imgFront" class="file-preview" alt="Document Front">
+                                </div>
+                            </div>
+                            <div class="form-group" id="backUploadGroup" style="display: none;">
+                                <label>Document Back Side Image</label>
+                                <div class="file-upload-wrapper">
+                                    <span id="labelBack">Drag & drop or Click to choose</span>
+                                    <input type="file" id="idBackFile" accept="image/*"
+                                        onchange="previewFile(this, 'imgBack')">
+                                    <img id="imgBack" class="file-preview" alt="Document Back">
+                                </div>
+                            </div>
+
+                            <div class="form-group form-group-full">
+                                <label>Passport-sized Portrait Photograph (Face Photo)</label>
+                                <div class="file-upload-wrapper">
+                                    <span id="labelPhoto">Drag & drop or Click to choose photo</span>
+                                    <input type="file" id="photoFile" accept="image/*" required
+                                        onchange="previewFile(this, 'imgPhoto')">
+                                    <img id="imgPhoto" class="file-preview" alt="Face Portrait">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" id="submitBtn" class="btn-submit">
+                        <span>Submit Verification Application</span>
+                    </button>
+                </form>
+            </main>
+        </div>
+    </div>
+
+    <script src="../../assets/js/api.js"></script>
+    <script src="../../assets/js/auth.js"></script>
+    <script src="../../assets/js/utils.js"></script>
+    <script>
+        Auth.requireAuth();
+
+        var idFrontBase64 = null;
+        var idBackBase64 = null;
+        var photoBase64 = null;
+
+        // Establish DOB max date is 18 years ago
+        (function () {
+            const maxDob = new Date();
+            maxDob.setFullYear(maxDob.getFullYear() - 18);
+            document.getElementById('dob').max = maxDob.toISOString().split('T')[0];
+
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            document.getElementById('idExpiry').min = tomorrow.toISOString().split('T')[0];
+        })();
+
+        // Sidebar navigation toggler for mobile display
+        function toggleSidebar() {
+            const sb = document.getElementById('sidebar');
+            sb.style.transform = sb.style.transform === 'translateX(0px)' ? 'translateX(-100%)' : 'translateX(0px)';
+        }
+
+        // Dynamic field labels based on country
+        function configureCountryIdentification(country) {
+            const ssnLabel = document.getElementById('ssnLabel');
+            const ssnInput = document.getElementById('ssn');
+
+            if (country === 'United States') {
+                ssnLabel.textContent = "Social Security Number (SSN)";
+                ssnInput.placeholder = "000-00-0000";
+            } else if (country === 'United Kingdom') {
+                ssnLabel.textContent = "National Insurance (NI) Number";
+                ssnInput.placeholder = "QQ 12 34 56 A";
+            } else if (country === 'Canada') {
+                ssnLabel.textContent = "Social Insurance Number (SIN)";
+                ssnInput.placeholder = "000-000-000";
+            } else {
+                ssnLabel.textContent = "National Identification Number (NID / Tax ID)";
+                ssnInput.placeholder = "National ID Serial Number";
+            }
+        }
+
+        // Adapt fields to passport vs cards (cards need back upload, passport does not)
+        function handleIdTypeChange() {
+            const type = document.getElementById('idType').value;
+            const backGroup = document.getElementById('backUploadGroup');
+            const backInput = document.getElementById('idBackFile');
+
+            if (type === 'passport') {
+                backGroup.style.display = 'none';
+                backInput.required = false;
+            } else {
+                backGroup.style.display = 'block';
+                backInput.required = true;
+            }
+        }
+
+        // Preview uploaded file and convert to base64
+        function previewFile(input, imgId) {
+            const file = input.files[0];
+            const preview = document.getElementById(imgId);
+            const label = input.previousElementSibling;
+
+            if (!file) return;
+
+            // File size sanity check (7MB limit)
+            if (file.size > 7 * 1024 * 1024) {
+                Utils.showToast("Maximum size allowed is 7 MB for uploads.", "error");
+                input.value = '';
+                preview.style.display = 'none';
+                label.textContent = "Drag & drop or Click to choose";
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                preview.src = e.target.result;
+                preview.style.display = 'block';
+                label.textContent = file.name;
+
+                // Populate base64 variables
+                if (imgId === 'imgFront') idFrontBase64 = e.target.result;
+                if (imgId === 'imgBack') idBackBase64 = e.target.result;
+                if (imgId === 'imgPhoto') photoBase64 = e.target.result;
+            };
+
+            reader.onerror = function (err) {
+                console.error("FileReader error:", err);
+                Utils.showToast('Could not read this file. Please try another.', 'error');
+            };
+
+            reader.readAsDataURL(file);
+        }
+
+        // Initial view rendering logic
+        async function initPage() {
+            try {
+                const res = await Api.get('/api/auth/me', true);
+                if (!res.ok) {
+                    Auth.logout();
+                    return;
+                }
+
+                const user = res.data;
+
+                // Update headers & names in page immediately, safely
+                try {
+                    Utils.setAvatar('sidebarAvatar', user);
+                    const fname = user.first_name || 'User';
+                    const lname = user.last_name || '';
+                    document.getElementById('sidebarName').textContent = `${fname} ${lname}`.trim();
+                    Utils.setAvatar('topbarAvatar', user);
+                } catch (e) {
+                    console.error("Avatar render error", e);
+                }
+
+                // If user KYC is complete and verified, proceed to dashboard
+                if (user.is_kyc_complete && user.status === 'active') {
+                    Utils.navigateTo('/frontend/pages/user/dashboard.html');
+                    return;
+                }
+
+                document.getElementById('fullName').value = `${user.first_name || ''} ${user.middle_name ? user.middle_name + ' ' : ''}${user.last_name || ''}`.trim();
+                document.getElementById('email').value = user.email || '';
+                document.getElementById('phone').value = user.phone || '—';
+                document.getElementById('nationality').value = user.country || 'United States';
+
+                // Prepopulate KYC details if they have submitted and are pending review
+                // In this case, show user the Status Banner instead of the form
+                if (user.kyc_submitted_at || user.status === 'pending') {
+                    document.getElementById('kycForm').style.display = 'none';
+                    document.getElementById('kycStatusBanner').style.display = 'block';
+
+                    if (user.status === 'blocked') {
+                        document.getElementById('kycStatusIcon').textContent = "✕";
+                        document.getElementById('kycStatusTitle').textContent = "Account Locked";
+                        document.getElementById('kycStatusDesc').textContent = "Your verification review has failed or your account has been locked by administration. Please contact customer support for further assistance.";
+                    }
+                    return;
+                }
+
+                // Configure dynamic labels based on nationality
+                configureCountryIdentification(user.country || 'United States');
+
+                // Initial setup for uploading ID
+                handleIdTypeChange();
+
+            } catch (err) {
+                console.error("KYC Form initiation error: ", err);
+            }
+        }
+
+        // Submit KYC request payload to Auth Router endpoint
+        async function submitKYCForm(event) {
+            event.preventDefault();
+
+            const alertArea = document.getElementById('formAlert');
+            alertArea.style.display = 'none';
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.querySelector('span').textContent = "Uploading assets, please wait...";
+
+            try {
+                const dobVal = document.getElementById('dob').value;
+                const expiryVal = document.getElementById('idExpiry').value;
+
+                // 18+ age verification
+                const dobDate = new Date(dobVal);
+                const today = new Date();
+                let age = today.getFullYear() - dobDate.getFullYear();
+                if (today < new Date(today.getFullYear(), dobDate.getMonth(), dobDate.getDate())) {
+                    age--;
+                }
+
+                if (age < 18) {
+                    throw new Error("Users must be at least 18 years of age.");
+                }
+
+                // ID expiry in future
+                const expiryDate = new Date(expiryVal);
+                const todayLimit = new Date();
+                todayLimit.setHours(0, 0, 0, 0);
+                if (expiryDate <= todayLimit) {
+                    throw new Error("Identification documents must have a future expiration date.");
+                }
+
+                const payload = {
+                    title: document.getElementById('title').value,
+                    gender: document.getElementById('gender').value,
+                    date_of_birth: dobVal,
+                    zip_code: document.getElementById('zipCode').value.trim(),
+                    ssn: document.getElementById('ssn').value.trim(),
+                    employment_status: document.getElementById('employmentStatus').value,
+                    employer_name: document.getElementById('employerName').value.trim() || null,
+                    annual_income: document.getElementById('annualIncome').value,
+                    source_of_income: document.getElementById('sourceOfIncome').value.trim(),
+                    account_purpose: document.getElementById('accountPurpose').value,
+                    address: document.getElementById('address').value.trim(),
+                    city: document.getElementById('city').value.trim(),
+                    state: document.getElementById('state').value.trim(),
+                    nationality: document.getElementById('nationality').value,
+                    next_of_kin_name: document.getElementById('nokName').value.trim(),
+                    next_of_kin_address: document.getElementById('nokAddress').value.trim(),
+                    next_of_kin_relationship: document.getElementById('nokRelationship').value.trim(),
+                    next_of_kin_age: parseInt(document.getElementById('nokAge').value, 10),
+                    id_type: document.getElementById('idType').value,
+                    id_number: document.getElementById('idNumber').value.trim(),
+                    id_expiry_date: expiryVal,
+                    id_front_data: idFrontBase64,
+                    id_back_data: idBackBase64,
+                    passport_photo_data: photoBase64
+                };
+
+                const res = await Api.post('/api/auth/kyc/submit', payload, true);
+
+                if (res.ok) {
+                    // Swap view with the pending card
+                    document.getElementById('kycForm').style.display = 'none';
+                    document.getElementById('kycStatusBanner').style.display = 'block';
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                } else {
+                    throw new Error((res.data && res.data.detail) ? res.data.detail : "Submission failed via server.");
+                }
+            } catch (err) {
+                console.error('KYC submit error:', err);
+                alertArea.textContent = err.message || "An unexpected error occurred while preparing your submission.";
+                alertArea.style.display = 'block';
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.querySelector('span').textContent = "Submit Verification Application";
+            }
+        }
+
+        // Trigger loading configuration on startup
+        window.addEventListener('DOMContentLoaded', initPage);
+    </script>
+</body>
+
+</html>
