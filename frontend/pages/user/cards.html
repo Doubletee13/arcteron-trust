@@ -1962,11 +1962,11 @@
       const icon = document.getElementById('privacyIcon');
 
       if (balanceVisible) {
-        amountEl.innerHTML = `${actualBalance} <span class="balance-currency">USD</span>`;
+        amountEl.innerHTML = `${actualBalance} <span class="balance-currency">${userCurrency}</span>`;
         acctEl.textContent = lastFourAcct ? `**** ${lastFourAcct}` : '**** ****';
         icon.innerHTML = `<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>`;
       } else {
-        amountEl.innerHTML = `•••••• <span class="balance-currency">USD</span>`;
+        amountEl.innerHTML = `•••••• <span class="balance-currency">${userCurrency}</span>`;
         acctEl.textContent = '•••• ••••';
         icon.innerHTML = `<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>`;
       }
@@ -2080,8 +2080,9 @@
           `Here's your financial overview for today, ${TimeUtils.formatGreetingDate(new Date())}.`;
       }
 
+      let userCurrency = 'USD';
       function fmt(n) {
-        return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(n || 0);
+        return new Intl.NumberFormat('en-US', { style: 'currency', currency: userCurrency }).format(n || 0);
       }
 
       // ── Update notification dot ──
@@ -2189,13 +2190,17 @@
           }
 
           if (data.account) {
+            userCurrency = data.account.currency || 'USD';
+            const currencySpans = document.querySelectorAll('.balance-currency');
+            currencySpans.forEach(span => span.textContent = userCurrency);
+
             actualBalance = fmt(data.account.balance);
             lastFourAcct = data.account.account_number.slice(-4);
             const balAm = document.getElementById('balanceAmount'); if (balAm) balAm.innerHTML =
-              `${actualBalance} <span class="balance-currency">USD</span>`;
+              `${actualBalance} <span class="balance-currency">${userCurrency}</span>`;
             const accNum = document.getElementById('accountNumber'); if (accNum) accNum.textContent =
               `**** ${lastFourAcct}`;
-            const rNum = document.getElementById('routingNumber'); if (rNum) rNum.textContent = data.account.routing_number;
+            const rNum = document.getElementById('routingNumber'); if (rNum) rNum.textContent = data.account.routing_number || 'N/A';
           }
         }
 
@@ -2418,7 +2423,8 @@
         blocked by an administrator.</p>
       <p id="blockedReason" style="font-size:12px;color:#EF4444;margin-bottom:24px;"></p>
       <p style="font-size:12px;color:var(--text-muted);">You will be redirected to the login page shortly. Contact
-        <strong>support@arcterontrust.com</strong> for assistance.</p>
+        <strong>support@arcterontrust.com</strong> for assistance.
+      </p>
     </div>
   </div>
 </body>
