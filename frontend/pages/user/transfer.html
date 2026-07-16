@@ -2315,7 +2315,33 @@
     function closeReceiptModal() {
       ReceiptModal.close();
     }
-  </script>
+  
+    // Poll every 45s to detect mid-session account block
+    async function pollAccountStatus() {
+        try {
+            const tok = Api.getToken();
+            if(!tok) return;
+            const res = await Api.get('/api/auth/status', true);
+            if(res && res.ok && res.data.status === 'blocked') {
+                const u = Api.getUser();
+                if(u) {
+                    sessionStorage.setItem('blockedUser', JSON.stringify({
+                        first_name: u.first_name,
+                        last_name: u.last_name,
+                        profile_photo: u.profile_photo,
+                        reason: res.data.blocked_reason
+                    }));
+                }
+                window.location.href = '../enter-pin.html?blocked=true';
+            }
+        } catch(e) {}
+    }
+    document.addEventListener('DOMContentLoaded', () => {
+        pollAccountStatus();
+        setInterval(pollAccountStatus, 45000);
+    });
+
+    </script>
 </body>
 
 </html>

@@ -1493,42 +1493,23 @@
                     if (!tok) return;
                     const res = await Api.get('/api/auth/status', true);
                     if (res && res.ok && res.data.status === 'blocked') {
-                        const modal = document.getElementById('blockedModal');
-                        modal.style.display = 'flex';
-                        const reason = res.data.blocked_reason;
-                        if (reason) document.getElementById('blockedReason').textContent = `Reason: ${reason}`;
-                        setTimeout(() => { Auth.logout(); }, 3500);
+                        const u = Api.getUser();
+                        if (u) {
+                            sessionStorage.setItem('blockedUser', JSON.stringify({
+                                first_name: u.first_name,
+                                last_name: u.last_name,
+                                profile_photo: u.profile_photo,
+                                reason: res.data.blocked_reason
+                            }));
+                        }
+                        window.location.href = '../enter-pin.html?blocked=true';
                     }
-                } catch (e) { /* silent fail */ }
+                } catch (e) { }
             }
             pollAccountStatus();
             setInterval(pollAccountStatus, 45000);
         })();
     </script>
-    <!-- Blocked Account Modal -->
-    <div id="blockedModal"
-        style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:99999;align-items:center;justify-content:center;">
-        <div
-            style="background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:16px;padding:40px 32px;max-width:420px;width:calc(100% - 40px);text-align:center;box-shadow:0 24px 60px rgba(0,0,0,0.4);">
-            <div
-                style="width:56px;height:56px;border-radius:50%;background:rgba(239,68,68,0.12);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;">
-                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#EF4444" stroke-width="2"
-                    stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="12" cy="12" r="10" />
-                    <line x1="4.93" y1="4.93" x2="19.07" y2="19.07" />
-                </svg>
-            </div>
-            <h2
-                style="font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;color:var(--text-primary);margin-bottom:10px;">
-                Account Blocked</h2>
-            <p style="font-size:13px;color:var(--text-secondary);line-height:1.6;margin-bottom:6px;">Your account has
-                been blocked by an administrator.</p>
-            <p id="blockedReason" style="font-size:12px;color:#EF4444;margin-bottom:24px;"></p>
-            <p style="font-size:12px;color:var(--text-muted);">You will be redirected to the login page shortly. Contact
-                <strong>support@arcterontrust.com</strong> for assistance.
-            </p>
-        </div>
-    </div>
 </body>
 
 </html>

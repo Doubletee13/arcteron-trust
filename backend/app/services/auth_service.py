@@ -229,11 +229,19 @@ def login_user(data: LoginRequest, db: Session) -> dict:
             detail="Please verify your email address before logging in. Check your inbox or request a new verification link."
         )
 
-    # Check if account is blocked
+    # Check if account is blocked — return rich detail so frontend can render the blocked UI
     if user.status == UserStatus.blocked:
+        import json
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail="Your account is blocked. Please contact support."
+            detail=json.dumps({
+                "code": "account_blocked",
+                "message": "Your account has been blocked. Please contact support.",
+                "reason": user.blocked_reason or "",
+                "first_name": user.first_name or "",
+                "last_name": user.last_name or "",
+                "profile_photo": user.profile_photo or "",
+            })
         )
 
     # Update last login

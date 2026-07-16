@@ -1,110 +1,548 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Enter PIN — Arcteron Trust</title>
+  <title>Verify Your Identity — Arcteron Trust</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=DM+Sans:wght@300;400;500;600&display=swap"
+    rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'">
   <link rel="stylesheet" href="../assets/css/theme.css">
   <link rel="stylesheet" href="../assets/css/style.css">
   <script src="../assets/js/theme.js"></script>
   <style>
-    body { font-family: 'DM Sans', sans-serif; margin: 0; min-height: 100vh; display: flex; align-items: center; justify-content: center; background: var(--bg-primary); padding: 24px; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg-primary);
+      padding: 24px;
+    }
+
     .card {
-      width: 100%; max-width: 400px;
+      width: 100%;
+      max-width: 400px;
       background: var(--bg-secondary);
       border: 1.5px solid var(--border-color);
       border-radius: 14px;
-      padding: 32px 28px;
+      overflow: hidden;
       box-shadow: var(--shadow-md);
       position: relative;
     }
-    .theme-wrap { position: absolute; top: 16px; right: 16px; }
+
+    /* ── Blue header (matches the sample screen) ── */
+    .card-header {
+      background: linear-gradient(135deg, #1e6fd4 0%, #2563eb 60%, #1d4ed8 100%);
+      padding: 32px 28px 28px;
+      text-align: center;
+      position: relative;
+    }
+
+    .card-header-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.18);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 14px;
+    }
+
+    .card-header h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 22px;
+      font-weight: 600;
+      color: #fff;
+      margin: 0 0 6px;
+    }
+
+    .card-header p {
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.82);
+      margin: 0;
+      line-height: 1.5;
+    }
+
+    .theme-wrap {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+    }
+
     .theme-btn {
-      width: 34px; height: 34px; border-radius: 8px;
-      background: var(--bg-primary); border: 1.5px solid var(--border-color);
-      color: var(--text-secondary); display: flex; align-items: center; justify-content: center;
+      width: 30px;
+      height: 30px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       cursor: pointer;
     }
-    h1 { font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 600; color: var(--text-primary); margin-bottom: 8px; }
-    .sub { font-size: 14px; color: var(--text-secondary); margin-bottom: 20px; }
-    .user-preview { text-align: center; margin-bottom: 20px; }
+
+    /* ── Card body ── */
+    .card-body {
+      padding: 28px 28px 32px;
+    }
+
+    /* ── User profile section ── */
+    .user-preview {
+      text-align: center;
+      margin-bottom: 22px;
+    }
+
+    .user-preview-avatar-wrap {
+      position: relative;
+      display: inline-block;
+      margin-bottom: 10px;
+    }
+
     .user-preview-avatar {
-      width: 56px; height: 56px; border-radius: 50%; background: #111827; color: #fff;
-      display: inline-flex; align-items: center; justify-content: center;
-      font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 600;
-      border: 3px solid var(--border-color); margin-bottom: 8px;
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: #111827;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 22px;
+      font-weight: 600;
+      border: 3px solid var(--border-color);
+      overflow: hidden;
     }
-    [data-theme="dark"] .user-preview-avatar { background: #E5E7EB; color: #111827; }
-    .user-preview-name { font-size: 15px; font-weight: 600; color: var(--text-primary); }
-    .user-preview-email { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
-    .pin-inputs { display: flex; gap: 10px; justify-content: center; margin: 20px 0; }
+
+    .user-preview-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+    }
+
+    [data-theme="dark"] .user-preview-avatar {
+      background: #E5E7EB;
+      color: #111827;
+    }
+
+    .verified-badge {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #2563eb;
+      border: 2px solid var(--bg-secondary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .user-preview-name {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .user-preview-email {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    /* ── PIN inputs ── */
+    .pin-inputs {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin: 20px 0;
+    }
+
     .pin-digit {
-      width: 48px; height: 52px; border: 1.5px solid var(--border-color); border-radius: 10px;
-      background: var(--bg-primary); font-size: 20px; font-weight: 700; text-align: center;
-      color: var(--text-primary); font-family: 'DM Sans', sans-serif;
+      width: 52px;
+      height: 56px;
+      border: 1.5px solid var(--border-color);
+      border-radius: 10px;
+      background: var(--bg-primary);
+      font-size: 22px;
+      font-weight: 700;
+      text-align: center;
+      color: var(--text-primary);
+      font-family: 'DM Sans', sans-serif;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
     }
-    [data-theme="dark"] .pin-digit { background: #0F1115; border-color: #2B2F36; color: #E5E7EB; }
+
+    .pin-digit:focus {
+      border-color: #2563eb;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+    }
+
+    [data-theme="dark"] .pin-digit {
+      background: #0F1115;
+      border-color: #2B2F36;
+      color: #E5E7EB;
+    }
+
     .submit-btn {
-      width: 100%; background: #111827; color: #fff; border: none; border-radius: 8px;
-      padding: 14px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: 'DM Sans', sans-serif;
+      width: 100%;
+      background: #111827;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 14px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      transition: opacity 0.2s;
     }
-    [data-theme="dark"] .submit-btn { background: #E5E7EB; color: #0F1115; }
-    [data-theme="dark"] .card { background: #171A20; border-color: #2B2F36; }
-    [data-theme="dark"] h1 { color: #E5E7EB; }
-    .form-alert { display: none; padding: 12px; border-radius: 8px; font-size: 13px; margin-bottom: 16px; border-left: 3px solid #EF4444; background: rgba(239,68,68,0.08); color: #DC2626; }
-    [data-theme="dark"] .form-alert { color: #FCA5A5; background: rgba(239,68,68,0.12); }
-    .form-alert.show { display: block; }
-    .footer-links { margin-top: 16px; text-align: center; font-size: 13px; }
-    .footer-links a { color: var(--text-secondary); font-weight: 500; transition: color 0.2s; }
-    .footer-links a:hover { color: var(--text-primary); }
+
+    .submit-btn:hover:not(:disabled) {
+      opacity: 0.85;
+    }
+
+    .submit-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    [data-theme="dark"] .submit-btn {
+      background: #E5E7EB;
+      color: #0F1115;
+    }
+
+    [data-theme="dark"] .card {
+      background: #171A20;
+      border-color: #2B2F36;
+    }
+
+    .form-alert {
+      display: none;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 13px;
+      margin-bottom: 16px;
+      border-left: 3px solid #EF4444;
+      background: rgba(239, 68, 68, 0.08);
+      color: #DC2626;
+    }
+
+    [data-theme="dark"] .form-alert {
+      color: #FCA5A5;
+      background: rgba(239, 68, 68, 0.12);
+    }
+
+    .form-alert.show {
+      display: block;
+    }
+
+    .footer-links {
+      margin-top: 16px;
+      text-align: center;
+      font-size: 13px;
+    }
+
+    .footer-links a {
+      color: var(--text-secondary);
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover {
+      color: var(--text-primary);
+    }
+
+    /* ── Blocked state box ── */
+    #blockedBox {
+      display: none;
+      border-left: 4px solid #EF4444;
+      background: rgba(254, 242, 242, 0.85);
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 0;
+    }
+
+    [data-theme="dark"] #blockedBox {
+      background: rgba(239, 68, 68, 0.07);
+    }
+
+    .blocked-box-inner {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+
+    .blocked-box-icon {
+      flex-shrink: 0;
+      margin-top: 2px;
+      color: #DC2626;
+    }
+
+    .blocked-box-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #DC2626;
+      margin-bottom: 4px;
+    }
+
+    .blocked-box-msg {
+      font-size: 13px;
+      color: #7f1d1d;
+      line-height: 1.5;
+      margin-bottom: 10px;
+    }
+
+    [data-theme="dark"] .blocked-box-msg {
+      color: #FCA5A5;
+    }
+
+    .blocked-box-reason {
+      font-size: 12px;
+      color: #DC2626;
+      margin-bottom: 12px;
+      font-style: italic;
+    }
+
+    .blocked-box-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .blocked-action-link {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 13px;
+      font-weight: 500;
+      color: #DC2626;
+      text-decoration: none;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 0;
+      font-family: 'DM Sans', sans-serif;
+      transition: opacity 0.2s;
+    }
+
+    .blocked-action-link:hover {
+      opacity: 0.75;
+    }
+
+    /* ── Security note ── */
+    .security-note {
+      text-align: center;
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
   </style>
 </head>
+
 <body>
   <div class="card">
-    <div class="theme-wrap">
-      <button type="button" class="theme-btn" onclick="Theme.toggle()" title="Toggle theme">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-      </button>
+    <!-- Blue Header -->
+    <div class="card-header">
+      <div class="theme-wrap">
+        <button type="button" class="theme-btn" onclick="Theme.toggle()" title="Toggle theme">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+          </svg>
+        </button>
+      </div>
+      <div class="card-header-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white"
+          stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2a10 10 0 0 1 6.32 2.26L6.26 16.32A10 10 0 0 1 12 2z" opacity="0.4" />
+          <path d="M12 22a10 10 0 0 1-6.32-2.26L17.74 7.68A10 10 0 0 1 12 22z" opacity="0.4" />
+          <!-- fingerprint icon -->
+          <path d="M12 1C6.48 1 2 5.48 2 11c0 3.42 1.72 6.44 4.35 8.25" stroke-linecap="round" />
+          <path d="M12 1c5.52 0 10 4.48 10 10 0 3.42-1.72 6.44-4.35 8.25" stroke-linecap="round" />
+          <path d="M8 11c0-2.21 1.79-4 4-4s4 1.79 4 4c0 4-4 7-4 7s-4-3-4-7z" />
+        </svg>
+      </div>
+      <h1>Verify Your Identity</h1>
+      <p id="headerSubtext">Please enter your secure 4-digit PIN to continue</p>
     </div>
-    <h1>Enter your PIN</h1>
-    <p class="sub">4-digit transaction PIN to continue to your account.</p>
-    <div id="formAlert" class="form-alert"></div>
-    <div class="user-preview">
-      <div class="user-preview-avatar" id="previewAvatar">—</div>
-      <div class="user-preview-name" id="previewName">…</div>
-      <div class="user-preview-email" id="previewEmail">…</div>
-    </div>
-    <div class="pin-inputs">
-      <input class="pin-digit" id="pin1" type="password" maxlength="1" inputmode="numeric">
-      <input class="pin-digit" id="pin2" type="password" maxlength="1" inputmode="numeric">
-      <input class="pin-digit" id="pin3" type="password" maxlength="1" inputmode="numeric">
-      <input class="pin-digit" id="pin4" type="password" maxlength="1" inputmode="numeric">
-    </div>
-    <button type="button" class="submit-btn" id="btnSubmit" onclick="submitPin()">Continue</button>
-    <div class="footer-links">
-      <a href="#" onclick="Auth.logout(); return false;">Use a different account</a>
-      &nbsp;·&nbsp;
-      <a href="/frontend/pages/forgot-pin.html">Forgot PIN?</a>
+
+    <!-- Card Body -->
+    <div class="card-body">
+      <!-- User Profile -->
+      <div class="user-preview">
+        <div class="user-preview-avatar-wrap">
+          <div class="user-preview-avatar" id="previewAvatar">—</div>
+          <div class="verified-badge">
+            <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none"
+              stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12" />
+            </svg>
+          </div>
+        </div>
+        <div class="user-preview-name" id="previewName">…</div>
+        <div class="user-preview-email" id="previewEmail">…</div>
+      </div>
+
+      <!-- Alert -->
+      <div id="formAlert" class="form-alert"></div>
+
+      <!-- PIN section (hidden when blocked) -->
+      <div id="pinSection">
+        <div class="pin-inputs">
+          <input class="pin-digit" id="pin1" type="password" maxlength="1" inputmode="numeric">
+          <input class="pin-digit" id="pin2" type="password" maxlength="1" inputmode="numeric">
+          <input class="pin-digit" id="pin3" type="password" maxlength="1" inputmode="numeric">
+          <input class="pin-digit" id="pin4" type="password" maxlength="1" inputmode="numeric">
+        </div>
+        <button type="button" class="submit-btn" id="btnSubmit" onclick="submitPin()">Continue</button>
+        <div class="footer-links">
+          <a href="#" onclick="Auth.logout(); return false;">Use a different account</a>
+          &nbsp;·&nbsp;
+          <a href="/frontend/pages/forgot-pin.html">Forgot PIN?</a>
+        </div>
+      </div>
+
+      <!-- Blocked state box (shown when blocked) -->
+      <div id="blockedBox">
+        <div class="blocked-box-inner">
+          <div class="blocked-box-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+            </svg>
+          </div>
+          <div style="flex:1">
+            <div class="blocked-box-title">Account Blocked</div>
+            <p class="blocked-box-msg">Your Arcteron Trust account has been blocked for security reasons.</p>
+            <p class="blocked-box-reason" id="blockedReason"></p>
+            <div class="blocked-box-actions">
+              <a class="blocked-action-link" href="/frontend/pages/user/support.html">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                  <polyline points="22,6 12,13 2,6" />
+                </svg>
+                Contact Support
+              </a>
+              <button class="blocked-action-link" onclick="doLogout()">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                  <polyline points="16 17 21 12 16 7" />
+                  <line x1="21" y1="12" x2="9" y2="12" />
+                </svg>
+                Logout
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Security note (shown in both states) -->
+      <div class="security-note">
+        <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+          <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+        </svg>
+        Your security is our priority. PIN verification protects your account from unauthorized access.
+      </div>
     </div>
   </div>
+
   <script src="../assets/js/api.js"></script>
   <script src="../assets/js/auth.js"></script>
   <script src="../assets/js/utils.js"></script>
   <script>
     const pinIds = ['pin1', 'pin2', 'pin3', 'pin4'];
 
+    // ── Blocked state helper ──
+    function renderBlockedUI(blockedData) {
+      // Update header
+      document.getElementById('headerSubtext').textContent = 'Your account access has been restricted';
+
+      // Render avatar — photo or initials fallback
+      const first = blockedData.first_name || '';
+      const last = blockedData.last_name || '';
+      const fullName = [first, last].filter(Boolean).join(' ') || 'Account Holder';
+      const avatarEl = document.getElementById('previewAvatar');
+
+      if (blockedData.profile_photo) {
+        const img = document.createElement('img');
+        img.src = blockedData.profile_photo;
+        img.alt = fullName;
+        img.onerror = function () {
+          // Fallback to initials if image fails to load
+          const initials = `${first[0] || ''}${last[0] || ''}`.toUpperCase() || '?';
+          avatarEl.textContent = initials;
+        };
+        avatarEl.textContent = '';
+        avatarEl.appendChild(img);
+      } else {
+        const initials = `${first[0] || ''}${last[0] || ''}`.toUpperCase() || '?';
+        avatarEl.textContent = initials;
+      }
+
+      document.getElementById('previewName').textContent = fullName;
+      document.getElementById('previewEmail').textContent = '';
+
+      // Show reason if provided
+      if (blockedData.reason) {
+        document.getElementById('blockedReason').textContent = `Reason: ${blockedData.reason}`;
+      }
+
+      // Swap UI sections
+      document.getElementById('pinSection').style.display = 'none';
+      document.getElementById('blockedBox').style.display = 'block';
+    }
+
+    function doLogout() {
+      sessionStorage.removeItem('blockedUser');
+      Auth.logout();
+    }
+
+    // ── Main gate ──
     (async function gate() {
+      const params = new URLSearchParams(window.location.search);
+      const isBlocked = params.get('blocked') === 'true';
+
+      if (isBlocked) {
+        // Load cached user context from sessionStorage
+        let blockedData = {};
+        try {
+          const raw = sessionStorage.getItem('blockedUser');
+          if (raw) blockedData = JSON.parse(raw);
+        } catch (_) { }
+        renderBlockedUI(blockedData);
+        return; // Do not run normal PIN gate
+      }
+
+      // Normal PIN gate
       if (!Api.getToken()) {
         window.location.href = '/frontend/pages/login.html';
         return;
       }
+
       let user = Api.getUser();
       if (!user) {
         Auth.logout();
         return;
       }
+
       if (typeof user.has_pin !== 'boolean') {
         const res = await Api.get('/api/auth/me', true);
         if (!res || !res.ok) {
@@ -114,28 +552,46 @@
         Api.setUser(res.data);
         user = res.data;
       }
+
       if (user.has_pin === false) {
         window.location.href = '/frontend/pages/set-pin.html';
         return;
       }
+
       if (Auth.isPinSessionVerified()) {
         Auth.redirectByRole(user);
         return;
       }
 
-      const initials = Auth.getInitials(user.first_name, user.last_name);
-      document.getElementById('previewAvatar').textContent = initials;
+      // Populate profile preview — photo or initials
+      const avatarEl = document.getElementById('previewAvatar');
+      if (user.profile_photo) {
+        const img = document.createElement('img');
+        img.src = user.profile_photo;
+        img.alt = `${user.first_name} ${user.last_name}`;
+        img.onerror = function () {
+          const initials = Auth.getInitials(user.first_name, user.last_name);
+          avatarEl.textContent = initials;
+        };
+        avatarEl.textContent = '';
+        avatarEl.appendChild(img);
+      } else {
+        const initials = Auth.getInitials(user.first_name, user.last_name);
+        avatarEl.textContent = initials;
+      }
+
       document.getElementById('previewName').textContent = `${user.first_name} ${user.last_name}`;
       document.getElementById('previewEmail').textContent = user.email;
     })();
 
+    // ── PIN auto-advance ──
     pinIds.forEach((id, i) => {
       const el = document.getElementById(id);
-      el.addEventListener('input', function() {
+      el.addEventListener('input', function () {
         if (this.value && i < 3) document.getElementById(pinIds[i + 1]).focus();
         if (this.value && i === 3) submitPin();
       });
-      el.addEventListener('keydown', function(e) {
+      el.addEventListener('keydown', function (e) {
         if (e.key === 'Backspace' && !this.value && i > 0) {
           document.getElementById(pinIds[i - 1]).focus();
         }
@@ -147,6 +603,7 @@
       el.textContent = msg;
       el.classList.add('show');
     }
+
     function hideAlert() {
       document.getElementById('formAlert').classList.remove('show');
     }
@@ -159,8 +616,11 @@
       }
       const btn = document.getElementById('btnSubmit');
       btn.disabled = true;
+      btn.textContent = 'Verifying...';
       const res = await Api.post('/api/auth/verify-pin', { pin }, true);
       btn.disabled = false;
+      btn.textContent = 'Continue';
+
       if (res && res.ok) {
         Auth.markPinSessionVerified();
         Auth.redirectByRole(Api.getUser());
@@ -173,4 +633,5 @@
     }
   </script>
 </body>
+
 </html>

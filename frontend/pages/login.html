@@ -957,7 +957,24 @@
         setTimeout(() => document.getElementById('pin1').focus(), 100);
 
       } else {
-        const errorMsg = res.data.detail || 'Login failed. Please try again.';
+        let errorDetail = res.data?.detail || '';
+        // Try to parse rich JSON detail from blocked account response
+        let parsedDetail = null;
+        try { parsedDetail = typeof errorDetail === 'string' ? JSON.parse(errorDetail) : errorDetail; } catch (_) { }
+
+        if (parsedDetail && parsedDetail.code === 'account_blocked') {
+          // Cache user context for the blocked screen
+          sessionStorage.setItem('blockedUser', JSON.stringify({
+            first_name: parsedDetail.first_name || '',
+            last_name: parsedDetail.last_name || '',
+            profile_photo: parsedDetail.profile_photo || '',
+            reason: parsedDetail.reason || '',
+          }));
+          window.location.href = '/frontend/pages/enter-pin.html?blocked=true';
+          return;
+        }
+
+        const errorMsg = (typeof errorDetail === 'string' ? errorDetail : parsedDetail?.message) || 'Login failed. Please try again.';
         // Check if error is due to unverified email
         if (errorMsg.includes('verify your email')) {
           const email = document.getElementById('email').value.trim();
