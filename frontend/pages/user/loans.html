@@ -2103,11 +2103,14 @@
           if (!tok) return;
           const res = await Api.get('/api/auth/status', true);
           if (res && res.ok && res.data.status === 'blocked') {
-            const modal = document.getElementById('blockedModal');
-            modal.style.display = 'flex';
-            const reason = res.data.blocked_reason;
-            if (reason) document.getElementById('blockedReason').textContent = `Reason: ${reason}`;
-            setTimeout(() => { Auth.logout(); }, 3500);
+            const user = Api.getUser() || {};
+            sessionStorage.setItem('blockedUser', JSON.stringify({
+              first_name: user.first_name || '',
+              last_name: user.last_name || '',
+              profile_photo: user.profile_photo || '',
+              reason: res.data.blocked_reason || '',
+            }));
+            window.location.href = '/frontend/pages/enter-pin.html?blocked=true';
           }
         } catch (e) { /* silent fail — never disrupt UX */ }
       }
@@ -2140,7 +2143,8 @@
         blocked by an administrator.</p>
       <p id="blockedReason" style="font-size:12px;color:#EF4444;margin-bottom:24px;"></p>
       <p style="font-size:12px;color:var(--text-muted);">You will be redirected to the login page shortly. Contact
-        <strong>support@arcterontrust.com</strong> for assistance.</p>
+        <strong>support@arcterontrust.com</strong> for assistance.
+      </p>
     </div>
   </div>
 </body>
