@@ -82,8 +82,10 @@ class CreditUserRequest(BaseModel):
 
 class DebitUserRequest(BaseModel):
     amount: float
-    description: str
-    reason: str
+    recipient_name: str
+    bank_name: str
+    account_number: Optional[str] = None
+    description: Optional[str] = ""
     transaction_date: Optional[str] = None
 
 
@@ -137,6 +139,8 @@ def get_all_users(
             "last_name": user.last_name,
             "account_number": account.account_number if account else None,
             "balance": float(account.balance) if account else 0.0,
+            "currency": account.currency if account else "USD",
+            "country": user.country,
             "role": user.role.value,
             "status": user.status.value,
             "is_email_verified": user.is_email_verified,
@@ -419,16 +423,22 @@ def debit_user(
         except Exception:
             debit_transaction_date = datetime.utcnow()
 
+    # Generate or use provided account number
+    final_recipient_account = data.account_number or str(random.randint(1000000000, 9999999999))
+
     # Create regular transaction record for user history
     transaction = Transaction(
         sender_id=user.id,
         transaction_type=TransactionType.debit,
         amount=Decimal(str(data.amount)),
-        description=data.description or f"Debit: {data.reason}",
+        description=data.description or f"Transfer to {data.recipient_name}",
         reference=reference,
         status=TransactionStatus.completed,
         transaction_date=debit_transaction_date,
         sender_account_number=account.account_number,
+        recipient_name=data.recipient_name,
+        recipient_bank=data.bank_name,
+        recipient_account=final_recipient_account,
         created_by_admin=True,
         admin_id=current_admin.id
     )
@@ -440,7 +450,7 @@ def debit_user(
         db,
         user.id,
         "Account Debited",
-        f"Your account has been debited with {data.amount}. Reason: {data.reason}. Reference: {reference}",
+        f"Your account has been debited with {data.amount}. Transfer to: {data.recipient_name}. Reference: {reference}",
         NotificationType.transaction,
         related_id=str(transaction.id),
         related_type="transaction",
@@ -456,7 +466,7 @@ def debit_user(
             first_name=user.first_name,
             amount=f"${data.amount:,.2f}",
             reference=reference,
-            reason=data.reason,
+            reason=data.recipient_name,
             transaction_date=datetime.utcnow().strftime("%B %d, %Y at %I:%M %p UTC"),
             description=data.description,
             new_balance=f"${account.balance:,.2f}"
