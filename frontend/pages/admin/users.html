@@ -1248,100 +1248,6 @@
             .stats-row {
                 grid-template-columns: 1fr;
             }
-
-            .page-content {
-                padding: 10px;
-            }
-        }
-
-        .btn {
-            padding: 8px 10px;
-            font-size: 12px;
-        }
-
-        .btn-secondary {
-            display: none;
-        }
-
-        .btn-primary span {
-            display: none;
-        }
-
-        .icon-btn {
-            width: 32px;
-            height: 32px;
-        }
-
-        .stats-row {
-            grid-template-columns: 1fr 1fr;
-        }
-
-        .table-header,
-        .table-row {
-            grid-template-columns: 1fr;
-            gap: 8px;
-        }
-
-        .table-header {
-            display: none;
-        }
-
-        .table-row {
-            flex-direction: column;
-            display: flex;
-            padding: 16px;
-            gap: 12px;
-        }
-
-        .user-info {
-            flex-direction: row;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .user-avatar {
-            width: 40px;
-            height: 40px;
-            font-size: 14px;
-        }
-
-        .user-details h4 {
-            font-size: 14px;
-        }
-
-        .user-details p {
-            font-size: 12px;
-        }
-
-        .actions {
-            position: relative;
-        }
-
-        .actions-dropdown {
-            position: absolute;
-            right: 0;
-            top: calc(100% + 4px);
-            width: auto;
-            min-width: 200px;
-            flex-direction: column;
-            flex-wrap: nowrap;
-            margin-top: 0;
-        }
-
-        .modal-content {
-            margin: 16px;
-            max-width: calc(100% - 32px);
-            padding: 20px;
-        }
-
-        .modal-header h2 {
-            font-size: 18px;
-        }
-
-        @media (max-width: 480px) {
-            .stats-row {
-                grid-template-columns: 1fr;
-            }
         }
 
         @media (max-width: 900px) {
@@ -1479,7 +1385,7 @@
                     <div class="stat-card">
                         <div class="stat-card-label">
                             <div class="stat-dot" style="background: #F59E0B;"></div>
-                            Total Balance
+                            Total Balance (USD Equivalent)
                         </div>
                         <div class="stat-card-value" id="statTotalBalance">$0</div>
                         <div class="stat-card-sub">Across all accounts</div>
@@ -1812,7 +1718,10 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" onclick="closeModal('createModal')">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Create User</button>
+                    <button type="submit" class="btn btn-primary" id="createSubmitBtn">
+                        <span class="btn-text">Create User</span>
+                        <div class="dot-loader"><span></span><span></span><span></span></div>
+                    </button>
                 </div>
             </form>
         </div>
@@ -1923,12 +1832,21 @@
                     <input type="number" id="debitAmount" step="0.01" required placeholder="0.00">
                 </div>
                 <div class="form-group">
-                    <label>Description</label>
-                    <input type="text" id="debitDescription" required placeholder="Transaction description">
+                    <label>Recipient Name</label>
+                    <input type="text" id="debitRecipientName" required placeholder="e.g. Federal Revenue Authority">
                 </div>
                 <div class="form-group">
-                    <label>Reason</label>
-                    <textarea id="debitReason" required placeholder="Reason for debit"></textarea>
+                    <label>Bank Name</label>
+                    <input type="text" id="debitBankName" required placeholder="e.g. Chase Bank">
+                </div>
+                <div class="form-group">
+                    <label>Account Number <span style="font-weight:400; color:var(--text-muted);">(optional —
+                            auto-generated if blank)</span></label>
+                    <input type="text" id="debitAccountNumber" placeholder="e.g. 4072938150">
+                </div>
+                <div class="form-group">
+                    <label>Description <span style="font-weight:400; color:var(--text-muted);">(optional)</span></label>
+                    <input type="text" id="debitDescription" placeholder="Transaction description">
                 </div>
                 <div class="form-group">
                     <label>Transaction Date</label>
@@ -1968,7 +1886,10 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" onclick="closeModal('blockModal')">Cancel</button>
-                    <button type="submit" class="btn btn-primary danger">Block Account</button>
+                    <button type="submit" class="btn btn-primary danger" id="blockSubmitBtn">
+                        <span class="btn-text">Block Account</span>
+                        <div class="dot-loader"><span></span><span></span><span></span></div>
+                    </button>
                 </div>
             </form>
         </div>
@@ -2121,7 +2042,12 @@
             const totalUsers = users.length;
             const activeUsers = users.filter(u => u.status === 'active').length;
             const blockedUsers = users.filter(u => u.status === 'blocked').length;
-            const totalBalance = users.reduce((sum, u) => sum + (u.balance || 0), 0);
+
+            const exchangeRates = { 'USD': 1, 'EUR': 1.10, 'GBP': 1.30, 'NGN': 0.00067 };
+            const totalBalance = users.reduce((sum, u) => {
+                const rate = exchangeRates[u.currency || 'USD'] || 1;
+                return sum + ((u.balance || 0) * rate);
+            }, 0);
 
             document.getElementById('statTotalUsers').textContent = totalUsers;
             document.getElementById('statActiveUsers').textContent = activeUsers;
@@ -2164,7 +2090,7 @@
                         </div>
                     </div>
                     <div>${user.account_number || 'N/A'}</div>
-                    <div>$${user.balance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
+                    <div>${(user.balance || 0).toLocaleString('en-US', { style: 'currency', currency: user.currency || 'USD' })}</div>
                     <div><span class="status-badge ${statusClass}">${user.status}</span></div>
                     <div><span class="role-badge ${roleClass}">${user.role}</span></div>
                     <div class="row-actions">
@@ -2267,6 +2193,12 @@
         }
 
         function openCreditModal(userId) {
+            const user = allUsers.find(u => u.id === userId);
+            if (user) {
+                const symbol = (0).toLocaleString('en-US', { style: 'currency', currency: user.currency || 'USD', minimumFractionDigits: 0, maximumFractionDigits: 0 }).replace(/[\d\s.,]/g, '').trim();
+                const el = document.querySelector('#creditModal .currency-symbol');
+                if (el) el.textContent = symbol;
+            }
             document.getElementById('creditUserId').value = userId;
             document.getElementById('creditModal').classList.add('show');
         }
@@ -2285,6 +2217,10 @@
         function openEditModal(userId) {
             const user = allUsers.find(u => u.id === userId);
             if (user) {
+                const symbol = (0).toLocaleString('en-US', { style: 'currency', currency: user.currency || 'USD', minimumFractionDigits: 0, maximumFractionDigits: 0 }).replace(/[\d\s.,]/g, '').trim();
+                const el = document.querySelector('#editModal .currency-symbol');
+                if (el) el.textContent = symbol;
+
                 document.getElementById('editUserId').value = user.id;
                 document.getElementById('editEmail').value = user.email;
                 document.getElementById('editFirstName').value = user.first_name;
@@ -2339,8 +2275,8 @@
             }
 
             submitBtn.disabled = true;
-            btnText.style.display = 'none';
-            loader.style.display = 'flex';
+            submitBtn.classList.add('loading');
+            if (btnText) btnText.textContent = 'Saving...';
 
             try {
                 const response = await fetch(`${API_BASE}/api/admin/users/${userId}`, {
@@ -2365,8 +2301,8 @@
                 showToast('Error updating user', 'error');
             } finally {
                 submitBtn.disabled = false;
-                btnText.style.display = 'inline';
-                loader.style.display = 'none';
+                submitBtn.classList.remove('loading');
+                if (btnText) btnText.textContent = 'Save Changes';
             }
         }
 
@@ -2574,7 +2510,14 @@
             }
 
             const isEmailVerified = document.getElementById('emailVerified').checked;
-            const userEmail = document.getElementById('createEmail').value;
+            const skipEmailVerification = !isEmailVerified;
+
+            const submitBtn = document.getElementById('createSubmitBtn');
+            const btnText = submitBtn.querySelector('.btn-text');
+
+            submitBtn.disabled = true;
+            submitBtn.classList.add('loading');
+            if (btnText) btnText.textContent = 'Creating...';
 
             const data = {
                 email: userEmail,
@@ -2588,7 +2531,7 @@
                 account_type: document.getElementById('createAccountType').value,
                 transaction_pin: pin || null,
                 initial_balance: parseFloat(document.getElementById('createBalance').value),
-                skip_email_verification: !isEmailVerified
+                skip_email_verification: skipEmailVerification
             };
 
             try {
@@ -2628,6 +2571,10 @@
             } catch (error) {
                 console.error('Error creating user:', error);
                 showToast('Error creating user. Please try again.', 'error');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.classList.remove('loading');
+                if (btnText) btnText.textContent = 'Create User';
             }
         }
 
@@ -2717,8 +2664,10 @@
             };
 
             // Show loading state
+            const btnText = submitBtn.querySelector('.btn-text');
             submitBtn.disabled = true;
             submitBtn.classList.add('loading');
+            if (btnText) btnText.textContent = 'Crediting...';
 
             try {
                 const response = await fetch(`${API_BASE}/api/admin/users/${userId}/credit`, {
@@ -2745,6 +2694,8 @@
                 // Hide loading state
                 submitBtn.disabled = false;
                 submitBtn.classList.remove('loading');
+                const btnText = submitBtn.querySelector('.btn-text');
+                if (btnText) btnText.textContent = 'Credit Account';
             }
         }
 
@@ -2761,14 +2712,18 @@
 
             const data = {
                 amount: parseFloat(document.getElementById('debitAmount').value),
+                recipient_name: document.getElementById('debitRecipientName').value,
+                bank_name: document.getElementById('debitBankName').value,
+                account_number: document.getElementById('debitAccountNumber').value || undefined,
                 description: document.getElementById('debitDescription').value,
-                reason: document.getElementById('debitReason').value,
                 transaction_date: transactionDate
             };
 
             // Show loading state
+            const btnText = submitBtn.querySelector('.btn-text');
             submitBtn.disabled = true;
             submitBtn.classList.add('loading');
+            if (btnText) btnText.textContent = 'Debiting...';
 
             try {
                 const response = await fetch(`${API_BASE}/api/admin/users/${userId}/debit`, {
@@ -2795,6 +2750,8 @@
                 // Hide loading state
                 submitBtn.disabled = false;
                 submitBtn.classList.remove('loading');
+                const btnText = submitBtn.querySelector('.btn-text');
+                if (btnText) btnText.textContent = 'Debit Account';
             }
         }
 
@@ -2803,10 +2760,16 @@
             event.preventDefault();
             const token = localStorage.getItem('admin_token');
             const userId = document.getElementById('blockUserId').value;
+            const submitBtn = document.getElementById('blockSubmitBtn');
+            const btnText = submitBtn.querySelector('.btn-text');
 
             const data = {
                 reason: document.getElementById('blockReason').value
             };
+
+            submitBtn.disabled = true;
+            submitBtn.classList.add('loading');
+            if (btnText) btnText.textContent = 'Blocking...';
 
             try {
                 const response = await fetch(`${API_BASE}/api/admin/users/${userId}/block`, {
@@ -2829,6 +2792,10 @@
                 }
             } catch (error) {
                 showToast('Error blocking user', 'error');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.classList.remove('loading');
+                if (btnText) btnText.textContent = 'Block Account';
             }
         }
 

@@ -56,8 +56,9 @@ def tx_to_dict(tx: Transaction, current_user_id, db: Session = None) -> dict:
                 fallback_acct = getattr(admin_tx, 'account_number', None)
                 display_account = fallback_acct or None
             else:
-                display_name = "Arcteron Trust Admin"
-                display_bank = "Arcteron Trust"
+                display_name = tx.recipient_name or "—"
+                display_bank = tx.recipient_bank or "—"
+                display_account = tx.recipient_account or "—"
 
     # Determine the current user's own account number for receipt display
     own_account = None
