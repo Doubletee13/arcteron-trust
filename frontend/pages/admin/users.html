@@ -320,7 +320,8 @@
             background: var(--bg-secondary);
             border: 1px solid var(--border-color);
             border-radius: 12px;
-            overflow: hidden;
+            overflow: visible;
+            /* allow dropdown to escape table bounds */
         }
 
         .table-header {
@@ -332,6 +333,14 @@
             font-size: 13px;
             font-weight: 600;
             color: var(--text-secondary);
+            border-radius: 12px 12px 0 0;
+            /* top corners match card */
+        }
+
+        /* Round bottom corners of last data row (replaces overflow:hidden clip) */
+        #usersList .table-row:last-child {
+            border-radius: 0 0 12px 12px;
+            border-bottom: none;
         }
 
         .table-row {
@@ -421,7 +430,7 @@
             color: var(--text-secondary);
         }
 
-        /* ── Actions Dropdown ── */
+        /* ── Actions Buttons ── */
         .actions {
             position: relative;
         }
@@ -492,22 +501,8 @@
             height: 16px;
         }
 
-        .actions-dropdown {
-            position: absolute;
-            right: 0;
-            top: calc(100% + 4px);
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-            z-index: 1000;
-            display: none;
-            flex-direction: column;
-            padding: 4px;
-            min-width: 180px;
-            animation: dropdownFade 0.15s ease;
-        }
-
+        /* ── Body-Teleported Actions Dropdown ── */
+        /* Rendered as a child of <body> — immune to any ancestor overflow:hidden */
         @keyframes dropdownFade {
             from {
                 opacity: 0;
@@ -520,11 +515,25 @@
             }
         }
 
-        .actions-dropdown.show {
+        .body-actions-dropdown {
+            position: fixed;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+            z-index: 9999;
+            display: none;
+            flex-direction: column;
+            padding: 4px;
+            min-width: 180px;
+            animation: dropdownFade 0.15s ease;
+        }
+
+        .body-actions-dropdown.show {
             display: flex;
         }
 
-        .actions-dropdown button {
+        .body-actions-dropdown button {
             background: none;
             border: none;
             padding: 8px 10px;
@@ -537,35 +546,37 @@
             align-items: center;
             gap: 6px;
             white-space: nowrap;
+            font-family: 'DM Sans', sans-serif;
+            text-align: left;
         }
 
-        .actions-dropdown button:hover {
+        .body-actions-dropdown button:hover {
             background: var(--bg-primary);
         }
 
-        .actions-dropdown button.danger {
+        .body-actions-dropdown button.danger {
             color: #EF4444;
         }
 
-        .actions-dropdown button.danger:hover {
+        .body-actions-dropdown button.danger:hover {
             background: rgba(239, 68, 68, 0.1);
             color: #EF4444;
         }
 
-        .actions-dropdown .divider {
+        .body-actions-dropdown .divider {
             height: 1px;
             background: var(--border-color);
             margin: 4px 0;
         }
 
-        .actions-dropdown button svg {
+        .body-actions-dropdown button svg {
             width: 14px;
             height: 14px;
             flex-shrink: 0;
             opacity: 0.6;
         }
 
-        .actions-dropdown button:hover svg {
+        .body-actions-dropdown button:hover svg {
             opacity: 1;
         }
 
@@ -1250,12 +1261,7 @@
             }
         }
 
-        @media (max-width: 900px) {
-            .actions-dropdown {
-                right: 0;
-                left: auto;
-            }
-        }
+        /* .body-actions-dropdown is positioned via JS on all screen sizes — no media override needed */
     </style>
 </head>
 
@@ -1983,6 +1989,14 @@
         const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? 'http://localhost:8000' : 'https://arcteron-trust.onrender.com';
         let allUsers = [];
 
+        // ── Body-level actions dropdown (shared singleton) ──
+        // Appended once to <body> so it is never clipped by .users-table's overflow
+        const _bdrop = document.createElement('div');
+        _bdrop.id = 'body-actions-dropdown';
+        _bdrop.className = 'body-actions-dropdown';
+        document.body.appendChild(_bdrop);
+        let _bdropUserId = null; // tracks which user's dropdown is currently open
+
         // Check authentication
         function checkAuth() {
             const token = localStorage.getItem('admin_token');
@@ -2112,62 +2126,20 @@
                             </svg>
                         </button>
                         <div class="actions">
-                            <button class="action-icon-btn" onclick="toggleActionsDropdown('${user.id}')" title="More">
+                            <button
+                                class="action-icon-btn"
+                                id="more-btn-${user.id}"
+                                onclick="toggleActionsDropdown('${user.id}', this)"
+                                title="More"
+                                data-user-status="${user.status}"
+                                data-user-role="${user.role}"
+                            >
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <circle cx="12" cy="12" r="1"></circle>
                                     <circle cx="12" cy="5" r="1"></circle>
                                     <circle cx="12" cy="19" r="1"></circle>
                                 </svg>
                             </button>
-                            <div class="actions-dropdown" id="actions-${user.id}">
-                                ${user.status === 'pending'
-                        ? `<button onclick="activateUser('${user.id}', this)">
-                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                            <polyline points="20 6 9 17 4 12"></polyline>
-                                        </svg>
-                                        Activate
-                                    </button>`
-                        : user.status === 'active'
-                            ? `<button onclick="openBlockModal('${user.id}')">
-                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-                                            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-                                        </svg>
-                                        Block
-                                    </button>`
-                            : `<button onclick="unblockUser('${user.id}', this)">
-                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-                                            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-                                        </svg>
-                                        Unblock
-                                    </button>`
-                    }
-                                ${user.role === 'user'
-                        ? `<button onclick="promoteUser('${user.id}', this)">
-                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                            <line x1="12" y1="5" x2="12" y2="19"></line>
-                                            <polyline points="19 12 12 5 5 12"></polyline>
-                                        </svg>
-                                        Promote to Admin
-                                    </button>`
-                        : `<button onclick="demoteUser('${user.id}', this)">
-                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                            <line x1="12" y1="19" x2="12" y2="5"></line>
-                                            <polyline points="5 12 12 19 19 12"></polyline>
-                                        </svg>
-                                        Demote to User
-                                    </button>`
-                    }
-                                <div class="divider"></div>
-                                <button class="danger" onclick="deleteUser('${user.id}', this)">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <polyline points="3 6 5 6 21 6"></polyline>
-                                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                                    </svg>
-                                    Delete User
-                                </button>
-                            </div>
                         </div>
                     </div>
                 `;
@@ -2306,51 +2278,110 @@
             }
         }
 
-        // Toggle actions dropdown
-        function toggleActionsDropdown(userId) {
-            // Close all other dropdowns
-            document.querySelectorAll('.actions-dropdown').forEach(dropdown => {
-                if (dropdown.id !== `actions-${userId}`) {
-                    dropdown.classList.remove('show');
-                    dropdown.style.top = '';
-                    dropdown.style.bottom = '';
-                }
-            });
+        // ── Body-teleported dropdown: toggle, position, close ──
+        function toggleActionsDropdown(userId, triggerBtn) {
+            const drop = document.getElementById('body-actions-dropdown');
 
-            const dropdown = document.getElementById(`actions-${userId}`);
-            const isOpen = dropdown.classList.contains('show');
-
-            if (isOpen) {
-                dropdown.classList.remove('show');
-                dropdown.style.top = '';
-                dropdown.style.bottom = '';
+            // Same button clicked again → close
+            if (_bdropUserId === userId && drop.classList.contains('show')) {
+                closeBdrop();
                 return;
             }
 
-            // Reset, show, then measure after paint
-            dropdown.style.top = '';
-            dropdown.style.bottom = '';
-            dropdown.classList.add('show');
+            // Build inner HTML from data-* attributes on the trigger button
+            const status = triggerBtn.dataset.userStatus;
+            const role = triggerBtn.dataset.userRole;
 
-            requestAnimationFrame(() => {
-                const rect = dropdown.getBoundingClientRect();
-                const spaceBelow = window.innerHeight - rect.top;
-                const spaceAbove = rect.top;
-                if (spaceBelow < 200 && spaceAbove > 100) {
-                    dropdown.style.top = 'auto';
-                    dropdown.style.bottom = '100%';
-                }
-            });
+            let statusBtn = '';
+            if (status === 'pending') {
+                statusBtn = `<button onclick="activateUser('${userId}', this)">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>Activate</button>`;
+            } else if (status === 'active') {
+                statusBtn = `<button onclick="openBlockModal('${userId}')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                    </svg>Block</button>`;
+            } else {
+                statusBtn = `<button onclick="unblockUser('${userId}', this)">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                    </svg>Unblock</button>`;
+            }
+
+            const roleBtn = role === 'user'
+                ? `<button onclick="promoteUser('${userId}', this)">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <polyline points="19 12 12 5 5 12"></polyline>
+                    </svg>Promote to Admin</button>`
+                : `<button onclick="demoteUser('${userId}', this)">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="12" y1="19" x2="12" y2="5"></line>
+                        <polyline points="5 12 12 19 19 12"></polyline>
+                    </svg>Demote to User</button>`;
+
+            drop.innerHTML = `
+                ${statusBtn}
+                ${roleBtn}
+                <div class="divider"></div>
+                <button class="danger" onclick="deleteUser('${userId}', this)">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="3 6 5 6 21 6"></polyline>
+                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                    </svg>Delete User</button>
+            `;
+            _bdropUserId = userId;
+
+            // Show hidden first to measure true rendered dimensions
+            drop.style.visibility = 'hidden';
+            drop.style.top = '0px';
+            drop.style.left = '0px';
+            drop.classList.add('show');
+
+            const trigRect = triggerBtn.getBoundingClientRect();
+            const dropH = drop.offsetHeight;
+            const dropW = drop.offsetWidth;
+            const vpH = window.innerHeight;
+            const vpW = window.innerWidth;
+            const GAP = 6; // px between button edge and dropdown
+
+            // Vertical: open below by default, flip above if not enough room
+            let top = (trigRect.bottom + dropH + GAP <= vpH)
+                ? trigRect.bottom + GAP
+                : trigRect.top - dropH - GAP;
+            top = Math.max(GAP, top); // never clip above viewport
+
+            // Horizontal: right-align to trigger, clamp within viewport
+            let left = trigRect.right - dropW;
+            left = Math.max(GAP, Math.min(left, vpW - dropW - GAP));
+
+            drop.style.top = `${top}px`;
+            drop.style.left = `${left}px`;
+            drop.style.visibility = 'visible';
         }
 
-        // Close dropdowns when clicking outside
+        function closeBdrop() {
+            const drop = document.getElementById('body-actions-dropdown');
+            if (drop) { drop.classList.remove('show'); drop.innerHTML = ''; }
+            _bdropUserId = null;
+        }
+
+        // Close body dropdown on outside click (capture phase fires before onclick)
         document.addEventListener('click', function (e) {
-            if (!e.target.closest('.actions')) {
-                document.querySelectorAll('.actions-dropdown').forEach(dropdown => {
-                    dropdown.classList.remove('show');
-                });
-            }
-        });
+            const drop = document.getElementById('body-actions-dropdown');
+            if (!drop || !drop.classList.contains('show')) return;
+            if (drop.contains(e.target) || e.target.closest('[title="More"]')) return;
+            closeBdrop();
+        }, true);
+
+        // Also close on any scroll (handles table scroll on mobile)
+        window.addEventListener('scroll', closeBdrop, { passive: true });
+        const mainContent = document.querySelector('.main-content');
+        if (mainContent) mainContent.addEventListener('scroll', closeBdrop, { passive: true });
 
         // Promote user to admin
         async function promoteUser(userId, btn) {
