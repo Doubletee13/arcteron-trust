@@ -47,7 +47,7 @@ app.include_router(cards.router, prefix="/api/cards", tags=["cards"])
 def root():
     return {"message": "Arcteron Trust API is running"}
 
-@app.get("/health")
+@app.api_route("/health", methods=["GET", "HEAD"])
 def health_check(db: Session = Depends(get_db)):
     try:
         db.execute(text("SELECT 1"))
