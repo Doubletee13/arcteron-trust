@@ -1,7 +1,9 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
+from sqlalchemy.orm import Session
+from sqlalchemy import text
 from app.config import settings
-from app.database import Base, engine
+from app.database import Base, engine, get_db
 import app.models
 from app.routers import auth
 from app.routers import transactions
@@ -44,3 +46,11 @@ app.include_router(cards.router, prefix="/api/cards", tags=["cards"])
 @app.get("/")
 def root():
     return {"message": "Arcteron Trust API is running"}
+
+@app.get("/health")
+def health_check(db: Session = Depends(get_db)):
+    try:
+        db.execute(text("SELECT 1"))
+        return {"status": "healthy", "database": "connected"}
+    except Exception as e:
+        return {"status": "degraded", "error": str(e)}
