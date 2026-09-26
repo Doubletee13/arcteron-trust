@@ -65,7 +65,7 @@ const Utils = {
         <circle cx="28" cy="4" r="3.5" fill="${isDark ? '#E5E7EB' : '#111827'}"/>
         <circle cx="52" cy="28" r="3" fill="#6B7280"/>
       </svg>
-      <div class="loader-name">Arcteron Trust</div>
+      <div class="loader-name">Kaelen Financial</div>
       <div class="loader-sub">Private Banking</div>
     `;
     document.body.appendChild(loader);

@@ -93,7 +93,7 @@ def local_transfer(
     ).first()
 
     if not recipient_account:
-        raise HTTPException(status_code=404, detail="Recipient account number not found in Arcteron Trust.")
+        raise HTTPException(status_code=404, detail="Recipient account number not found in Kaelen Financial.")
 
     if recipient_account.user_id == current_user.id:
         raise HTTPException(status_code=400, detail="You cannot transfer to your own account.")
@@ -380,7 +380,7 @@ def verify_account(
     return {
         "account_number": account.account_number,
         "account_name": f"{user.first_name} {user.last_name}",
-        "bank": "Arcteron Trust"
+        "bank": "Kaelen Financial"
     }
 
 

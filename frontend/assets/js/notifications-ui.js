@@ -250,7 +250,7 @@ const TransactionDetails = {
               <path d="M14 23 H26" stroke="white" stroke-width="1.5" opacity="0.6" />
               <circle cx="20" cy="6" r="2" fill="white" opacity="0.5" />
             </svg>
-            <span style="font-family: 'Cormorant Garamond', serif; font-size: 24px; font-weight: 600; color: #fff;">Arcteron Trust</span>
+            <span style="font-family: 'Cormorant Garamond', serif; font-size: 24px; font-weight: 600; color: #fff;">Kaelen Financial</span>
           </div>
           <h2 style="font-size: 14px; opacity: 0.7; font-weight: 500; letter-spacing: 1px; text-transform: uppercase; color: #fff; margin-top: 10px;">Transaction Receipt</h2>
           <button class="icon-btn" onclick="TransactionDetails.hide()" style="position: absolute; top: 16px; right: 16px; background:transparent; border:none; color:#fff; opacity: 0.5; cursor:pointer;">
@@ -266,7 +266,7 @@ const TransactionDetails = {
           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; border-top: 1px solid var(--border-color); padding-top: 24px;">
             <div><label style="font-size:10px; color:var(--text-muted); text-transform:uppercase; display:block; margin-bottom:4px;">${is_credit ? 'Received From' : 'Transfer To'}</label><p style="font-size: 13px; font-weight: 600; margin:0;">${tx.recipient_name || 'System'}</p></div>
             <div><label style="font-size:10px; color:var(--text-muted); text-transform:uppercase; display:block; margin-bottom:4px;">Reference</label><p style="font-size: 13px; font-weight: 600; margin:0;">#${(tx.reference || '').slice(-8).toUpperCase()}</p></div>
-            <div><label style="font-size:10px; color:var(--text-muted); text-transform:uppercase; display:block; margin-bottom:4px;">Bank</label><p style="font-size: 13px; font-weight: 600; margin:0;">${tx.recipient_bank || 'Arcteron Trust'}</p></div>
+            <div><label style="font-size:10px; color:var(--text-muted); text-transform:uppercase; display:block; margin-bottom:4px;">Bank</label><p style="font-size: 13px; font-weight: 600; margin:0;">${tx.recipient_bank || 'Kaelen Financial'}</p></div>
             <div><label style="font-size:10px; color:var(--text-muted); text-transform:uppercase; display:block; margin-bottom:4px;">Date</label><p style="font-size: 13px; font-weight: 600; margin:0;">${date.toLocaleDateString()}</p></div>
             <div style="grid-column: span 2;"><label style="font-size:10px; color:var(--text-muted); text-transform:uppercase; display:block; margin-bottom:4px;">Account Number</label><p style="font-size: 13px; font-weight: 600; margin:0;">${tx.recipient_account || '—'}</p></div>
           </div>

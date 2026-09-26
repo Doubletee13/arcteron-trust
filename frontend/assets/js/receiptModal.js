@@ -51,7 +51,7 @@ const ReceiptModal = (function () {
                                     <path d="M14 23 H26" stroke="currentColor" stroke-width="2" opacity="0.8" />
                                     <circle cx="20" cy="6" r="2" fill="currentColor" opacity="0.6" />
                                 </svg>
-                                <span>Arcteron Trust</span>
+                                <span>Kaelen Financial</span>
                             </div>
                             <div class="rcp-header-label">Transaction Receipt</div>
                             <button class="rcp-close-btn" id="rcpCloseBtn">&times;</button>
@@ -73,7 +73,7 @@ const ReceiptModal = (function () {
                                 </div>
                                 <div class="rcp-row">
                                     <div class="rcp-label">Bank</div>
-                                    <div class="rcp-value" id="rcpBank">Arcteron Trust</div>
+                                    <div class="rcp-value" id="rcpBank">Kaelen Financial</div>
                                 </div>
                                 <div class="rcp-row">
                                     <div class="rcp-label">Account No.</div>
@@ -100,9 +100,9 @@ const ReceiptModal = (function () {
                             <div class="rcp-divider"></div>
 
                             <div class="rcp-footer-tagline">
-                                This is an official transaction receipt issued by Arcteron Trust — Private Banking &amp; Wealth Management. FDIC Insured &bull; Member SIPC.
+                                This is an official transaction receipt issued by Kaelen Financial — Private Banking &amp; Wealth Management. FDIC Insured &bull; Member SIPC.
                                 <br><br>
-                                © <span id="rcpYear">2026</span> Arcteron Trust
+                                © <span id="rcpYear">2026</span> Kaelen Financial
                             </div>
                         </div>
                     </div>
@@ -202,12 +202,12 @@ const ReceiptModal = (function () {
                 opacity: 0.035;
                 pointer-events: none;
                 z-index: 0;
-                background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='100' viewBox='0 0 120 100'%3E%3Cg transform='rotate(-25 60 50)'%3E%3Ccircle cx='20' cy='20' r='18' stroke='%23ffffff' stroke-width='1.5' fill='none'/%3E%3Cpath d='M20 8 L30 28 H24 L20 20 L16 28 H10 Z' fill='%23ffffff'/%3E%3Ctext x='45' y='24' font-family='Times New Roman' font-weight='bold' font-size='14' fill='%23ffffff'%3EArcteron Trust%3C/text%3E%3C/g%3E%3C/svg%3E");
+                background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='100' viewBox='0 0 120 100'%3E%3Cg transform='rotate(-25 60 50)'%3E%3Ccircle cx='20' cy='20' r='18' stroke='%23ffffff' stroke-width='1.5' fill='none'/%3E%3Cpath d='M20 8 L30 28 H24 L20 20 L16 28 H10 Z' fill='%23ffffff'/%3E%3Ctext x='45' y='24' font-family='Times New Roman' font-weight='bold' font-size='14' fill='%23ffffff'%3EKaelen Financial%3C/text%3E%3C/g%3E%3C/svg%3E");
                 background-size: 160px 130px;
                 background-repeat: repeat;
             }
             [data-theme="light"] .rcp-capture-area::before {
-                background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='100' viewBox='0 0 120 100'%3E%3Cg transform='rotate(-25 60 50)'%3E%3Ccircle cx='20' cy='20' r='18' stroke='%23000000' stroke-width='1.5' fill='none'/%3E%3Cpath d='M20 8 L30 28 H24 L20 20 L16 28 H10 Z' fill='%23000000'/%3E%3Ctext x='45' y='24' font-family='Times New Roman' font-weight='bold' font-size='14' fill='%23000000'%3EArcteron Trust%3C/text%3E%3C/g%3E%3C/svg%3E");
+                background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='100' viewBox='0 0 120 100'%3E%3Cg transform='rotate(-25 60 50)'%3E%3Ccircle cx='20' cy='20' r='18' stroke='%23000000' stroke-width='1.5' fill='none'/%3E%3Cpath d='M20 8 L30 28 H24 L20 20 L16 28 H10 Z' fill='%23000000'/%3E%3Ctext x='45' y='24' font-family='Times New Roman' font-weight='bold' font-size='14' fill='%23000000'%3EKaelen Financial%3C/text%3E%3C/g%3E%3C/svg%3E");
             }
 
             /* Header part of card */
@@ -432,7 +432,7 @@ const ReceiptModal = (function () {
         document.getElementById('rcpPartyLabel').textContent = isCredit ? 'Transfer From' : 'Transfer To';
         document.getElementById('rcpParty').textContent = data.party || data.recipient_name || 'External Sender';
         document.getElementById('rcpRef').textContent = data.reference || '—';
-        document.getElementById('rcpBank').textContent = data.bank || data.recipient_bank || 'Arcteron Trust';
+        document.getElementById('rcpBank').textContent = data.bank || data.recipient_bank || 'Kaelen Financial';
         document.getElementById('rcpDescription').textContent = data.description || '—';
 
         let typeStr = (data.type || data.transaction_type || 'Transfer');
@@ -463,8 +463,8 @@ const ReceiptModal = (function () {
      */
     async function openById(txId) {
         if (!txId) return;
-        const token = typeof Api !== 'undefined' ? Api.getToken() : localStorage.getItem('arcteronToken');
-        const API_BASE = typeof Api !== 'undefined' && Api.API_BASE ? Api.API_BASE : 'https://arcteron-trust.onrender.com';
+        const token = typeof Api !== 'undefined' ? Api.getToken() : localStorage.getItem('kaelenToken');
+        const API_BASE = typeof Api !== 'undefined' && Api.API_BASE ? Api.API_BASE : 'https://kaelen-financial.onrender.com';
 
         try {
             const res = await fetch(`${API_BASE}/api/transactions/${txId}`, {
@@ -516,8 +516,8 @@ const ReceiptModal = (function () {
 
     function downloadReceipt() {
         if (!currentTransactionId) return;
-        const token = typeof Api !== 'undefined' ? Api.getToken() : localStorage.getItem('arcteronToken');
-        const API_BASE = typeof Api !== 'undefined' && Api.API_BASE ? Api.API_BASE : 'https://arcteron-trust.onrender.com';
+        const token = typeof Api !== 'undefined' ? Api.getToken() : localStorage.getItem('kaelenToken');
+        const API_BASE = typeof Api !== 'undefined' && Api.API_BASE ? Api.API_BASE : 'https://kaelen-financial.onrender.com';
         const theme = document.documentElement.getAttribute('data-theme') || 'dark';
 
         const url = `${API_BASE}/api/transactions/${currentTransactionId}/receipt?theme=${theme}`;
@@ -603,8 +603,8 @@ const ReceiptModal = (function () {
                         const file = new File([blob], filename, { type: 'image/png' });
                         await navigator.share({
                             files: [file],
-                            title: 'Arcteron Trust Receipt',
-                            text: 'Transaction Receipt from Arcteron Trust'
+                            title: 'Kaelen Financial Receipt',
+                            text: 'Transaction Receipt from Kaelen Financial'
                         });
                     } catch (e) {
                         if (e.name !== 'AbortError') {

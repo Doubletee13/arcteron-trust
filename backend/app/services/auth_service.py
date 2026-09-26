@@ -94,7 +94,7 @@ def register_step1(data: RegisterStep1, db: Session) -> User:
             )
 
     # Generate a temporary unique dummy email and dummy password to satisfy NOT NULL constraints
-    dummy_email = f"temp_reg_{uuid.uuid4()}@arcterontrust.com"
+    dummy_email = f"temp_reg_{uuid.uuid4()}@kaelenfinancial.com"
     dummy_hash = hash_password(str(uuid.uuid4()))
 
     user = User(
@@ -182,14 +182,14 @@ def register_step3(user_id: str, data: RegisterStep3, db: Session) -> User:
             account_type=data.account_type,
             balance=0.00,
             currency=data.currency,
-            swift_code=f"ARCT{data.currency}1",
-            bank_name="Arcteron Trust"
+            swift_code=f"KFIN{data.currency}1",
+            bank_name="Kaelen Financial"
         )
         db.add(account)
     else:
         existing_account.currency = data.currency
         existing_account.account_type = data.account_type
-        existing_account.swift_code = f"ARCT{data.currency}1"
+        existing_account.swift_code = f"KFIN{data.currency}1"
         existing_account.routing_number = "011400754" if user.country == "United States" else None
 
     db.commit()

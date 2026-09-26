@@ -1,5 +1,5 @@
 const Auth = {
-  PIN_SESSION_KEY: 'arcteronPinVerified',
+  PIN_SESSION_KEY: 'kaelenPinVerified',
 
   isLoggedIn() {
     return !!Api.getToken();

@@ -12,8 +12,8 @@ class Settings(BaseSettings):
     MAIL_SERVER: str
     MAIL_PORT: int
 
-    APP_NAME: str = "Arcteron Trust"
-    FRONTEND_URL: str = "https://arcteron-trust.vercel.app"
+    APP_NAME: str = "Kaelen Financial"
+    FRONTEND_URL: str = "https://kaelenfinancial.com"
 
     SUPABASE_URL: str = ""
     SUPABASE_KEY: str = ""

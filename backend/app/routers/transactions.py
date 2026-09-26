@@ -31,7 +31,7 @@ def tx_to_dict(tx: Transaction, current_user_id, db: Session = None) -> dict:
             receiver = db.query(User).filter(User.id == tx.receiver_id).first()
             if receiver:
                 display_name = f"{receiver.first_name} {receiver.last_name}"
-                display_bank = "Arcteron Trust"
+                display_bank = "Kaelen Financial"
                 # Use full account number from account record
                 receiver_acct = db.query(Account).filter(Account.user_id == tx.receiver_id).first()
                 if receiver_acct:
@@ -41,7 +41,7 @@ def tx_to_dict(tx: Transaction, current_user_id, db: Session = None) -> dict:
             sender = db.query(User).filter(User.id == tx.sender_id).first()
             if sender:
                 display_name = f"{sender.first_name} {sender.last_name}"
-                display_bank = "Arcteron Trust"
+                display_bank = "Kaelen Financial"
                 sender_acct = db.query(Account).filter(Account.user_id == tx.sender_id).first()
                 if sender_acct:
                     display_account = sender_acct.account_number
@@ -52,7 +52,7 @@ def tx_to_dict(tx: Transaction, current_user_id, db: Session = None) -> dict:
         if admin_tx:
             if is_credit:
                 display_name = admin_tx.sender_name or display_name
-                display_bank = admin_tx.bank_name or "Arcteron Trust"
+                display_bank = admin_tx.bank_name or "Kaelen Financial"
                 fallback_acct = getattr(admin_tx, 'account_number', None)
                 display_account = fallback_acct or None
             else:
@@ -403,7 +403,7 @@ def generate_receipt_pdf(tx, user, account, is_credit: bool, theme: str = 'dark'
 
                 canvas.setFillColor(wm_color)
                 canvas.setFillAlpha(0.04)
-                canvas.drawString(14, 2, 'Arcteron Trust')
+                canvas.drawString(14, 2, 'Kaelen Financial')
                 canvas.restoreState()
 
         canvas.restoreState()
@@ -416,19 +416,19 @@ def generate_receipt_pdf(tx, user, account, is_credit: bool, theme: str = 'dark'
     party_label = "Transfer From" if is_credit else "Transfer To"
     party_name  = "External Sender"
     recipient_acct = tx.recipient_account or "—"
-    bank_name = tx.recipient_bank or "Arcteron Trust"
+    bank_name = tx.recipient_bank or "Kaelen Financial"
 
     if is_credit:
         if tx.sender_id and db:
             sender = db.query(User).filter(User.id == tx.sender_id).first()
             if sender:
                 party_name = f"{sender.first_name} {sender.last_name}"
-                bank_name  = "Arcteron Trust"
+                bank_name  = "Kaelen Financial"
                 sender_acct = db.query(Account).filter(Account.user_id == sender.id).first()
                 if sender_acct: recipient_acct = sender_acct.account_number
         elif tx.sender_name:
             party_name = tx.sender_name
-            bank_name  = tx.recipient_bank or "Arcteron Trust"
+            bank_name  = tx.recipient_bank or "Kaelen Financial"
             recipient_acct = tx.recipient_account or "—"
     else:
         party_name = tx.recipient_name or "Unknown Recipient"
@@ -436,7 +436,7 @@ def generate_receipt_pdf(tx, user, account, is_credit: bool, theme: str = 'dark'
             receiver = db.query(User).filter(User.id == tx.receiver_id).first()
             if receiver:
                 party_name = f"{receiver.first_name} {receiver.last_name}"
-                bank_name  = "Arcteron Trust"
+                bank_name  = "Kaelen Financial"
                 rec_acc = db.query(Account).filter(Account.user_id == receiver.id).first()
                 if rec_acc: recipient_acct = rec_acc.account_number
 
@@ -497,7 +497,7 @@ def generate_receipt_pdf(tx, user, account, is_credit: bool, theme: str = 'dark'
     elements = []
 
     logo_fl = LogoFlowable(size=28, color=logo_color)
-    brand_p = Paragraph('Arcteron Trust', brand_sty)
+    brand_p = Paragraph('Kaelen Financial', brand_sty)
     receipt_label_p = Paragraph('Transaction Receipt',
                                  sty('rl', fontSize=9, fontName='Helvetica',
                                      textColor=text_muted, alignment=TA_RIGHT, leading=12))
@@ -566,13 +566,13 @@ def generate_receipt_pdf(tx, user, account, is_credit: bool, theme: str = 'dark'
     elements.append(Spacer(1, 8*mm))
 
     elements.append(Paragraph(
-        'This is an official transaction receipt issued by Arcteron Trust — Private Banking &amp; Wealth '
-        'Management. FDIC Insured · Member SIPC. For inquiries: support@arcterontrust.com',
+        'This is an official transaction receipt issued by Kaelen Financial — Private Banking &amp; Wealth '
+        'Management. FDIC Insured · Member SIPC. For inquiries: support@kaelenfinancial.com',
         footer_sty
     ))
     elements.append(Spacer(1, 3*mm))
     elements.append(Paragraph(
-        f'© {datetime.now().year} Arcteron Trust',
+        f'© {datetime.now().year} Kaelen Financial',
         sty('copy', fontSize=8, fontName=brand_font, textColor=text_primary, alignment=TA_CENTER)
     ))
 
@@ -621,7 +621,7 @@ def generate_statement_pdf(transactions, user, account, date_from, date_to, them
 
     def on_page(canvas, doc):
         canvas.saveState()
-        canvas.setTitle("Arcteron Trust")
+        canvas.setTitle("Kaelen Financial")
         canvas.setFillColor(bg_main)
         canvas.rect(0, 0, A4[0], A4[1], fill=1)
         canvas.restoreState()
@@ -649,7 +649,7 @@ def generate_statement_pdf(transactions, user, account, date_from, date_to, them
     
     header_data = [[
         logo,
-        Paragraph('Arcteron Trust', brand_style),
+        Paragraph('Kaelen Financial', brand_style),
         Paragraph('ACCOUNT STATEMENT',
                   ParagraphStyle('hr', fontSize=10, fontName='Helvetica-Bold', textColor=white if theme == 'dark' else navy, alignment=TA_RIGHT))
     ]]
@@ -812,14 +812,14 @@ def generate_statement_pdf(transactions, user, account, date_from, date_to, them
     elements.append(Spacer(1, 4*mm))
     elements.append(Paragraph(
         'This statement is confidential and intended solely for the named account holder. '
-        'Arcteron Trust is FDIC insured and a member of SIPC. '
-        'For questions, contact support@arcterontrust.com.',
+        'Kaelen Financial is FDIC insured and a member of SIPC. '
+        'For questions, contact support@kaelenfinancial.com.',
         ParagraphStyle('footer', fontSize=7, fontName='Helvetica', textColor=text_muted,
                        alignment=TA_CENTER, leading=11)
     ))
     elements.append(Spacer(1, 2*mm))
     elements.append(Paragraph(
-        f'© {datetime.now().year} Arcteron Trust — Private Banking & Wealth Management',
+        f'© {datetime.now().year} Kaelen Financial — Private Banking & Wealth Management',
         ParagraphStyle('copy', fontSize=8, fontName=brand_font, textColor=navy, alignment=TA_CENTER)
     ))
 

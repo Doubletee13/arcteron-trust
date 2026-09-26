@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sign In — Arcteron Trust</title>
+  <title>Sign In — Kaelen Financial</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link
     href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=DM+Sans:wght@300;400;500;600&display=swap"
@@ -682,7 +682,7 @@
       <div class="brand-top">
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px;">
           <img src="../assets/images/logo.svg" style="width:28px;height:28px;filter:invert(1);opacity:0.8;" alt="logo">
-          <div class="brand-wordmark">Arcteron Trust</div>
+          <div class="brand-wordmark">Kaelen Financial</div>
         </div>
         <div class="brand-tagline">Private Banking &amp; Wealth Management</div>
       </div>
@@ -704,7 +704,7 @@
         </div>
       </div>
       <div class="brand-bottom">
-        <p class="brand-legal">© <span class="current-year">2025</span> Arcteron Trust. FDIC Insured.</p>
+        <p class="brand-legal">© <span class="current-year">2025</span> Kaelen Financial. FDIC Insured.</p>
         <div class="fdic-badge">
           <div class="fdic-dot"></div>
           <span>SYSTEMS SECURE</span>
@@ -730,7 +730,7 @@
           <!-- In mobile brand (register/login) -->
           <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:4px;">
             <img src="../assets/images/logo.svg" class="mobile-brand-logo" alt="logo">
-            <h1 style="font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:600;">Arcteron Trust</h1>
+            <h1 style="font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:600;">Kaelen Financial</h1>
           </div>
           <p>Private Banking &amp; Wealth Management</p>
         </div>
@@ -997,7 +997,7 @@
       setLoading('btn2', 'dots2', true);
 
       // Temporarily set token to make auth'd request
-      localStorage.setItem('arcteronToken', loginToken);
+      localStorage.setItem('kaelenToken', loginToken);
 
       const res = await Api.post('/api/auth/verify-pin', { pin }, true);
       setLoading('btn2', 'dots2', false);
@@ -1008,7 +1008,7 @@
         Auth.markPinSessionVerified();
         Auth.redirectByRole(loginUser);
       } else {
-        localStorage.removeItem('arcteronToken');
+        localStorage.removeItem('kaelenToken');
         pinIds.forEach(id => document.getElementById(id).value = '');
         document.getElementById('pin1').focus();
         showAlert(res?.data?.detail || 'Incorrect PIN. Please try again.');

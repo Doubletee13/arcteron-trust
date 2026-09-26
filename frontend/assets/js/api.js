@@ -1,31 +1,31 @@
 const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
   ? 'http://localhost:8000'
-  : 'https://api.arcterontrust.com';
+  : 'https://api.kaelenfinancial.com';
 
 const Api = {
   API_BASE: API_BASE,
 
   getToken() {
-    return localStorage.getItem('arcteronToken');
+    return localStorage.getItem('kaelenToken');
   },
 
   setToken(token) {
-    localStorage.setItem('arcteronToken', token);
+    localStorage.setItem('kaelenToken', token);
   },
 
   removeToken() {
-    localStorage.removeItem('arcteronToken');
-    localStorage.removeItem('arcteronUser');
-    sessionStorage.removeItem('arcteronPinVerified');
+    localStorage.removeItem('kaelenToken');
+    localStorage.removeItem('kaelenUser');
+    sessionStorage.removeItem('kaelenPinVerified');
   },
 
   getUser() {
-    const u = localStorage.getItem('arcteronUser');
+    const u = localStorage.getItem('kaelenUser');
     return u ? JSON.parse(u) : null;
   },
 
   setUser(user) {
-    localStorage.setItem('arcteronUser', JSON.stringify(user));
+    localStorage.setItem('kaelenUser', JSON.stringify(user));
   },
 
   async request(method, endpoint, body = null, auth = false) {

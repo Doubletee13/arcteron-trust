@@ -1,4 +1,4 @@
-# Arcteron Trust
+# Kaelen Financial
 
 A premium digital banking platform built with FastAPI, PostgreSQL, and Vanilla JS.
 

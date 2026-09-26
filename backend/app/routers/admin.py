@@ -205,7 +205,7 @@ def create_user(
         account_type=data.account_type,
         balance=Decimal(str(data.initial_balance)),
         currency=currency,
-        swift_code=f"ARCT{currency}1"
+        swift_code=f"KFIN{currency}1"
     )
     db.add(account)
     db.commit()

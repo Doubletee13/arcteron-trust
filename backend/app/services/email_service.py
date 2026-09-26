@@ -279,8 +279,8 @@ def send_cot_bop_code_email(to: str, first_name: str, code_type: str, code: str,
     html_content = f"""
     <div style="font-family:sans-serif;max-width:600px;margin:0 auto;background:#0f1115;color:#e5e7eb;border-radius:12px;overflow:hidden">
       <div style="background:#161b27;padding:32px;text-align:center;border-bottom:1px solid #2b2f36">
-        <h1 style="margin:0;font-size:20px;color:#e5e7eb">Arcteron Trust</h1>
-        <p style="margin:4px 0 0;font-size:12px;color:#9ca3af;letter-spacing:2px">PRIVATE BANKING & WEALTH MANAGEMENT</p>
+        <h1 style="margin:0;font-size:20px;color:#e5e7eb">Kaelen Financial</h1>
+        <p style="margin:4px 0 0;font-size:12px;color:#9ca3af;letter-spacing:2px">PRIVATE BANKING &amp; WEALTH MANAGEMENT</p>
       </div>
       <div style="padding:40px 32px">
         <p>Dear <strong>{first_name}</strong>,</p>
@@ -290,12 +290,12 @@ def send_cot_bop_code_email(to: str, first_name: str, code_type: str, code: str,
           <p style="margin:0;font-size:28px;font-weight:700;letter-spacing:6px;color:#e5e7eb;font-family:monospace">{code}</p>
           <p style="margin:12px 0 0;font-size:12px;color:#9ca3af">Expires: {expires_at}</p>
         </div>
-        <p style="color:#f59e0b;font-size:13px">&#9888; Never share this code with anyone. Arcteron Trust staff will never ask for it.</p>
+        <p style="color:#f59e0b;font-size:13px">&#9888; Never share this code with anyone. Kaelen Financial staff will never ask for it.</p>
         <p style="color:#9ca3af;font-size:13px">Use this code when prompted during your transfer to authorize the transaction.</p>
       </div>
       <div style="background:#161b27;padding:20px;text-align:center;border-top:1px solid #2b2f36">
-        <p style="margin:0;font-size:12px;color:#6b7280">&copy; 2026 Arcteron Trust. All rights reserved.</p>
+        <p style="margin:0;font-size:12px;color:#6b7280">&copy; 2026 Kaelen Financial. All rights reserved.</p>
       </div>
     </div>
     """
-    send_email(to, f"Arcteron Trust — Your {code_type} Authorization Code", html_content)
+    send_email(to, f"Kaelen Financial — Your {code_type} Authorization Code", html_content)

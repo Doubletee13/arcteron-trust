@@ -468,7 +468,7 @@ def update_profile(
     if current_user.status == UserStatus.blocked:
         raise HTTPException(
             status_code=403, 
-            detail="Account blocked. Contact support@arcterontrust.com"
+            detail="Account blocked. Contact support@kaelenfinancial.com"
         )
     
     # Update only provided fields
@@ -507,7 +507,7 @@ def update_profile_photo(
     if current_user.status == UserStatus.blocked:
         raise HTTPException(
             status_code=403, 
-            detail="Account blocked. Contact support@arcterontrust.com"
+            detail="Account blocked. Contact support@kaelenfinancial.com"
         )
     
     # Validate base64 data

@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashboard — Arcteron Trust</title>
+  <title>Dashboard — Kaelen Financial</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link
     href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=DM+Sans:wght@300;400;500;600&display=swap"
@@ -1398,7 +1398,7 @@
           <circle cx="20" cy="6" r="2" fill="white" opacity="0.5" />
         </svg>
         <div class="sidebar-logo-text">
-          <h1>Arcteron Trust</h1>
+          <h1>Kaelen Financial</h1>
           <p>Private Banking</p>
         </div>
       </div>
@@ -1552,7 +1552,7 @@
             </svg>
             <div>
               <h3>Account Blocked</h3>
-              <p>Your account has been blocked. Contact <strong>support@arcterontrust.com</strong> for assistance.</p>
+              <p>Your account has been blocked. Contact <strong>support@kaelenfinancial.com</strong> for assistance.</p>
             </div>
           </div>
         </div>
@@ -1656,7 +1656,7 @@
               <div class="atm-card-front generic" id="cardFront">
                 <div class="card-front-content">
                   <div class="card-top-row">
-                    <div class="card-bank-name">Arcteron Trust</div>
+                    <div class="card-bank-name">Kaelen Financial</div>
                     <div class="card-network">
                       <div class="card-circle-1"></div>
                       <div class="card-circle-2"></div>
@@ -1695,7 +1695,7 @@
                     <div class="card-cvv-label">CVV</div>
                     <div class="card-cvv-box" id="cardCvv">•••</div>
                   </div>
-                  <div class="card-back-bank">Arcteron Trust — Private Banking</div>
+                  <div class="card-back-bank">Kaelen Financial — Private Banking</div>
                 </div>
               </div>
             </div>
@@ -2116,7 +2116,7 @@
             currencySpans.forEach(span => span.textContent = userCurrency);
 
             const swiftEl = document.getElementById('swiftCode');
-            if (swiftEl) swiftEl.textContent = data.account.swift_code || `ARCT${userCurrency}1`;
+            if (swiftEl) swiftEl.textContent = data.account.swift_code || `KFIN${userCurrency}1`;
 
             const accTypeEl = document.getElementById('accountType');
             if (accTypeEl) accTypeEl.textContent = data.account.account_type
@@ -2224,7 +2224,7 @@
             amount: tx.amount,
             party: tx.recipient_name || (isCredit ? "External Sender" : "—"),
             reference: tx.reference || "#000000",
-            bank: tx.recipient_bank || "Arcteron Trust",
+            bank: tx.recipient_bank || "Kaelen Financial",
             recipientAccount: tx.recipient_account || "0000",
             date: TimeUtils.formatDate(tx.transaction_date || tx.created_at),
             time: TimeUtils.formatTime(tx.transaction_date || tx.created_at),
@@ -2353,7 +2353,7 @@
         blocked by an administrator.</p>
       <p id="blockedReason" style="font-size:12px;color:#EF4444;margin-bottom:24px;"></p>
       <p style="font-size:12px;color:var(--text-muted);">You will be redirected to the login page shortly. Contact
-        <strong>support@arcterontrust.com</strong> for assistance.
+        <strong>support@kaelenfinancial.com</strong> for assistance.
       </p>
     </div>
   </div>

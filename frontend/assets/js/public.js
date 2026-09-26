@@ -1,5 +1,5 @@
 /**
- * Arcteron Trust — Public Pages JavaScript
+ * Kaelen Financial — Public Pages JavaScript
  * Handles: News Ticker, Hero Slideshow, Nav Dropdowns,
  *          Mobile Drawer, Scroll Animations, Testimonials, Back-to-Top
  */
@@ -9,16 +9,16 @@
 // ============================================================
 const TICKER_ITEMS = [
     '🏦 Federal Reserve holds interest rates steady at 5.25%–5.50% for the fourth consecutive meeting',
-    '📈 Arcteron Trust reports record Q1 2025 earnings — assets under management cross $2.8 billion',
+    '📈 Kaelen Financial reports record Q1 2025 earnings — assets under management cross $2.8 billion',
     '🏠 30-year fixed mortgage rates ease to 6.82% — lowest in 14 months',
     '💳 New FDIC guidance expands deposit insurance clarity for joint accounts',
     '📊 US banking sector shows resilience with Tier 1 capital ratios averaging 14.2%',
-    '🌟 Arcteron Trust named among "Best Private Banks in New England" by Boston Business Journal',
-    '💰 CD rates remain competitive — Arcteron Trust offers 5.10% APY on 12-month certificates',
-    '🔒 Arcteron Trust upgrades to military-grade 512-bit encryption across all digital platforms',
+    '🌟 Kaelen Financial named among "Best Private Banks in New England" by Boston Business Journal',
+    '💰 CD rates remain competitive — Kaelen Financial offers 5.10% APY on 12-month certificates',
+    '🔒 Kaelen Financial upgrades to military-grade 512-bit encryption across all digital platforms',
     '📉 Consumer credit growth slows to 2.1% annually, signaling cautious household spending',
     '🏛️ Senate Banking Committee advances new open banking framework legislation',
-    '✅ Arcteron Trust expands wealth management division with three new senior advisors in Boston',
+    '✅ Kaelen Financial expands wealth management division with three new senior advisors in Boston',
     '📱 Mobile banking adoption reaches 78% among US adults under 45, per Federal Reserve report',
 ];
 
@@ -62,7 +62,7 @@ const HERO_SLIDES = [
         overlay: 'linear-gradient(100deg, rgba(8,10,18,0.90) 0%, rgba(8,10,18,0.58) 58%, rgba(8,10,18,0.28) 100%)',
         eyebrow: 'Business Banking',
         title: 'Banking That\nFuels Business Growth',
-        subtitle: 'From startup checking accounts to enterprise treasury management, Arcteron Trust is your partner for every stage of business.',
+        subtitle: 'From startup checking accounts to enterprise treasury management, Kaelen Financial is your partner for every stage of business.',
         cta1: { text: 'Business Solutions', href: '/frontend/pages/business-banking.html' },
         cta2: { text: 'Talk to an Advisor', href: '/frontend/pages/contact.html' },
     },
@@ -200,7 +200,7 @@ function initNav() {
 // ============================================================
 const TESTIMONIALS = [
     {
-        text: "Arcteron Trust completely transformed how I think about wealth management. My advisor created a retirement plan that I never thought was possible at my age. The personalized service is truly unmatched.",
+        text: "Kaelen Financial completely transformed how I think about wealth management. My advisor created a retirement plan that I never thought was possible at my age. The personalized service is truly unmatched.",
         name: "Margaret T.",
         role: "Retired Executive, Cambridge MA",
         initials: "MT",
@@ -221,14 +221,14 @@ const TESTIMONIALS = [
         stars: 5,
     },
     {
-        text: "As a first-generation immigrant building credit from scratch, Arcteron Trust was patient, educational, and empowering. Three years later, I have an 800+ credit score and a thriving small business account.",
+        text: "As a first-generation immigrant building credit from scratch, Kaelen Financial was patient, educational, and empowering. Three years later, I have an 800+ credit score and a thriving small business account.",
         name: "Emmanuel O.",
         role: "Entrepreneur, Roxbury MA",
         initials: "EO",
         stars: 5,
     },
     {
-        text: "I've banked with the big national banks for 20 years. Arcteron Trust reminded me what banking should actually feel like — your banker knows your name, your goals, and your family. Truly a community institution.",
+        text: "I've banked with the big national banks for 20 years. Kaelen Financial reminded me what banking should actually feel like — your banker knows your name, your goals, and your family. Truly a community institution.",
         name: "Patricia N.",
         role: "Real Estate Investor, South Boston",
         initials: "PN",

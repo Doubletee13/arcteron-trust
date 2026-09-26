@@ -14,16 +14,16 @@ from app.routers import cards
 
 app = FastAPI(
     title=settings.APP_NAME,
-    description="Arcteron Trust Banking API",
+    description="Kaelen Financial Banking API",
     version="1.0.0"
 )
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "https://arcterontrust.com",
-        "https://www.arcterontrust.com",
-        "https://arcteron-trust.vercel.app",
+        "https://kaelenfinancial.com",
+        "https://www.kaelenfinancial.com",
+        "https://kaelen-financial.vercel.app",
         "http://127.0.0.1:5500",
         "http://localhost:5500",
         "http://127.0.0.1:5501",
@@ -45,7 +45,7 @@ app.include_router(cards.router, prefix="/api/cards", tags=["cards"])
 
 @app.get("/")
 def root():
-    return {"message": "Arcteron Trust API is running"}
+    return {"message": "Kaelen Financial API is running"}
 
 @app.api_route("/health", methods=["GET", "HEAD"])
 def health_check(db: Session = Depends(get_db)):
