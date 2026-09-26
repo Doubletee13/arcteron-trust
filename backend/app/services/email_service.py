@@ -43,6 +43,7 @@ def send_email(to: str, subject: str, html_content: str):
         import json
 
         is_sendgrid = settings.MAIL_SERVER == "smtp.sendgrid.net"
+        is_mailgun = settings.MAIL_SERVER == "smtp.mailgun.org"
 
         if is_sendgrid:
             url = "https://api.sendgrid.com/v3/mail/send"
@@ -53,6 +54,16 @@ def send_email(to: str, subject: str, html_content: str):
                 "content": [{"type": "text/html", "value": html_content}]
             }
             provider = "SENDGRID"
+        elif is_mailgun:
+            # Mailgun
+            url = f"https://api.mailgun.net/v3/{settings.MAIL_USERNAME}/messages"
+            payload = {
+                "from": f"{settings.APP_NAME} <{settings.MAIL_FROM}>",
+                "to": [to],
+                "subject": subject,
+                "html": html_content
+            }
+            provider = "MAILGUN"
         else:
             # Resend
             url = "https://api.resend.com/emails"
@@ -64,10 +75,19 @@ def send_email(to: str, subject: str, html_content: str):
             }
             provider = "RESEND"
 
-        headers = {
-            "Authorization": f"Bearer {settings.MAIL_PASSWORD}",
-            "Content-Type": "application/json"
-        }
+        if is_mailgun:
+            # Mailgun uses Basic Auth
+            import base64
+            credentials = base64.b64encode(f"api:{settings.MAIL_PASSWORD}".encode()).decode()
+            headers = {
+                "Authorization": f"Basic {credentials}",
+                "Content-Type": "application/json"
+            }
+        else:
+            headers = {
+                "Authorization": f"Bearer {settings.MAIL_PASSWORD}",
+                "Content-Type": "application/json"
+            }
 
         req = urllib.request.Request(
             url,
