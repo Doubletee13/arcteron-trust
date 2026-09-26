@@ -1,6 +1,6 @@
 const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
   ? 'http://localhost:8000'
-  : 'https://api.kaelenfinancial.com';
+  : 'https://arcteron-trust-1g13.onrender.com';
 
 const Api = {
   API_BASE: API_BASE,
