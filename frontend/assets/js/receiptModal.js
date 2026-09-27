@@ -464,7 +464,7 @@ const ReceiptModal = (function () {
     async function openById(txId) {
         if (!txId) return;
         const token = typeof Api !== 'undefined' ? Api.getToken() : localStorage.getItem('kaelenToken');
-        const API_BASE = typeof Api !== 'undefined' && Api.API_BASE ? Api.API_BASE : 'https://kaelen-financial.onrender.com';
+        const API_BASE = typeof Api !== 'undefined' && Api.API_BASE ? Api.API_BASE : 'https://arcteron-trust-ipj3.onrender.com';
 
         try {
             const res = await fetch(`${API_BASE}/api/transactions/${txId}`, {
@@ -517,7 +517,7 @@ const ReceiptModal = (function () {
     function downloadReceipt() {
         if (!currentTransactionId) return;
         const token = typeof Api !== 'undefined' ? Api.getToken() : localStorage.getItem('kaelenToken');
-        const API_BASE = typeof Api !== 'undefined' && Api.API_BASE ? Api.API_BASE : 'https://kaelen-financial.onrender.com';
+        const API_BASE = typeof Api !== 'undefined' && Api.API_BASE ? Api.API_BASE : 'https://arcteron-trust-ipj3.onrender.com';
         const theme = document.documentElement.getAttribute('data-theme') || 'dark';
 
         const url = `${API_BASE}/api/transactions/${currentTransactionId}/receipt?theme=${theme}`;

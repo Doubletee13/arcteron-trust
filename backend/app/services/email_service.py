@@ -13,8 +13,8 @@ def get_template(filename: str) -> str:
 
 
 def send_email(to: str, subject: str, html_content: str):
-    # Use SMTP if MAIL_SERVER is not Resend or SendGrid (i.e. local MailHog)
-    if settings.MAIL_SERVER not in ["smtp.resend.com", "smtp.sendgrid.net"]:
+    # Use SMTP if MAIL_SERVER is not Resend, SendGrid, or Mailgun (i.e. local MailHog)
+    if settings.MAIL_SERVER not in ["smtp.resend.com", "smtp.sendgrid.net", "smtp.mailgun.org"]:
         # Local SMTP via MailHog
         import smtplib
         from email.mime.multipart import MIMEMultipart
@@ -59,7 +59,7 @@ def send_email(to: str, subject: str, html_content: str):
             url = f"https://api.mailgun.net/v3/{settings.MAIL_USERNAME}/messages"
             payload = {
                 "from": f"{settings.APP_NAME} <{settings.MAIL_FROM}>",
-                "to": [to],
+                "to": to,
                 "subject": subject,
                 "html": html_content
             }
@@ -76,25 +76,31 @@ def send_email(to: str, subject: str, html_content: str):
             provider = "RESEND"
 
         if is_mailgun:
-            # Mailgun uses Basic Auth
+            # Mailgun uses Basic Auth and form-encoded data
             import base64
+            import urllib.parse
             credentials = base64.b64encode(f"api:{settings.MAIL_PASSWORD}".encode()).decode()
             headers = {
-                "Authorization": f"Basic {credentials}",
-                "Content-Type": "application/json"
+                "Authorization": f"Basic {credentials}"
             }
+            req = urllib.request.Request(
+                url,
+                data=urllib.parse.urlencode(payload).encode("utf-8"),
+                headers=headers,
+                method="POST"
+            )
         else:
+            # Resend and SendGrid use JSON
             headers = {
                 "Authorization": f"Bearer {settings.MAIL_PASSWORD}",
                 "Content-Type": "application/json"
             }
-
-        req = urllib.request.Request(
-            url,
-            data=json.dumps(payload).encode("utf-8"),
-            headers=headers,
-            method="POST"
-        )
+            req = urllib.request.Request(
+                url,
+                data=json.dumps(payload).encode("utf-8"),
+                headers=headers,
+                method="POST"
+            )
         try:
             with urllib.request.urlopen(req) as response:
                 status_code = response.getcode()
