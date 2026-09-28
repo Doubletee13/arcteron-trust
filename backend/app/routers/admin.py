@@ -233,23 +233,23 @@ def update_user(
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
     
-    # Update fields
+    # Update fields (convert empty strings to None to avoid unique constraint violations)
     if data.first_name is not None:
-        user.first_name = data.first_name
+        user.first_name = data.first_name if data.first_name else None
     if data.last_name is not None:
-        user.last_name = data.last_name
+        user.last_name = data.last_name if data.last_name else None
     if data.phone is not None:
-        user.phone = data.phone
+        user.phone = data.phone if data.phone else None
     if data.address is not None:
-        user.address = data.address
+        user.address = data.address if data.address else None
     if data.city is not None:
-        user.city = data.city
+        user.city = data.city if data.city else None
     if data.state is not None:
-        user.state = data.state
+        user.state = data.state if data.state else None
     if data.zip_code is not None:
-        user.zip_code = data.zip_code
+        user.zip_code = data.zip_code if data.zip_code else None
     if data.country is not None:
-        user.country = data.country
+        user.country = data.country if data.country else None
     
     user.updated_at = datetime.utcnow()
     db.commit()
