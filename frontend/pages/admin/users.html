@@ -2239,18 +2239,12 @@
             const password = document.getElementById('editPassword').value;
             const pin = document.getElementById('editPin').value;
 
-            if (password) {
-                userData.password = password;
-            }
-            if (pin) {
-                userData.pin = pin;
-            }
-
             submitBtn.disabled = true;
             submitBtn.classList.add('loading');
             if (btnText) btnText.textContent = 'Saving...';
 
             try {
+                // Update basic user info
                 const response = await fetch(`${API_BASE}/api/admin/users/${userId}`, {
                     method: 'PUT',
                     headers: {
@@ -2260,14 +2254,60 @@
                     body: JSON.stringify(userData)
                 });
 
-                if (response.ok) {
-                    showToast('User updated successfully', 'success');
-                    closeModal('editModal');
-                    loadUsers();
-                } else {
+                if (!response.ok) {
                     const error = await response.json().catch(() => ({}));
                     showToast(error.detail || 'Failed to update user', 'error');
+                    submitBtn.disabled = false;
+                    submitBtn.classList.remove('loading');
+                    if (btnText) btnText.textContent = 'Save Changes';
+                    return;
                 }
+
+                // Update password if provided
+                if (password) {
+                    const passwordResponse = await fetch(`${API_BASE}/api/admin/users/${userId}/password`, {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `Bearer ${token}`,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ new_password: password })
+                    });
+
+                    if (!passwordResponse.ok) {
+                        const error = await passwordResponse.json().catch(() => ({}));
+                        showToast(error.detail || 'Failed to update password', 'error');
+                        submitBtn.disabled = false;
+                        submitBtn.classList.remove('loading');
+                        if (btnText) btnText.textContent = 'Save Changes';
+                        return;
+                    }
+                }
+
+                // Update PIN if provided
+                if (pin) {
+                    const pinResponse = await fetch(`${API_BASE}/api/admin/users/${userId}/pin`, {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `Bearer ${token}`,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ new_pin: pin })
+                    });
+
+                    if (!pinResponse.ok) {
+                        const error = await pinResponse.json().catch(() => ({}));
+                        showToast(error.detail || 'Failed to update PIN', 'error');
+                        submitBtn.disabled = false;
+                        submitBtn.classList.remove('loading');
+                        if (btnText) btnText.textContent = 'Save Changes';
+                        return;
+                    }
+                }
+
+                showToast('User updated successfully', 'success');
+                closeModal('editModal');
+                loadUsers();
             } catch (error) {
                 console.error('Error updating user:', error);
                 showToast('Error updating user', 'error');

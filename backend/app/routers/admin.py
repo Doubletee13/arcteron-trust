@@ -70,6 +70,10 @@ class UserPasswordResetRequest(BaseModel):
     new_password: str
 
 
+class UserPinResetRequest(BaseModel):
+    new_pin: str
+
+
 class CreditUserRequest(BaseModel):
     amount: float
     sender_name: str
@@ -270,6 +274,25 @@ def reset_user_password(
     db.commit()
     
     return {"message": "Password reset successfully"}
+
+
+@router.post("/users/{user_id}/pin")
+def reset_user_pin(
+    user_id: str,
+    data: UserPinResetRequest,
+    db: Session = Depends(get_db),
+    current_admin: User = Depends(get_current_admin)
+):
+    """Reset user PIN"""
+    user = db.query(User).filter(User.id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    user.transaction_pin = hash_pin(data.new_pin)
+    user.updated_at = datetime.utcnow()
+    db.commit()
+    
+    return {"message": "PIN reset successfully"}
 
 
 @router.post("/users/{user_id}/credit")
