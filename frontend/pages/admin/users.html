@@ -2565,6 +2565,7 @@
         async function handleCreateUser(event) {
             event.preventDefault();
             const token = localStorage.getItem('admin_token');
+            const userEmail = document.getElementById('createEmail').value;
 
             const pin = document.getElementById('createPin').value;
             const confirmPin = document.getElementById('createPinConfirm').value;
@@ -2581,7 +2582,7 @@
             }
 
             const isEmailVerified = document.getElementById('emailVerified').checked;
-            const skipEmailVerification = !isEmailVerified;
+            const skipEmailVerification = isEmailVerified;
 
             const submitBtn = document.getElementById('createSubmitBtn');
             const btnText = submitBtn.querySelector('.btn-text');
