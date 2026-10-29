@@ -449,7 +449,7 @@
         /* Stats row */
         .stats-mini {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(2, 1fr);
             gap: 12px;
             margin-bottom: 20px;
         }
@@ -1215,13 +1215,7 @@
                             <div class="stat-mini-label">Total Debits</div>
                         </div>
                     </div>
-                    <div class="stat-mini-card">
-                        <div class="stat-mini-icon total">#</div>
-                        <div>
-                            <div class="stat-mini-value" id="totalCount">0</div>
-                            <div class="stat-mini-label">Total Transactions</div>
-                        </div>
-                    </div>
+
                 </div>
 
                 <!-- Action bar: Filter + Download Statement -->
@@ -1804,6 +1798,9 @@
             }
 
             // Expose functions to global scope
+            window.loadTransactions = loadTransactions;
+            window.applyFilters = applyFilters;
+            window.clearFilters = clearFilters;
             window.openSidebar = openSidebar;
             window.closeSidebar = closeSidebar;
             window.openFilterModal = openFilterModal;
