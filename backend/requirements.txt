@@ -9,6 +9,7 @@ passlib[bcrypt]
 python-jose[cryptography]
 python-multipart
 sendgrid
+resend
 jinja2
 reportlab==3.6.12
 pillow

@@ -34,90 +34,93 @@ def send_email(to: str, subject: str, html_content: str):
             print(f"EMAIL (LOCAL SMTP) TO: {to} | SUBJECT: {subject}")
         except ConnectionRefusedError:
             print(f"MOCKED EMAIL TO: {to} | SUBJECT: {subject} (Local SMTP down, bypassing)")
-            
+
         return {"status_code": 250}
-    else:
-        # Production: HTTP API (SendGrid or Resend) via Python standard urllib
-        import urllib.request
-        import urllib.error
-        import json
 
-        is_sendgrid = settings.MAIL_SERVER == "smtp.sendgrid.net"
-        is_mailgun = settings.MAIL_SERVER == "smtp.mailgun.org"
+    is_sendgrid = settings.MAIL_SERVER == "smtp.sendgrid.net"
+    is_mailgun = settings.MAIL_SERVER == "smtp.mailgun.org"
+    is_resend = settings.MAIL_SERVER == "smtp.resend.com"
 
-        if is_sendgrid:
-            url = "https://api.sendgrid.com/v3/mail/send"
-            payload = {
-                "personalizations": [{"to": [{"email": to}]}],
-                "from": {"email": settings.MAIL_FROM, "name": settings.APP_NAME},
-                "subject": subject,
-                "content": [{"type": "text/html", "value": html_content}]
-            }
-            provider = "SENDGRID"
-        elif is_mailgun:
-            # Mailgun
-            url = f"https://api.mailgun.net/v3/{settings.MAIL_USERNAME}/messages"
-            payload = {
-                "from": f"{settings.APP_NAME} <{settings.MAIL_FROM}>",
-                "to": to,
-                "subject": subject,
-                "html": html_content
-            }
-            provider = "MAILGUN"
-        else:
-            # Resend
-            url = "https://api.resend.com/emails"
-            payload = {
+    # ── Resend (official SDK — avoids Cloudflare 403 bot-detection on urllib) ──
+    if is_resend:
+        import resend
+        resend.api_key = settings.MAIL_PASSWORD
+        try:
+            params: resend.Emails.SendParams = {
                 "from": f"{settings.APP_NAME} <{settings.MAIL_FROM}>",
                 "to": [to],
                 "subject": subject,
-                "html": html_content
+                "html": html_content,
             }
-            provider = "RESEND"
-
-        if is_mailgun:
-            # Mailgun uses Basic Auth and form-encoded data
-            import base64
-            import urllib.parse
-            credentials = base64.b64encode(f"api:{settings.MAIL_PASSWORD}".encode()).decode()
-            headers = {
-                "Authorization": f"Basic {credentials}"
-            }
-            req = urllib.request.Request(
-                url,
-                data=urllib.parse.urlencode(payload).encode("utf-8"),
-                headers=headers,
-                method="POST"
-            )
-        else:
-            # Resend and SendGrid use JSON
-            headers = {
-                "Authorization": f"Bearer {settings.MAIL_PASSWORD}",
-                "Content-Type": "application/json"
-            }
-            req = urllib.request.Request(
-                url,
-                data=json.dumps(payload).encode("utf-8"),
-                headers=headers,
-                method="POST"
-            )
-        try:
-            with urllib.request.urlopen(req) as response:
-                status_code = response.getcode()
-                body = response.read().decode("utf-8")
-                print(f"EMAIL ({provider}) TO: {to} | STATUS: {status_code}")
-                class MockResponse:
-                    def __init__(self, sc, b):
-                        self.status_code = sc
-                        self.body = b
-                return MockResponse(status_code, body)
-        except urllib.error.HTTPError as e:
-            error_body = e.read().decode("utf-8")
-            print(f"{provider} ERROR {e.code}: {e.reason} | BODY: {error_body}")
-            raise e
+            response = resend.Emails.send(params)
+            print(f"EMAIL (RESEND SDK) TO: {to} | ID: {response.get('id')}")
+            return response
         except Exception as e:
-            print(f"FAILED TO SEND EMAIL VIA {provider}: {e}")
+            print(f"RESEND SDK ERROR: {e}")
             raise e
+
+    # ── SendGrid ──────────────────────────────────────────────────────────────
+    import urllib.request
+    import urllib.error
+    import json
+
+    if is_sendgrid:
+        url = "https://api.sendgrid.com/v3/mail/send"
+        payload = {
+            "personalizations": [{"to": [{"email": to}]}],
+            "from": {"email": settings.MAIL_FROM, "name": settings.APP_NAME},
+            "subject": subject,
+            "content": [{"type": "text/html", "value": html_content}]
+        }
+        provider = "SENDGRID"
+        headers = {
+            "Authorization": f"Bearer {settings.MAIL_PASSWORD}",
+            "Content-Type": "application/json"
+        }
+        req = urllib.request.Request(
+            url,
+            data=json.dumps(payload).encode("utf-8"),
+            headers=headers,
+            method="POST"
+        )
+    elif is_mailgun:
+        # Mailgun uses Basic Auth and form-encoded data
+        import base64
+        import urllib.parse
+        url = f"https://api.mailgun.net/v3/{settings.MAIL_USERNAME}/messages"
+        payload = {
+            "from": f"{settings.APP_NAME} <{settings.MAIL_FROM}>",
+            "to": to,
+            "subject": subject,
+            "html": html_content
+        }
+        provider = "MAILGUN"
+        credentials = base64.b64encode(f"api:{settings.MAIL_PASSWORD}".encode()).decode()
+        headers = {"Authorization": f"Basic {credentials}"}
+        req = urllib.request.Request(
+            url,
+            data=urllib.parse.urlencode(payload).encode("utf-8"),
+            headers=headers,
+            method="POST"
+        )
+
+    try:
+        with urllib.request.urlopen(req) as response:
+            status_code = response.getcode()
+            body = response.read().decode("utf-8")
+            print(f"EMAIL ({provider}) TO: {to} | STATUS: {status_code}")
+            class MockResponse:
+                def __init__(self, sc, b):
+                    self.status_code = sc
+                    self.body = b
+            return MockResponse(status_code, body)
+    except urllib.error.HTTPError as e:
+        error_body = e.read().decode("utf-8")
+        print(f"{provider} ERROR {e.code}: {e.reason} | BODY: {error_body}")
+        raise e
+    except Exception as e:
+        print(f"FAILED TO SEND EMAIL VIA {provider}: {e}")
+        raise e
 
 
 def send_login_alert(
