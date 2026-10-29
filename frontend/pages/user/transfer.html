@@ -1711,30 +1711,12 @@
                 <div class="amount-wrap">
                   <span class="amount-prefix">$</span>
                   <input type="number" id="intlAmount" placeholder="0.00" min="10" step="0.01"
-                    oninput="updateIntlSummary(); checkCodeRequirement()">
+                    oninput="updateIntlSummary()">
                 </div>
                 <span class="field-error" id="error_intlAmount"></span>
               </div>
 
-              <!-- COT/BOP notice -->
-              <div class="code-info-box" id="codeInfoBox">
-                ⚠️ Transfers of $10,000 or more require a COT (Cost of Transfer) or BOP (Balance of Payment) code.
-                Please contact your account manager or visit a branch to obtain this code before proceeding.
-              </div>
 
-              <div class="field" id="cotField" style="display:none">
-                <label>COT Code</label>
-                <input type="text" id="cotCode" placeholder="Enter COT code"
-                  oninput="this.value = this.value.toUpperCase()">
-              </div>
-
-              <div class="field" id="bopField" style="display:none">
-                <label>BOP Code <span
-                    style="font-weight:400;text-transform:none;letter-spacing:0;font-size:11px;">(alternative to
-                    COT)</span></label>
-                <input type="text" id="bopCode" placeholder="Enter BOP code"
-                  oninput="this.value = this.value.toUpperCase()">
-              </div>
 
               <div class="field">
                 <label>Transfer Purpose / Description</label>
@@ -2118,13 +2100,7 @@
       document.getElementById('isummAmount').textContent = fmt(amount);
     }
 
-    function checkCodeRequirement() {
-      const amount = parseFloat(document.getElementById('intlAmount').value) || 0;
-      const show = amount >= 10000;
-      document.getElementById('codeInfoBox').classList.toggle('show', show);
-      document.getElementById('cotField').style.display = show ? 'block' : 'none';
-      document.getElementById('bopField').style.display = show ? 'block' : 'none';
-    }
+
 
     async function submitLocalTransfer() {
       hideAllErrors();
@@ -2315,33 +2291,33 @@
     function closeReceiptModal() {
       ReceiptModal.close();
     }
-  
+
     // Poll every 45s to detect mid-session account block
     async function pollAccountStatus() {
-        try {
-            const tok = Api.getToken();
-            if(!tok) return;
-            const res = await Api.get('/api/auth/status', true);
-            if(res && res.ok && res.data.status === 'blocked') {
-                const u = Api.getUser();
-                if(u) {
-                    sessionStorage.setItem('blockedUser', JSON.stringify({
-                        first_name: u.first_name,
-                        last_name: u.last_name,
-                        profile_photo: u.profile_photo,
-                        reason: res.data.blocked_reason
-                    }));
-                }
-                window.location.href = '../enter-pin.html?blocked=true';
-            }
-        } catch(e) {}
+      try {
+        const tok = Api.getToken();
+        if (!tok) return;
+        const res = await Api.get('/api/auth/status', true);
+        if (res && res.ok && res.data.status === 'blocked') {
+          const u = Api.getUser();
+          if (u) {
+            sessionStorage.setItem('blockedUser', JSON.stringify({
+              first_name: u.first_name,
+              last_name: u.last_name,
+              profile_photo: u.profile_photo,
+              reason: res.data.blocked_reason
+            }));
+          }
+          window.location.href = '../enter-pin.html?blocked=true';
+        }
+      } catch (e) { }
     }
     document.addEventListener('DOMContentLoaded', () => {
-        pollAccountStatus();
-        setInterval(pollAccountStatus, 45000);
+      pollAccountStatus();
+      setInterval(pollAccountStatus, 45000);
     });
 
-    </script>
+  </script>
 </body>
 
 </html>
